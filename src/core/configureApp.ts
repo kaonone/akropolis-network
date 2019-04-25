@@ -3,7 +3,7 @@ import { TYPES, container } from './configureIoc';
 import configureStore, { createReducer } from './configureStore';
 import { configureJss } from 'core/configureJss';
 
-// import { MarketplaceModule, CashFlowModule } from 'modules';
+import { DaoModule } from 'modules';
 import { reduxEntry as adaptabilityRE } from 'services/adaptability';
 import { reduxEntry as i18nRE } from 'services/i18n';
 import { reduxEntry as orderbookRE } from 'services/orderbook';
@@ -21,6 +21,7 @@ import { IAppData, IModule, RootSaga, IAppReduxState, IReduxEntry } from 'shared
 function configureApp(data?: IAppData): IAppData {
   /* Prepare main app elements */
   const modules: IModule[] = [
+    DaoModule,
   ];
 
   if (data) {

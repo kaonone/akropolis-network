@@ -14,6 +14,7 @@ export default {
       notDefault: 'Value must be different from initial',
       maxStringLength: 'Text should be less then %{max} letters',
       allowedCharactersForCashFlowName: 'Text should contain only english letters and numbers',
+      allowedCharactersForDaoName: 'Name should contain only english letters and numbers',
     },
     pageNotFound: 'We can’t find this page',
     copiedAtClipboard: 'Copied at clipboard',

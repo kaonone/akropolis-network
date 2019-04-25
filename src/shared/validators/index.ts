@@ -1,4 +1,4 @@
-export * from './allowedCharactersForCashFlowName';
+export * from './allowedCharacters';
 export * from './isEthereumAddress';
 export * from './isRequired';
 export * from './lessThenOrEqual';

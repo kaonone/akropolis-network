@@ -1,9 +1,9 @@
-import { IReduxEntry, IDictionary } from '../types/app';
+import { IReduxEntry } from '../types/app';
 import { ActionCreator, Action } from 'redux';
 
-type Containers<C> = IDictionary<React.ComponentType<any>, keyof C>;
-type ActionCreators<A> = IDictionary<ActionCreator<Action>, keyof A>;
-type Selectors<S> = IDictionary<(state: any, ...args: any[]) => any, keyof S>;
+type Containers<C> = Record<keyof C, React.ComponentType<any>>;
+type ActionCreators<A> = Record<keyof A, ActionCreator<Action>>;
+type Selectors<S> = Record<keyof S, (state: any, ...args: any[]) => any>;
 
 interface ICPart<C> { containers: C; }
 interface IAPart<A> { actions: A; }

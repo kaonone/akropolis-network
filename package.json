@@ -218,6 +218,7 @@
     "0x.js": "^3.0.3",
     "@0x/connect": "^3.0.13",
     "@0x/web3-wrapper": "^3.2.4",
+    "@aragon/wrapper": "^5.0.0-rc.2",
     "@date-io/moment": "^1.0.1",
     "@material-ui/core": "^3.6.2",
     "@material-ui/icons": "^3.0.1",
@@ -274,6 +275,7 @@
     "doiuse": "^4.2.0",
     "drizzle": "^1.2.4",
     "drizzle-react": "^1.2.0",
+    "eth-provider": "^0.2.2",
     "eth-sig-util": "^2.1.1",
     "events": "^3.0.0",
     "express": "^4.16.3",
@@ -286,6 +288,8 @@
     "jss": "^9.8.3",
     "jss-compose": "^5.0.0",
     "material-ui-pickers": "^2.1.1",
+    "mobx": "^5.9.4",
+    "mobx-react-lite": "^1.2.0",
     "moment": "^2.18.1",
     "node-polyglot": "^2.3.0",
     "node-sass": "^4.11.0",
@@ -329,7 +333,9 @@
     "ts-node": "^7.0.1",
     "typescript": "^3.3.1",
     "url-loader": "^1.1.2",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "web3": "^1.0.0-beta.35",
+    "web3-utils": "^1.0.0-beta.35"
   },
   "engines": {
     "node": "10.15.0",

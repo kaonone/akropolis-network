@@ -63,9 +63,9 @@ export interface IReduxEntry {
 }
 
 export interface IFeatureEntry<
-  C extends IDictionary<React.ReactType<any>, keyof C> | void,
-  A extends IDictionary<ActionCreator<Action>, keyof A> | void,
-  S extends IDictionary<(state: any, ...args: any[]) => any, keyof S> | void,
+  C extends Record<keyof C, React.ReactType<any>> | void,
+  A extends Record<keyof A, ActionCreator<Action>> | void,
+  S extends Record<keyof S, (state: any, ...args: any[]) => any> | void,
   > extends IReduxEntry {
   actions?: A;
   selectors?: S;

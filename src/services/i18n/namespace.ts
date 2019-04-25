@@ -7,7 +7,7 @@ export interface IReduxState {
   };
 }
 
-type CustomTranslateFunction = (phrase: IPhraseWithOptions) => string;
+type CustomTranslateFunction = (phrase: ITranslateKey) => string;
 interface IPhraseWithOptions {
   key: string;
   params: Record<string, string | number>;

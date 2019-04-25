@@ -3,6 +3,9 @@
 interface Window {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?(): any;
   __data: any; // initial redux state, maybe undefined
+  __CIPHER__: any;
+  ethereum: any;
+  web3: any;
 }
 
 declare var __DISABLE_SSR__: boolean;
@@ -19,6 +22,8 @@ declare module "*.svg" {
   const content: string;
   export default content;
 }
+
+declare module 'web3-utils'; // TODO ds: Remove after web3-utils updating
 
 declare module 'redux-async-connect';
 declare module 'react-geosuggest';

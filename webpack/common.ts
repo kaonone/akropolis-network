@@ -16,9 +16,10 @@ import * as autoprefixer from 'autoprefixer';
 import * as stylelint from 'stylelint';
 import * as doiuse from 'doiuse';
 
-import { ROUTES_PREFIX } from '../src/core/constants';
+import { ROUTES_PREFIX } from '../src/core/constants/common';
 import getEnvParams from '../src/core/getEnvParams';
-import { LANGUAGES } from '../src/services/i18n/constants';
+// import { LANGUAGES } from '../src/services/i18n/constants';
+const LANGUAGES = ['en'];
 
 export type BuildType = 'dev' | 'prod' | 'server';
 
@@ -228,7 +229,7 @@ export const commonConfig: webpack.Configuration = {
   },
   resolve: {
     modules: ['node_modules', 'src', path.resolve('ethereum-contracts', 'build')],
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     plugins: withHot ? [
       new ReactJssHmrPlugin(),
     ] : undefined,
@@ -249,6 +250,7 @@ export const commonConfig: webpack.Configuration = {
     assets: false,
     modules: false,
   },
+  devtool: 'eval',
   devServer: {
     hot: withHot,
     contentBase: path.resolve('..', 'build'),
