@@ -1,4 +1,4 @@
-# Akropolis Network Testnet
+# Akropolis Network Testnet (active development)
 
 ## For frontend (in root folder)
 ### Install all dependencies
