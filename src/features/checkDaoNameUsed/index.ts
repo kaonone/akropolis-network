@@ -3,4 +3,4 @@ import { loadEntry } from './loader';
 
 export { Entry } from './entry';
 
-export const OpenDaoAsync = getAsyncContainer(loadEntry, 'OpenDao');
+export const DaoNameCheckingAsync = getAsyncContainer(loadEntry, 'DaoNameChecking');

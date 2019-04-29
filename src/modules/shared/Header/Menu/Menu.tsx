@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { i18nConnect, ITranslateProps, tKeys } from 'services/i18n';
+import { i18nConnect, ITranslateProps } from 'services/i18n';
 
 import { withComponent } from 'shared/helpers/react';
 import { Button } from 'shared/view/elements';
 
-import routes from '../../../routes';
+// import routes from '../../../routes';
 import { StylesProps, provideStyles } from './Menu.style';
 
 interface IProps {
@@ -18,11 +18,11 @@ interface IMenuItem {
   label: string;
 }
 
-const getItems = (isLogged: boolean) => ([] as IMenuItem[])
-  .concat(isLogged ? [
-    { label: tKeys.shared.menu.myCashflows.getKey(), to: routes.cashFlows.getRoutePath() },
-  ] : [])
-  .concat([{ label: tKeys.shared.menu.marketplace.getKey(), to: routes.marketplace.getRedirectPath() }]);
+const getItems = (_isLogged: boolean) => ([] as IMenuItem[]);
+// .concat(isLogged ? [
+//   { label: tKeys.shared.menu.myCashflows.getKey(), to: routes.cashFlows.getRoutePath() },
+// ] : [])
+// .concat([{ label: tKeys.shared.menu.marketplace.getKey(), to: routes.marketplace.getRedirectPath() }]);
 
 const NavButton = withComponent(NavLink)(Button);
 

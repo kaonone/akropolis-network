@@ -1,8 +1,7 @@
 import { observable, flow } from 'mobx';
 import { CancellablePromise } from 'mobx/lib/api/flow';
-import { web3Providers, NETWORK_CONFIG } from 'core/constants';
-import { isNameUsed } from '@aragon/wrapper';
 import { PromisedReturnType } from '_helpers';
+import { isNameUsed } from 'shared/helpers/aragon-wrapper';
 
 export interface IState {
   checking: boolean;
@@ -37,10 +36,7 @@ export default class DaoNameUtils {
     };
 
     try {
-      const isUsed: PromisedReturnType<typeof isNameUsed> = yield isNameUsed(domain, {
-        provider: web3Providers.default,
-        registryAddress: NETWORK_CONFIG.aragonEnsRegistry,
-      });
+      const isUsed: PromisedReturnType<typeof isNameUsed> = yield isNameUsed(domain);
       this.state = {
         checkedDomain: domain,
         isAvailable: !isUsed,

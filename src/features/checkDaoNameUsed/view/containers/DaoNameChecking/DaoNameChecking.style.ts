@@ -12,6 +12,10 @@ const styles = (theme: Theme) => ({
   nameIcon: rule({
     marginLeft: theme.spacing.unit * 2,
   }),
+
+  actionPreloader: rule({
+    marginLeft: theme.spacing.unit,
+  }),
 });
 
 export const provideStyles = withStyles(styles);

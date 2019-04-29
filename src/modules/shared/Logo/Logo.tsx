@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { provideStyles, StylesProps } from './Logo.style';
 import { Logo } from 'shared/view/elements/Icons';
+import { provideStyles, StylesProps } from './Logo.style';
 
 interface IOwnProps {
   linkTo: string;
@@ -17,7 +17,7 @@ class HeaderLogo extends React.PureComponent<IProps> {
     return (
       <Link className={classes.root} to={linkTo}>
         <Logo className={classes.logo} />
-        <div className={classes.title}>Cashflow<br />Relay</div>
+        <div className={classes.title}>Akropolis<br />Network</div>
       </Link>
     );
   }
