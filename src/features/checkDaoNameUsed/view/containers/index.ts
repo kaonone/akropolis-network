@@ -1,1 +1,1 @@
-export { default as OpenDao } from './OpenDao/OpenDao';
+export { default as DaoNameChecking } from './DaoNameChecking/DaoNameChecking';

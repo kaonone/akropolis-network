@@ -18,6 +18,7 @@ import Api from 'services/api/Api';
 
 import * as buyCashFlowNS from 'features/buyCashFlow/namespace';
 import * as sellCashFlowNS from 'features/sellCashFlow/namespace';
+import { namespace as createDaoNS } from 'features/createDao';
 import * as signInNS from 'features/signIn/namespace';
 
 import { JSS, Theme } from 'shared/styles';
@@ -81,6 +82,7 @@ export interface IAppReduxState {
   user: userNS.IReduxState;
   notifications: notificationNS.IReduxState;
   // features
+  createDao: createDaoNS.IReduxState;
   buyCashFlow: buyCashFlowNS.IReduxState;
   sellCashFlow: sellCashFlowNS.IReduxState;
   signIn: signInNS.IReduxState;

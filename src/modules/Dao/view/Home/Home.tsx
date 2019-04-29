@@ -4,7 +4,7 @@ import { Link, LinkProps, RouteComponentProps } from 'react-router-dom';
 import { BaseLayout } from 'modules/shared';
 
 import { InjectedAuthRouterProps } from 'shared/helpers/authWrapper';
-import { OpenDaoAsync } from 'features/checkDaoNameUsed';
+import { DaoNameCheckingAsync } from 'features/checkDaoNameUsed';
 import { Grid, Typography, Button } from 'shared/view/elements';
 import { withComponent } from 'shared/helpers/react';
 import routes from 'modules/routes';
@@ -36,7 +36,12 @@ function Home(props: IProps & RouteComponentProps<any>) {
             <Typography variant="h4">Or open an existing co-op</Typography>
           </Grid>
           <Grid item xs={12}>
-            <OpenDaoAsync onOpenDao={handleOpenDao} />
+            <DaoNameCheckingAsync
+              checkOf="used"
+              actionButtonText="Open co-op"
+              onActionClick={handleOpenDao}
+              negativeCheckingDescription="No co-ops with that name exists."
+            />
           </Grid>
         </Grid>
       </Grid>

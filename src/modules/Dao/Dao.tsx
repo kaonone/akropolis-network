@@ -5,17 +5,25 @@ import routes from 'modules/routes';
 import { IModule } from 'shared/types/app';
 
 import Home from './view/Home/Home';
+import Create from './view/Create/Create';
 
 const HomeModule: IModule = {
   getRoutes() {
-    return (
+    return [(
       <Route
         exact
-        key="Home"
+        key="Dao Home"
         path={routes.dao.getRoutePath()}
         component={Home}
       />
-    );
+    ), (
+      <Route
+        exact
+        key="Create Dao"
+        path={routes.dao.create.getRoutePath()}
+        component={Create}
+      />
+    )];
   },
 };
 

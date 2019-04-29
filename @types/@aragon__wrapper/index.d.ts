@@ -1,7 +1,7 @@
-
 // tslint:disable:max-classes-per-file
 declare module '@aragon/wrapper' {
   import { Provider, IAragonApp, IAragonPermissions, ITransactionBag } from '@aragon/types';
+  import { ApmOptions } from '@aragon/apm';
   import { Observable, Subscription } from 'rxjs';
 
   class WrapperProvider { }
@@ -16,7 +16,11 @@ declare module '@aragon/wrapper' {
     MessagePortMessage: typeof MessagePortMessageProvider;
     WindowMessage: typeof WindowMessageProvider;
   };
-  export function setupTemplates(): void;
+
+  interface ITemplate {
+
+  }
+  export function setupTemplates(account: string, options: IAragonWrapperOptions): ITemplate;
 
   interface IEnsResolveOptions {
     provider: Provider;
@@ -25,16 +29,9 @@ declare module '@aragon/wrapper' {
   export function isNameUsed(name: string, options: IEnsResolveOptions): Promise<boolean>;
   export function ensResolve(domain: string, options: IEnsResolveOptions): Promise<string>;
 
-  export interface IpfsConfig {
-    gateway: string;
-  }
-
   interface IAragonWrapperOptions {
     provider: Provider;
-    apm: {
-      ensRegistryAddress: string;
-      ipfs: IpfsConfig;
-    };
+    apm: ApmOptions;
     defaultGasPriceFn(): string | undefined;
   }
 
@@ -59,4 +56,10 @@ declare module '@aragon/wrapper' {
   }
 
   export default AragonWrapper;
+}
+
+declare module '@aragon/wrapper/dist/utils' {
+  import Web3 from 'web3';
+
+  export function getRecommendedGasLimit(web3: Web3, estimatedGasLimit: number, options?: { gasFuzzFactor?: number }): number;
 }

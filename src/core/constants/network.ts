@@ -1,4 +1,4 @@
-import { IpfsConfig } from '@aragon/wrapper';
+import { IpfsConfig } from '@aragon/apm';
 import { getContractAddressesForNetworkOrThrow, ContractAddresses } from '@0x/contract-addresses';
 import getEnvParams from '../getEnvParams';
 import { toWei } from 'shared/helpers/web3';

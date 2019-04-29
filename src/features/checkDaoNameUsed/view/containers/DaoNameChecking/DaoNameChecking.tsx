@@ -7,16 +7,23 @@ import { TextInput, CircleProgressBar, Button, Grid } from 'shared/view/elements
 import { useDebounce, useValidation } from 'shared/helpers/react';
 import { maxStringLength, allowedCharactersForDaoName } from 'shared/validators';
 
-import { StylesProps, provideStyles } from './OpenDao.style';
+import { StylesProps, provideStyles } from './DaoNameChecking.style';
 
 interface IProps {
-  onOpenDao(daoName: string): void;
+  checkOf: 'used' | 'unused';
+  disabled?: boolean;
+  negativeCheckingDescription?: string;
+  actionButtonText: string;
+  actionIsInProgress?: boolean;
+  onActionClick(daoName: string): void;
 }
 
 const validateMaxLength = maxStringLength.bind(null, 30);
 
-function OpenDao(props: IProps & StylesProps) {
-  const { classes, onOpenDao } = props;
+function DaoNameChecking(props: IProps & StylesProps) {
+  const {
+    classes, onActionClick, negativeCheckingDescription, actionButtonText, checkOf, disabled, actionIsInProgress,
+  } = props;
   const { t } = useTranslate();
 
   const [daoName, setDaoName] = React.useState('');
@@ -26,17 +33,19 @@ function OpenDao(props: IProps & StylesProps) {
   const handleChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setDaoName(event.target.value);
   }, []);
-  const handleOpen = React.useCallback(() => {
-    onOpenDao(daoName);
-  }, [daoName, onOpenDao]);
+  const handleActionClick = React.useCallback(() => {
+    onActionClick(daoName);
+  }, [daoName, onActionClick]);
 
   const nameChecking = useCheckDaoNameAvailability(debouncedDaoName);
 
-  const isFoundDao = nameChecking.checkedDomain === daoName && daoName && !nameChecking.isAvailable;
-  const isNotFoundDao = nameChecking.checkedDomain === daoName && daoName && nameChecking.isAvailable;
+  const checkingPositiveResult = checkOf === 'used' ? !nameChecking.isAvailable : nameChecking.isAvailable;
+
+  const isPositive = nameChecking.checkedDomain === daoName && daoName && checkingPositiveResult;
+  const isNegative = nameChecking.checkedDomain === daoName && daoName && !checkingPositiveResult;
   const helperText: string = (
     daoNameFormatError && t(daoNameFormatError) ||
-    isNotFoundDao && 'No organization with that name exists.' || ''
+    isNegative && negativeCheckingDescription || ''
   );
 
   return (
@@ -44,25 +53,30 @@ function OpenDao(props: IProps & StylesProps) {
       <Grid item xs={12}>
         <div className={classes.nameInput}>
           <TextInput
+            disabled={disabled}
             variant="outlined"
             value={daoName}
             onChange={handleChange}
             helperText={helperText}
+            label="Co-op name"
           />
           <div className={classes.nameIcon}>
             {nameChecking.checkedDomain !== daoName && <CircleProgressBar size={24} />}
-            {isFoundDao && 'Ok'}
-            {isNotFoundDao && 'Not Ok'}
+            {isPositive && 'Ok'}
+            {isNegative && 'Not Ok'}
           </div>
         </div>
       </Grid>
-      {isFoundDao && (
+      {isPositive && (
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={handleOpen}>Open co-op</Button>
+          <Button variant="contained" color="primary" onClick={handleActionClick} disabled={disabled}>
+            {actionButtonText}
+            {actionIsInProgress && <CircleProgressBar size={16} classes={{ root: classes.actionPreloader }} />}
+          </Button>
         </Grid>
       )}
     </Grid>
   );
 }
 
-export default provideStyles(OpenDao);
+export default provideStyles(DaoNameChecking);
