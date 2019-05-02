@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 declare module '@aragon/wrapper' {
-  import { Provider, IAragonApp, IAragonPermissions, ITransactionBag } from '@aragon/types';
+  import { Provider, IAragonApp, IAragonPermissions, ITransactionBag, ITransaction } from '@aragon/types';
   import { ApmOptions } from '@aragon/apm';
   import { Observable, Subscription } from 'rxjs';
 
@@ -53,6 +53,10 @@ declare module '@aragon/wrapper' {
         providedAccounts: string[];
       };
     }): Promise<void>;
+
+    public getTransactionPath(
+      destination: string, methodName: string, params: string[], finalForwarder?: string,
+    ): Promise<ITransaction[]>;
   }
 
   export default AragonWrapper;

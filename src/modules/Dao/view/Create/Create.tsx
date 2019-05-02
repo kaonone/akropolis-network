@@ -12,7 +12,7 @@ type IProps = InjectedAuthRouterProps;
 
 function Create(props: IProps & RouteComponentProps<any>) {
   const handleCreateDao = React.useCallback((daoName: string) => {
-    props.history.push(routes.dao.id.getRedirectPath({ id: `${daoName}.aragonid.eth` }));
+    props.history.push(routes.dao.view.id.getRedirectPath({ id: daoName }));
   }, []);
 
   return (
