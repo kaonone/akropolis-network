@@ -15,7 +15,7 @@ const LinkButton = withComponent<React.ComponentClass<LinkProps>>(Link)(Button);
 
 function Home(props: IProps & RouteComponentProps<any>) {
   const handleOpenDao = React.useCallback((daoName: string) => {
-    props.history.push(routes.dao.id.getRedirectPath({ id: `${daoName}.aragonid.eth` }));
+    props.history.push(routes.dao.view.id.getRedirectPath({ id: daoName }));
   }, []);
 
   return (

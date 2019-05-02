@@ -3,7 +3,9 @@ import build, { getParam } from 'shared/helpers/buildRouteTree';
 const rawTree = {
   dao: {
     create: null,
-    id: getParam(null),
+    view: {
+      id: getParam(null),
+    },
   },
   marketplace: null,
   cashFlows: {

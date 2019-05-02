@@ -8,13 +8,16 @@ import { ContractWrappers, Web3ProviderEngine } from '0x.js';
 import { HttpClient } from '@0x/connect';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 
+import { LocalStorage } from 'services/storage';
+import { DaoApi } from 'services/daoApi';
+import Api from 'services/api/Api';
+
 import * as adaptabilityNS from 'services/adaptability/namespace';
 import * as i18nNS from 'services/i18n/namespace';
 import * as orderbookNS from 'services/orderbook/namespace';
 import * as transactionsNS from 'services/transactions/namespace';
 import * as userNS from 'services/user/namespace';
 import * as notificationNS from 'services/notifications/namespace';
-import Api from 'services/api/Api';
 
 import * as buyCashFlowNS from 'features/buyCashFlow/namespace';
 import * as sellCashFlowNS from 'features/sellCashFlow/namespace';
@@ -22,7 +25,6 @@ import { namespace as createDaoNS } from 'features/createDao';
 import * as signInNS from 'features/signIn/namespace';
 
 import { JSS, Theme } from 'shared/styles';
-import { LocalStorage } from 'services/storage';
 
 export interface IModule {
   getRoutes?(): ReactElement<RouteProps> | Array<ReactElement<RouteProps>>;
@@ -34,6 +36,7 @@ export interface IAppData {
   drizzle: Drizzle;
   store: Store<IAppReduxState>;
   jssDeps: IJssDependencies;
+  deps: IDependencies;
 }
 
 export interface IJssDependencies {
@@ -44,6 +47,7 @@ export interface IJssDependencies {
 
 export interface IDependencies {
   api: Api;
+  daoApi: DaoApi;
   drizzle: Drizzle;
   storage: LocalStorage;
   Ox: {

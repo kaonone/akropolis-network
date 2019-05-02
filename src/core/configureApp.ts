@@ -92,7 +92,7 @@ function configureApp(data?: IAppData): IAppData {
     }
   }
 
-  return { modules, store, jssDeps, drizzle: dependencies.drizzle };
+  return { modules, store, jssDeps, drizzle: dependencies.drizzle, deps: dependencies };
 }
 
 export default configureApp;

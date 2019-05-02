@@ -9,70 +9,76 @@ import { Drizzle } from 'drizzle';
 import 'normalize.css';
 
 import { I18nProvider } from 'services/i18n';
-import { IAppData, IModule, IJssDependencies } from 'shared/types/app';
+import { IAppData, IModule, IJssDependencies, IDependencies } from 'shared/types/app';
 import { JssProvider, SheetsRegistry, BaseStyles } from 'shared/styles';
 
 import createRoutes from './routes';
+import { DepsContext } from './DepsReactContext';
 
 interface IAppProps {
   jssDeps: IJssDependencies;
   disableStylesGeneration?: boolean;
 }
 
-export function App({ modules, store, jssDeps, disableStylesGeneration, drizzle }: IAppData & IAppProps) {
+export function App({ modules, store, jssDeps, disableStylesGeneration, deps, drizzle }: IAppData & IAppProps) {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        {renderSharedPart(modules, drizzle, jssDeps, disableStylesGeneration)}
+        {renderSharedPart({ modules, drizzle, jssDeps, disableStylesGeneration, deps })}
       </BrowserRouter>
     </Provider >
   );
 }
 
-interface IServerAppProps {
-  jssDeps: IJssDependencies;
+interface IServerAppProps extends IAppProps {
   registry?: SheetsRegistry;
-  disableStylesGeneration?: boolean;
 }
 
 export function ServerApp(props: IAppData & IServerAppProps & StaticRouter['props']) {
-  const { modules, store, registry, jssDeps, disableStylesGeneration, drizzle, ...routerProps } = props;
+  const { modules, store, registry, jssDeps, disableStylesGeneration, drizzle, deps, ...routerProps } = props;
   return (
     <Provider store={store}>
       <StaticRouter {...routerProps}>
-        {renderSharedPart(modules, drizzle, jssDeps, disableStylesGeneration, registry)}
+        {renderSharedPart({ modules, drizzle, jssDeps, disableStylesGeneration, registry, deps })}
       </StaticRouter>
     </Provider>
   );
 }
 
+interface ISharedProps {
+  modules: IModule[];
+  drizzle: Drizzle;
+  jssDeps: IJssDependencies;
+  deps: IDependencies;
+  disableStylesGeneration?: boolean;
+  registry?: SheetsRegistry;
+}
+
 function renderSharedPart(
-  modules: IModule[],
-  drizzle: Drizzle,
-  jssDeps: IJssDependencies,
-  disableStylesGeneration?: boolean,
-  registry?: SheetsRegistry,
+  { modules, drizzle, jssDeps, disableStylesGeneration, registry, deps }: ISharedProps,
 ) {
   const { generateClassName, jss, theme } = jssDeps;
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <DrizzleContext.Provider drizzle={drizzle}>
-        <I18nProvider>
-          <JssProvider
-            jss={jss}
-            registry={registry}
-            generateClassName={generateClassName}
-            disableStylesGeneration={disableStylesGeneration}
-          >
-            <MuiThemeProvider theme={theme} disableStylesGeneration={disableStylesGeneration}>
-              {/* <React.StrictMode> */}
-              <BaseStyles />
-              {createRoutes(modules)}
-              {/* </React.StrictMode> */}
-            </MuiThemeProvider>
-          </JssProvider>
-        </I18nProvider>
+        <DepsContext.Provider value={deps}>
+          <I18nProvider>
+            <JssProvider
+              jss={jss}
+              registry={registry}
+              generateClassName={generateClassName}
+              disableStylesGeneration={disableStylesGeneration}
+            >
+              <MuiThemeProvider theme={theme} disableStylesGeneration={disableStylesGeneration}>
+                {/* <React.StrictMode> */}
+                <BaseStyles />
+                {createRoutes(modules)}
+                {/* </React.StrictMode> */}
+              </MuiThemeProvider>
+            </JssProvider>
+          </I18nProvider>
+        </DepsContext.Provider>
       </DrizzleContext.Provider>
     </MuiPickersUtilsProvider>
   );
