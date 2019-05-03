@@ -1,5 +1,5 @@
 overwrite: true
-schema: "https://aragon-rinkeby-graph.cashflowrelay.com/subgraphs/name/graphprotocol/aragon-network"
+schema: "https://api.thegraph.com/subgraphs/name/proofoftom/aragon-dao"
 documents: "./src/**/*.graphql"
 generates:
   src/generated/graphql.tsx:

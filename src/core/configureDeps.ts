@@ -1,6 +1,11 @@
 import { Store } from 'redux';
 import { Drizzle, generateStore, IDrizzleOptions } from 'drizzle';
-import ApolloClient, { InMemoryCache } from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
+import { onError } from 'apollo-link-error';
+import { ApolloLink } from 'apollo-link';
+import { InMemoryCache, HttpLink, split } from 'apollo-boost';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
 
 import Api from 'services/api/Api';
 import { DaoApi } from 'services/daoApi';
@@ -25,8 +30,44 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
     ipfsConfig: NETWORK_CONFIG.defaultIpfsConfig,
   });
 
-  const apolloClient = new ApolloClient<InMemoryCache>({
-    uri: 'https://aragon-rinkeby-graph.cashflowrelay.com/subgraphs/name/graphprotocol/aragon-network',
+  const httpLink = new HttpLink({
+    uri: 'https://api.thegraph.com/subgraphs/name/proofoftom/aragon-dao',
+    credentials: 'same-origin',
+  });
+
+  const wsLink = new WebSocketLink({
+    uri: 'wss://api.thegraph.com/subgraphs/name/proofoftom/aragon-dao',
+    options: {
+      reconnect: true,
+    },
+  });
+
+  const link = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      );
+    },
+    wsLink,
+    httpLink,
+  );
+
+  const apolloClient = new ApolloClient({
+    link: ApolloLink.from([
+      onError(({ graphQLErrors, networkError }) => {
+        if (graphQLErrors) {
+          graphQLErrors.map(({ message, locations, path }) =>
+            console.log(
+              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+            ),
+          );
+        }
+        if (networkError) { console.log(`[Network error]: ${networkError}`); }
+      }),
+      link,
+    ]),
     cache: new InMemoryCache(),
   });
 

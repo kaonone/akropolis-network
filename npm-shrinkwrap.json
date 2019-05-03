@@ -3505,6 +3505,22 @@
         }
       }
     },
+    "apollo-link-ws": {
+      "version": "1.0.17",
+      "resolved": "https://registry.npmjs.org/apollo-link-ws/-/apollo-link-ws-1.0.17.tgz",
+      "integrity": "sha512-0PKgahM2BOcUiI3QSJMYXOoUylWKzar5NTZLgMLEW4K/CczOTzC4CTXvKMjh/cx57Jto/U2xzKRy9BEoNfnK5Q==",
+      "requires": {
+        "apollo-link": "^1.2.11",
+        "tslib": "^1.9.3"
+      },
+      "dependencies": {
+        "tslib": {
+          "version": "1.9.3",
+          "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.9.3.tgz",
+          "integrity": "sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ=="
+        }
+      }
+    },
     "apollo-utilities": {
       "version": "1.2.1",
       "resolved": "https://registry.npmjs.org/apollo-utilities/-/apollo-utilities-1.2.1.tgz",
@@ -5902,6 +5918,11 @@
       "resolved": "https://registry.npmjs.org/babylon/-/babylon-7.0.0-beta.47.tgz",
       "integrity": "sha512-+rq2cr4GDhtToEzKFD6KZZMDBXhjFAr9JjPw9pAppZACeEWqNM294j+NdBzkSHYXwzzBmVjZ3nEVJlOhbR2gOQ==",
       "dev": true
+    },
+    "backo2": {
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/backo2/-/backo2-1.0.2.tgz",
+      "integrity": "sha1-MasayLEpNjRj41s+u2n038+6eUc="
     },
     "bail": {
       "version": "1.0.3",
@@ -10089,8 +10110,7 @@
     "eventemitter3": {
       "version": "3.1.0",
       "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-3.1.0.tgz",
-      "integrity": "sha512-ivIvhpq/Y0uSjcHDcOIccjmYjGLcP09MFGE7ysAwkAvkXfpZlC985pH2/ui64DKazbTW/4kN3yqozUxlXzI6cA==",
-      "dev": true
+      "integrity": "sha512-ivIvhpq/Y0uSjcHDcOIccjmYjGLcP09MFGE7ysAwkAvkXfpZlC985pH2/ui64DKazbTW/4kN3yqozUxlXzI6cA=="
     },
     "events": {
       "version": "3.0.0",
@@ -26133,6 +26153,28 @@
           "version": "1.2.0",
           "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz",
           "integrity": "sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ="
+        }
+      }
+    },
+    "subscriptions-transport-ws": {
+      "version": "0.9.16",
+      "resolved": "https://registry.npmjs.org/subscriptions-transport-ws/-/subscriptions-transport-ws-0.9.16.tgz",
+      "integrity": "sha512-pQdoU7nC+EpStXnCfh/+ho0zE0Z+ma+i7xvj7bkXKb1dvYHSZxgRPaU6spRP+Bjzow67c/rRDoix5RT0uU9omw==",
+      "requires": {
+        "backo2": "^1.0.2",
+        "eventemitter3": "^3.1.0",
+        "iterall": "^1.2.1",
+        "symbol-observable": "^1.0.4",
+        "ws": "^5.2.0"
+      },
+      "dependencies": {
+        "ws": {
+          "version": "5.2.2",
+          "resolved": "https://registry.npmjs.org/ws/-/ws-5.2.2.tgz",
+          "integrity": "sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==",
+          "requires": {
+            "async-limiter": "~1.0.0"
+          }
         }
       }
     },

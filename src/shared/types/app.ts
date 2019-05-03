@@ -4,7 +4,7 @@ import { Store, Reducer, ActionCreator, Action } from 'redux';
 import { SagaIterator } from 'redux-saga';
 import { GenerateClassName } from 'jss';
 import { Drizzle } from 'drizzle';
-import ApolloClient, { InMemoryCache } from 'apollo-boost';
+import ApolloClient, { NormalizedCacheObject } from 'apollo-boost';
 
 import { LocalStorage } from 'services/storage';
 import { DaoApi } from 'services/daoApi';
@@ -44,7 +44,7 @@ export interface IDependencies {
   daoApi: DaoApi;
   drizzle: Drizzle;
   storage: LocalStorage;
-  apolloClient: ApolloClient<InMemoryCache>;
+  apolloClient: ApolloClient<NormalizedCacheObject>;
 }
 
 export type IDictionary<T, S extends keyof any = string> = {
