@@ -27,7 +27,6 @@ interface IOwnProps {
 
 interface IStateProps {
   isCheckedAuth: boolean;
-  isLogged: boolean;
 }
 
 type ActionProps = typeof mapDispatch;
@@ -38,17 +37,12 @@ class LoadingContainer extends React.Component<IProps, IState> {
   public state: IState = { isUnsupportedNetwork: false, isCheckedNetwork: false };
   public componentDidUpdate(prevProps: IProps) {
     const {
-      initialized, drizzle, drizzleState, isLogged,
-      onDrizzleInitialize, checkIsUserSigned, checkUserPermissions,
+      initialized, drizzle, drizzleState, onDrizzleInitialize, checkIsUserSigned,
     } = this.props;
 
     if (!prevProps.initialized && initialized) {
       !this.isEmptyAccounts() && drizzleState.web3.status !== 'failed' && checkIsUserSigned();
       onDrizzleInitialize && onDrizzleInitialize(drizzle);
-    }
-
-    if (!prevProps.isLogged && isLogged) {
-      checkUserPermissions();
     }
 
     if (
@@ -105,13 +99,11 @@ class LoadingContainer extends React.Component<IProps, IState> {
 function mapState(state: IAppReduxState): IStateProps {
   return {
     isCheckedAuth: userSelectors.selectIsCheckedAuth(state),
-    isLogged: userSelectors.selectIsLogged(state),
   };
 }
 
 const mapDispatch = {
   checkIsUserSigned: userActions.checkIsUserSigned,
-  checkUserPermissions: userActions.checkPermissions,
 };
 
 export default withDrizzle(

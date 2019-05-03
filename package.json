@@ -215,9 +215,6 @@
     "yo": "^2.0.5"
   },
   "dependencies": {
-    "0x.js": "^3.0.3",
-    "@0x/connect": "^3.0.13",
-    "@0x/web3-wrapper": "^3.2.4",
     "@aragon/apm": "^3.1.0-beta.1",
     "@aragon/wrapper": "^5.0.0-rc.2",
     "@date-io/moment": "^1.0.1",
@@ -263,6 +260,7 @@
     "babel-polyfill": "^6.26.0",
     "bem-cn": "^3.0.1",
     "better-npm-run": "^0.1.1",
+    "bignumber.js": "^8.1.1",
     "bootstrap": "^3.3.7",
     "cheerio": "^1.0.0-rc.2",
     "circular-dependency-plugin": "^5.0.2",

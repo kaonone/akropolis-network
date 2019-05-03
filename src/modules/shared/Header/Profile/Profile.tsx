@@ -4,7 +4,6 @@ import { bind } from 'decko';
 import { AccountAddress, ProfileMenu } from 'services/user';
 
 import { StylesProps, provideStyles } from './Profile.style';
-import ShowBalance from './ShowBalance/ShowBalance';
 
 interface IState {
   isOpenMenu: boolean;
@@ -21,8 +20,8 @@ class Profile extends React.PureComponent<StylesProps> {
     return (
       <>
         <div className={classes.root} ref={this.accountStatusRef}>
-          <ShowBalance token="DAI" />
-          <ShowBalance token="AKT" />
+          {/* <ShowBalance token="DAI" /> */}
+          {/* <ShowBalance token="AKT" /> */}
           <AccountAddress onClick={this.openMenu} />
         </div>
         <ProfileMenu

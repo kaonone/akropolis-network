@@ -23,53 +23,6 @@ export function dataReducer(state: NS.IReduxState['data'] = initial.data, action
         isCheckedAuth: true,
       };
     }
-    case 'USER:CHECK_PERMISSIONS_SUCCESS': {
-      return {
-        ...state,
-        isMinter: action.payload.isMinter,
-        isApproved: action.payload.isApproved,
-        isPayingAllowance: action.payload.isPayingAllowance,
-        isStakingAllowance: action.payload.isStakingAllowance,
-        isBuyingAllowance: action.payload.isBuyingAllowance,
-        isCheckedPermissions: true,
-      };
-    }
-    case 'USER:CHECK_PERMISSIONS_FAIL': {
-      return {
-        ...state,
-        isCheckedPermissions: true,
-      };
-    }
-    case 'USER:SET_MINTER_SUCCESS': {
-      return {
-        ...state,
-        isMinter: true,
-      };
-    }
-    case 'USER:SET_APPROVED_SUCCESS': {
-      return {
-        ...state,
-        isApproved: action.payload.isApproved,
-      };
-    }
-    case 'USER:SET_PAYING_ALLOWANCE_SUCCESS': {
-      return {
-        ...state,
-        isPayingAllowance: action.payload.isPayingAllowance,
-      };
-    }
-    case 'USER:SET_STAKING_ALLOWANCE_SUCCESS': {
-      return {
-        ...state,
-        isStakingAllowance: action.payload.isStakingAllowance,
-      };
-    }
-    case 'USER:SET_BUYING_ALLOWANCE_SUCCESS': {
-      return {
-        ...state,
-        isBuyingAllowance: action.payload.isBuyingAllowance,
-      };
-    }
     default: return state;
   }
 }

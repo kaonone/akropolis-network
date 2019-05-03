@@ -1,5 +1,5 @@
 import { bind } from 'decko';
-import { OneDAI } from 'shared/model/calculate';
+import { ONE_ERC20 } from 'shared/constants';
 import { IDaoApiConfig } from './types';
 import { BaseDaoApi } from './BaseDaoApi';
 
@@ -25,7 +25,7 @@ export class DaoApi {
 
     const params = [
       account,
-      OneDAI.toString(),
+      ONE_ERC20.toString(),
     ] as const;
 
     await this.base.sendTransaction('Token Manager', 'mint', params);

@@ -8,7 +8,6 @@ import { selectors } from 'services/user';
 import { i18nConnect, ITranslateProps, tKeys as tKeysAll } from 'services/i18n';
 import { SignInButton } from 'features/signIn';
 import { IAppReduxState } from 'shared/types/app';
-import { ICommunication } from 'shared/types/redux';
 
 import Logo from '../Logo/Logo';
 import Menu from './Menu/Menu';
@@ -21,8 +20,6 @@ const brandRedirectPath = routes.marketplace.getRoutePath();
 const tKeys = tKeysAll.features.signIn;
 interface IStateProps {
   isLogged: boolean;
-  checkingPermissions: ICommunication;
-  isAllPermissionsGranted: boolean;
 }
 
 type IProps = IStateProps & StylesProps & RouteComponentProps & ITranslateProps;
@@ -30,8 +27,6 @@ type IProps = IStateProps & StylesProps & RouteComponentProps & ITranslateProps;
 function mapState(state: IAppReduxState): IStateProps {
   return {
     isLogged: selectors.selectIsLogged(state),
-    checkingPermissions: selectors.selectCommunication(state, 'checkingPermissions'),
-    isAllPermissionsGranted: selectors.selectIsAllPermissionsGranted(state),
   };
 }
 
