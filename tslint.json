@@ -4,6 +4,11 @@
     "tslint:latest"
   ],
   "rulesDirectory": "./node_modules/tslint-eslint-rules/dist/rules",
+  "linterOptions": {
+    "exclude": [
+      "src/generated/**/*"
+    ]
+  },
   "jsRules": {
     "indent": [true, "spaces", 2],
     "class-name": true,

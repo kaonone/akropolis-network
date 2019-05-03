@@ -1,5 +1,6 @@
 import { Store } from 'redux';
 import { Drizzle, generateStore, IDrizzleOptions } from 'drizzle';
+import ApolloClient, { InMemoryCache } from 'apollo-boost';
 
 import Api from 'services/api/Api';
 import { DaoApi } from 'services/daoApi';
@@ -24,10 +25,16 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
     ipfsConfig: NETWORK_CONFIG.defaultIpfsConfig,
   });
 
+  const apolloClient = new ApolloClient<InMemoryCache>({
+    uri: 'https://aragon-rinkeby-graph.cashflowrelay.com/subgraphs/name/graphprotocol/aragon-network',
+    cache: new InMemoryCache(),
+  });
+
   return {
     api,
     daoApi,
     drizzle,
     storage,
+    apolloClient,
   };
 }

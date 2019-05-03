@@ -6,6 +6,8 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import MomentUtils from '@date-io/moment';
 import { DrizzleContext } from 'drizzle-react';
 import { Drizzle } from 'drizzle';
+import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
 import 'normalize.css';
 
 import { I18nProvider } from 'services/i18n';
@@ -60,26 +62,30 @@ function renderSharedPart(
   const { generateClassName, jss, theme } = jssDeps;
 
   return (
-    <MuiPickersUtilsProvider utils={MomentUtils}>
-      <DrizzleContext.Provider drizzle={drizzle}>
-        <DepsContext.Provider value={deps}>
-          <I18nProvider>
-            <JssProvider
-              jss={jss}
-              registry={registry}
-              generateClassName={generateClassName}
-              disableStylesGeneration={disableStylesGeneration}
-            >
-              <MuiThemeProvider theme={theme} disableStylesGeneration={disableStylesGeneration}>
-                {/* <React.StrictMode> */}
-                <BaseStyles />
-                {createRoutes(modules)}
-                {/* </React.StrictMode> */}
-              </MuiThemeProvider>
-            </JssProvider>
-          </I18nProvider>
-        </DepsContext.Provider>
-      </DrizzleContext.Provider>
-    </MuiPickersUtilsProvider>
+    <ApolloProvider client={deps.apolloClient}>
+      <ApolloHooksProvider client={deps.apolloClient}>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <DrizzleContext.Provider drizzle={drizzle}>
+            <DepsContext.Provider value={deps}>
+              <I18nProvider>
+                <JssProvider
+                  jss={jss}
+                  registry={registry}
+                  generateClassName={generateClassName}
+                  disableStylesGeneration={disableStylesGeneration}
+                >
+                  <MuiThemeProvider theme={theme} disableStylesGeneration={disableStylesGeneration}>
+                    {/* <React.StrictMode> */}
+                    <BaseStyles />
+                    {createRoutes(modules)}
+                    {/* </React.StrictMode> */}
+                  </MuiThemeProvider>
+                </JssProvider>
+              </I18nProvider>
+            </DepsContext.Provider>
+          </DrizzleContext.Provider>
+        </MuiPickersUtilsProvider>
+      </ApolloHooksProvider>
+    </ApolloProvider>
   );
 }

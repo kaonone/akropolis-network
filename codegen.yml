@@ -1,0 +1,12 @@
+overwrite: true
+schema: "https://aragon-rinkeby-graph.cashflowrelay.com/subgraphs/name/graphprotocol/aragon-network"
+documents: "./src/**/*.graphql"
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
