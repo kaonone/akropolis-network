@@ -1,8 +1,7 @@
 import { IpfsConfig } from '@aragon/apm';
-import { getContractAddressesForNetworkOrThrow, ContractAddresses } from '@0x/contract-addresses';
-import getEnvParams from '../getEnvParams';
 import { toWei } from 'shared/helpers/web3';
 import { NULL_ADDRESS } from 'shared/constants';
+import getEnvParams from '../getEnvParams';
 
 interface INetworkConfig {
   id: number;
@@ -14,7 +13,6 @@ interface INetworkConfig {
   aragonEnsRegistry: string;
   defaultEthNode: string;
   defaultIpfsConfig: IpfsConfig;
-  OxContracts: ContractAddresses;
 }
 
 const networkConfigs: Record<string, INetworkConfig> = {
@@ -30,7 +28,6 @@ const networkConfigs: Record<string, INetworkConfig> = {
     defaultIpfsConfig: {
       gateway: 'https://ipfs.eth.aragon.network/ipfs',
     },
-    OxContracts: getContractAddressesForNetworkOrThrow(4),
   },
   '42': {
     id: 42,
@@ -44,7 +41,6 @@ const networkConfigs: Record<string, INetworkConfig> = {
     defaultIpfsConfig: {
       gateway: 'https://ipfs.eth.aragon.network/ipfs',
     },
-    OxContracts: getContractAddressesForNetworkOrThrow(42),
   },
   '1': {
     id: 1,
@@ -58,7 +54,6 @@ const networkConfigs: Record<string, INetworkConfig> = {
     defaultIpfsConfig: {
       gateway: 'https://ipfs.eth.aragon.network/ipfs',
     },
-    OxContracts: getContractAddressesForNetworkOrThrow(1),
   },
 };
 

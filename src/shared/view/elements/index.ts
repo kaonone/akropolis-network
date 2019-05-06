@@ -13,7 +13,6 @@ export { default as QRCode } from './QRCode/QRCode';
 export { default as Radio } from './Radio/Radio';
 export { default as RadioGroupInput } from './RadioGroupInput/RadioGroupInput';
 export { default as RowsLayout } from './RowsLayout/RowsLayout';
-export { default as SimpleList } from './SimpleList/SimpleList';
 export { default as ToggleButton } from './ToggleButton/ToggleButton';
 export { default as ToggleButtonGroup } from './ToggleButtonGroup/ToggleButtonGroup';
 export { default as Tooltip } from './Tooltip/Tooltip';

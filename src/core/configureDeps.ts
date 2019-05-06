@@ -1,17 +1,18 @@
 import { Store } from 'redux';
 import { Drizzle, generateStore, IDrizzleOptions } from 'drizzle';
-
-import { RPCSubprovider, Web3ProviderEngine, ContractWrappers } from '0x.js';
-import { HttpClient } from '@0x/connect';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import { MetamaskSubprovider } from '@0x/subproviders';
+import { ApolloClient } from 'apollo-client';
+import { onError } from 'apollo-link-error';
+import { ApolloLink } from 'apollo-link';
+import { InMemoryCache, HttpLink, split } from 'apollo-boost';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
 
 import Api from 'services/api/Api';
 import { DaoApi } from 'services/daoApi';
 import { LocalStorage } from 'services/storage';
 import { IDependencies, IAppReduxState } from 'shared/types/app';
 
-import { NETWORK_CONFIG, RELAYER_URL, contracts, web3Providers, defaultGasPriceFn } from './constants';
+import { NETWORK_CONFIG, contracts, web3Providers, defaultGasPriceFn } from './constants';
 
 export default function configureDeps(_store: Store<IAppReduxState>): IDependencies {
   const api = new Api('/api');
@@ -21,17 +22,6 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
   const drizzle = new Drizzle(options, drizzleStore);
   const storage = new LocalStorage('v1');
 
-  const providerEngine = new Web3ProviderEngine();
-  if ((window as any).web3 && (window as any).web3.currentProvider) {
-    providerEngine.addProvider(new MetamaskSubprovider((window as any).web3.currentProvider));
-  }
-  providerEngine.addProvider(new RPCSubprovider(NETWORK_CONFIG.rpcUrl));
-  providerEngine.start();
-
-  const web3Wrapper = new Web3Wrapper(providerEngine);
-  const contractWrappers = new ContractWrappers(providerEngine, { networkId: NETWORK_CONFIG.id });
-  const client0x = new HttpClient(RELAYER_URL);
-
   const daoApi = new DaoApi({
     aragonEnsRegistry: NETWORK_CONFIG.aragonEnsRegistry,
     defaultGasPriceFn,
@@ -40,16 +30,52 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
     ipfsConfig: NETWORK_CONFIG.defaultIpfsConfig,
   });
 
+  const httpLink = new HttpLink({
+    uri: 'https://api.thegraph.com/subgraphs/name/proofoftom/aragon-dao',
+    credentials: 'same-origin',
+  });
+
+  const wsLink = new WebSocketLink({
+    uri: 'wss://api.thegraph.com/subgraphs/name/proofoftom/aragon-dao',
+    options: {
+      reconnect: true,
+    },
+  });
+
+  const link = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      );
+    },
+    wsLink,
+    httpLink,
+  );
+
+  const apolloClient = new ApolloClient({
+    link: ApolloLink.from([
+      onError(({ graphQLErrors, networkError }) => {
+        if (graphQLErrors) {
+          graphQLErrors.map(({ message, locations, path }) =>
+            console.log(
+              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+            ),
+          );
+        }
+        if (networkError) { console.log(`[Network error]: ${networkError}`); }
+      }),
+      link,
+    ]),
+    cache: new InMemoryCache(),
+  });
+
   return {
     api,
     daoApi,
     drizzle,
     storage,
-    Ox: {
-      providerEngine,
-      client: client0x,
-      contractWrappers,
-      web3Wrapper,
-    },
+    apolloClient,
   };
 }

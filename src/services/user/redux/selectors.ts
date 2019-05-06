@@ -19,34 +19,4 @@ export function selectIsCheckedAuth(state: IAppReduxState): boolean {
   return selectState(state).data.isCheckedAuth;
 }
 
-export function selectIsCheckedPermissions(state: IAppReduxState): boolean {
-  return selectState(state).data.isCheckedPermissions;
-}
-
-export function selectIsMinter(state: IAppReduxState): boolean {
-  return selectState(state).data.isMinter;
-}
-
-export function selectIsApproved(state: IAppReduxState): boolean {
-  return selectState(state).data.isApproved;
-}
-
-export function selectIsPayingAllowance(state: IAppReduxState): boolean {
-  return selectState(state).data.isPayingAllowance;
-}
-
-export function selectIsStakingAllowance(state: IAppReduxState): boolean {
-  return selectState(state).data.isStakingAllowance;
-}
-
-export function selectIsBuyingAllowance(state: IAppReduxState): boolean {
-  return selectState(state).data.isBuyingAllowance;
-}
-
-export function selectIsAllPermissionsGranted(state: IAppReduxState): boolean {
-  const { isMinter, isPayingAllowance, isApproved, isBuyingAllowance, isStakingAllowance } = selectState(state).data;
-
-  return isMinter && isPayingAllowance && isApproved && isBuyingAllowance && isStakingAllowance;
-}
-
 export const selectCommunication = makeCommunicationSelector(selectState);

@@ -4,6 +4,7 @@ import { IAragonApp, ITransaction } from '@aragon/types';
 
 import getEnvParams from 'core/getEnvParams';
 import { getWeb3, getMainAccount } from 'shared/helpers/web3';
+import { isEthereumAddress } from 'shared/validators/isEthereumAddress/isEthereumAddress';
 import { NULL_ADDRESS } from 'shared/constants';
 import { IDaoApiConfig, AppType, MethodByApp, ParamsByAppByMethod } from './types';
 
@@ -36,7 +37,7 @@ export class BaseDaoApi {
       this.wrapper = null;
     });
 
-    const daoAddress = await ensResolve(`${daoEnsName}.aragonid.eth`, {
+    const daoAddress = isEthereumAddress(daoEnsName) ? daoEnsName : await ensResolve(`${daoEnsName}.aragonid.eth`, {
       provider: defaultWeb3Provider,
       registryAddress: aragonEnsRegistry,
     });

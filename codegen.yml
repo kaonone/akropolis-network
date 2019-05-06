@@ -1,0 +1,12 @@
+overwrite: true
+schema: "https://api.thegraph.com/subgraphs/name/proofoftom/aragon-dao"
+documents: "./src/**/*.graphql"
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true

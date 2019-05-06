@@ -4,9 +4,7 @@ import { Store, Reducer, ActionCreator, Action } from 'redux';
 import { SagaIterator } from 'redux-saga';
 import { GenerateClassName } from 'jss';
 import { Drizzle } from 'drizzle';
-import { ContractWrappers, Web3ProviderEngine } from '0x.js';
-import { HttpClient } from '@0x/connect';
-import { Web3Wrapper } from '@0x/web3-wrapper';
+import ApolloClient, { NormalizedCacheObject } from 'apollo-boost';
 
 import { LocalStorage } from 'services/storage';
 import { DaoApi } from 'services/daoApi';
@@ -14,13 +12,9 @@ import Api from 'services/api/Api';
 
 import * as adaptabilityNS from 'services/adaptability/namespace';
 import * as i18nNS from 'services/i18n/namespace';
-import * as orderbookNS from 'services/orderbook/namespace';
-import * as transactionsNS from 'services/transactions/namespace';
 import * as userNS from 'services/user/namespace';
 import * as notificationNS from 'services/notifications/namespace';
 
-import * as buyCashFlowNS from 'features/buyCashFlow/namespace';
-import * as sellCashFlowNS from 'features/sellCashFlow/namespace';
 import { namespace as createDaoNS } from 'features/createDao';
 import * as signInNS from 'features/signIn/namespace';
 
@@ -50,12 +44,7 @@ export interface IDependencies {
   daoApi: DaoApi;
   drizzle: Drizzle;
   storage: LocalStorage;
-  Ox: {
-    client: HttpClient;
-    contractWrappers: ContractWrappers;
-    web3Wrapper: Web3Wrapper;
-    providerEngine: Web3ProviderEngine;
-  };
+  apolloClient: ApolloClient<NormalizedCacheObject>;
 }
 
 export type IDictionary<T, S extends keyof any = string> = {
@@ -81,14 +70,10 @@ export interface IAppReduxState {
   // services
   adaptability: adaptabilityNS.IReduxState;
   i18n: i18nNS.IReduxState;
-  orderbook: orderbookNS.IReduxState;
-  transactions: transactionsNS.IReduxState;
   user: userNS.IReduxState;
   notifications: notificationNS.IReduxState;
   // features
   createDao: createDaoNS.IReduxState;
-  buyCashFlow: buyCashFlowNS.IReduxState;
-  sellCashFlow: sellCashFlowNS.IReduxState;
   signIn: signInNS.IReduxState;
 }
 

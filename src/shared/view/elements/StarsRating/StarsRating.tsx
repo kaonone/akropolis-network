@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import { StylesProps, provideStyles } from './StarsRating.style';
-import { BigNumber } from '0x.js';
+import BigNumber from 'bignumber.js';
+
 import { Star, StarOutlined, StarHalf } from '../Icons';
 
 const defaultStars = 5;
@@ -34,7 +35,7 @@ function StarsRating(props: IProps & StylesProps) {
 }
 
 function roundToHalf(value: BigNumber) {
-  return value.times(2).round().div(2);
+  return value.times(2).decimalPlaces(0).div(2);
 }
 
 export default provideStyles(StarsRating);
