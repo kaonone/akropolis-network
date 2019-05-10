@@ -7,10 +7,6 @@ const rawTree = {
       id: getParam(null),
     },
   },
-  marketplace: null,
-  cashFlows: {
-    type: getParam(null),
-  },
 };
 
 const routes = build(rawTree);

@@ -1,8 +1,18 @@
 overwrite: true
-schema: "https://api.thegraph.com/subgraphs/name/proofoftom/aragon-dao"
-documents: "./src/**/*.graphql"
 generates:
   src/generated/graphql.tsx:
+    documents: "./src/**/*[!.compound].graphql"
+    schema: "https://api.thegraph.com/subgraphs/name/proofoftom/aragon-dao"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+  src/generated/compaund-graphql.tsx:
+    documents: "./src/**/*.compaund.graphql"
+    schema: "https://api.thegraph.com/subgraphs/name/compound-finance/compound-v2-rinkeby"
     plugins:
       - "typescript"
       - "typescript-operations"

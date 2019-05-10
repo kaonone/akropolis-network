@@ -15,7 +15,7 @@ import { provideStyles, StylesProps } from './Header.style';
 import Profile from './Profile/Profile';
 import ExpandedContent from './ExpandedContent/ExpandedContent';
 
-const brandRedirectPath = routes.marketplace.getRoutePath();
+const brandRedirectPath = routes.dao.getRoutePath();
 
 const tKeys = tKeysAll.features.signIn;
 interface IStateProps {

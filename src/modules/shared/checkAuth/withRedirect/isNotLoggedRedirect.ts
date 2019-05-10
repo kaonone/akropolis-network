@@ -11,5 +11,5 @@ export default connectedRouterRedirect({
   wrapperDisplayName: 'IsLoggedRedirect',
   allowRedirectBack: false,
   redirectPath: (_state, ownProps) =>
-    locationHelper.getRedirectQueryParam(ownProps) || routes.marketplace.getRedirectPath(),
+    locationHelper.getRedirectQueryParam(ownProps) || routes.dao.getRedirectPath(),
 });

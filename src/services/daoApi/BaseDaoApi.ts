@@ -2,8 +2,8 @@ import { observable, action, runInAction, when } from 'mobx';
 import AragonWrapper, { ensResolve } from '@aragon/wrapper';
 import { IAragonApp, ITransaction } from '@aragon/types';
 
-import getEnvParams from 'core/getEnvParams';
 import { getWeb3, getMainAccount } from 'shared/helpers/web3';
+import { notifyDevWarning } from 'shared/helpers/notifyDevWarning';
 import { isEthereumAddress } from 'shared/validators/isEthereumAddress/isEthereumAddress';
 import { NULL_ADDRESS } from 'shared/constants';
 import { IDaoApiConfig, AppType, MethodByApp, ParamsByAppByMethod } from './types';
@@ -91,23 +91,21 @@ export class BaseDaoApi {
 
     const path = await this.wrapper.getTransactionPath(proxyAddress, method as string, params as any);
 
-    if (!getEnvParams().isProduction && path.length > 1) {
-      const msg = 'Transactions path have more than one transaction, see developer console for more info';
-      window.alert(msg);
-      console.error(new Error(msg));
-      console.log('This path have more than one transaction', { path });
-    }
+    notifyDevWarning(
+      path.length > 1,
+      'Transactions path have more than one transaction',
+      { path },
+    );
 
     return path[0] && this._sendTransaction(path[0]);
   }
 
   private async _sendTransaction(transaction: ITransaction) {
-    if (!getEnvParams().isProduction && transaction.pretransaction) {
-      const msg = 'Need to sign pretransaction, see developer console for more info';
-      window.alert(msg);
-      console.error(new Error(msg));
-      console.log('This transaction contains pretransaction', { transaction });
-    }
+    notifyDevWarning(
+      !!transaction.pretransaction,
+      'Transaction have pretransaction, check code that sign this pretransaction',
+      { transaction },
+    );
 
     return new Promise<string>((resolve, reject) => {
       this.web3.eth
