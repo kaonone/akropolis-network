@@ -11,6 +11,7 @@ import Api from 'services/api/Api';
 import { DaoApi } from 'services/daoApi';
 import { LocalStorage } from 'services/storage';
 import { IDependencies, IAppReduxState } from 'shared/types/app';
+import { notifyDevWarning } from 'shared/helpers/notifyDevWarning';
 
 import { NETWORK_CONFIG, contracts, web3Providers, defaultGasPriceFn } from './constants';
 
@@ -42,16 +43,41 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
     },
   });
 
+  const httpLinkCompaund = new HttpLink({
+    uri: 'https://api.thegraph.com/subgraphs/name/compound-finance/compound-v2-rinkeby',
+    credentials: 'same-origin',
+  });
+
+  const wsLinkCompaund = new WebSocketLink({
+    uri: 'wss://api.thegraph.com/subgraphs/name/compound-finance/compound-v2-rinkeby',
+    options: {
+      reconnect: true,
+    },
+  });
+
+  const akroLink = makeEndpointLink(httpLink, wsLink);
+  const compaundLink = makeEndpointLink(httpLinkCompaund, wsLinkCompaund);
+
   const link = split(
     ({ query }) => {
+      const akroSelectionNames: string[] = ['votes'];
+      const compaundSelectionNames: string[] = ['compaundUsers'];
+
       const definition = getMainDefinition(query);
-      return (
-        definition.kind === 'OperationDefinition' &&
-        definition.operation === 'subscription'
+      const selectionName = getFirstSelectionName(definition);
+
+      const isAkroSelection = !!selectionName && akroSelectionNames.includes(selectionName);
+      const isCompaundSelection = !!selectionName && compaundSelectionNames.includes(selectionName);
+
+      notifyDevWarning(
+        !isAkroSelection && !isCompaundSelection,
+        `You need to add "${selectionName}" to \`akroSelectionNames\` or \`compaundSelectionNames\``,
       );
+
+      return isAkroSelection;
     },
-    wsLink,
-    httpLink,
+    akroLink,
+    compaundLink,
   );
 
   const apolloClient = new ApolloClient({
@@ -78,4 +104,37 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
     storage,
     apolloClient,
   };
+}
+
+function makeEndpointLink(httpLink: HttpLink, wsLink: WebSocketLink) {
+  return split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      );
+    },
+    wsLink,
+    httpLink,
+  );
+}
+
+function getFirstSelectionName(definition: any): string | null {
+  interface ISelection {
+    alias?: { value: string; };
+    name: { value: string; };
+  }
+
+  const firstSelection: ISelection | undefined =
+    definition.selectionSet &&
+    definition.selectionSet.selections &&
+    definition.selectionSet.selections[0];
+
+  const selectionName = firstSelection
+    ? (firstSelection.alias || firstSelection.name)
+    : { value: null };
+
+  return selectionName.value;
 }
