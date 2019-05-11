@@ -9,7 +9,7 @@ const hoverBorder = `0 0 0 1px ${extraTheme.colors.coldPurple}`;
 const styles = ({ extra: theme }: Theme) => ({
   row: rule({
     boxShadow: bottomBorder,
-    borderRadius: '4px',
+    borderRadius: '0.25rem',
     background: theme.colors.white,
     padding: theme.spacing.unit * 2,
     paddingTop: theme.spacing.unit * 2,
@@ -32,17 +32,17 @@ const styles = ({ extra: theme }: Theme) => ({
 
   cell: rule({
 
-    padding: '16px',
-    fontSize: '16px',
+    padding: '1rem',
+    fontSize: '1rem',
 
     '&:first-child': {
-      borderTopLeftRadius: '4px',
-      borderBottomLeftRadius: '4px',
+      borderTopLeftRadius: '0.25rem',
+      borderBottomLeftRadius: '0.25rem',
     },
 
     '&:last-child': {
-      borderTopRightRadius: '4px',
-      borderBottomRightRadius: '4px',
+      borderTopRightRadius: '0.25rem',
+      borderBottomRightRadius: '0.25rem',
     },
 
   }),
@@ -55,26 +55,26 @@ const styles = ({ extra: theme }: Theme) => ({
 
   complexCellTitle: rule({
     color: theme.colors.topaz,
-    fontSize: '12px',
-    marginBottom: '4px',
+    fontSize: '0.75rem',
+    marginBottom: '0.25rem',
   }),
 
   complexCellValue: rule({
-    fontSize: '16px',
+    fontSize: '1rem',
   }),
 
   avatar: rule({
     background: theme.colors.whiteLilac,
     color: theme.colors.royalPurple,
     fontWeight: 500,
-    fontSize: '14px',
+    fontSize: '0.875rem',
   }),
 
   goal: rule({
     display: '-webkit-box',
-    lineHeight: '20px',
-    maxHeight: '40px',
-    maxWidth: '280px',
+    lineHeight: '1.25rem',
+    maxHeight: '2.5rem',
+    maxWidth: '17.5rem',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     lineClamp: 2,
@@ -83,20 +83,20 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   eventIcon: rule({
-    width: '16px',
+    width: '1rem',
   }),
 
   newEvent: rule({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: '4px 8px 4px 12px',
-    borderRadius: '34px',
+    padding: '0.25rem 0.5rem 0.25rem 0.75rem',
+    borderRadius: '2.125rem',
     background: theme.colors.whiteLilac,
   }),
 
   eventTag: rule({
-    fontSize: '10px',
+    fontSize: '0.625rem',
     color: theme.colors.royalPurple,
     fontWeight: 500,
   }),
