@@ -31,16 +31,31 @@ const colors = {
   valencia: '#D63B3B',
   electricViolet: '#9013FE',
   apple: '#35BC2D',
+  haiti: '#1D1135',
+  topaz: '#746E85',
+  royalPurple: '#613AAF',
+  coldPurple: '#B09CD7',
+  whiteLilac: '#EFEBF7',
+  frenchGray: '#B6B3C0',
+  athensGray: '#E8E7EB',
+  shamrock: '#2ED573',
+  geraldine: '#FF7888',
+  ghostWhite: '#F7F5FB',
+};
+
+const gradients = {
+  purple: 'linear-gradient(360deg, #7357D2 0%, #8E41DC 100%)',
 };
 
 export const theme = {
   breakpoints,
   colors,
+  gradients,
   palette: {
     text: {
-      primary: colors.codGray,
+      primary: colors.haiti,
       primaryInverted: colors.white,
-      secondary: hexToRGBA(colors.codGray, 0.58),
+      secondary: colors.topaz,
       warning: colors.buttercup,
       positive: colors.purpleHeart,
       negative: colors.monza,
@@ -79,7 +94,7 @@ export const theme = {
     unit: 8,
   },
   typography: {
-    primaryFont: ['OpenSans', 'Arial', 'sans-serif'].join(','),
+    primaryFont: ['Roboto', 'Arial', 'sans-serif'].join(','),
   },
   zIndex: {
     newContext: 0,

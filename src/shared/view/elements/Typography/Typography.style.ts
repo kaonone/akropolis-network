@@ -5,30 +5,36 @@ import { rule } from 'shared/helpers/style';
 const styles = ({ extra: theme }: Theme) => ({
 
   root: rule({
-    width: '100%',
+    color: theme.palette.text.primary,
 
-    '&$separated': {
-      borderSpacing: '0 1rem',
-      borderCollapse: 'separate',
+    '&$medium': {
+      fontWeight: 500,
+    },
+
+    '&$bold': {
+      fontWeight: 'bold',
     },
   }),
 
-  separated: {},
-
-  row: rule({
-    background: theme.colors.white,
+  h3: rule({
+    fontSize: '3rem',
   }),
 
-  text: rule({
-    fontWeight: 'normal',
-    fontFamily: theme.typography.primaryFont,
-    color: theme.palette.text.primary,
+  h4: rule({
+    fontSize: '2.25rem',
   }),
 
-  cell: rule({
-    composes: '$text',
-    fontSize: '0.9375rem',
+  h5: rule({
+    fontSize: '1.75rem',
   }),
+
+  h6: rule({
+    fontSize: '1.25rem',
+  }),
+
+  medium: {},
+  bold: {},
+
 });
 
 // TODO ds: rewrite after transition to @material-ui/styles

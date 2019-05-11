@@ -8,6 +8,7 @@ import { DaoNameCheckingAsync } from 'features/checkDaoNameUsed';
 import { Grid, Typography, Button } from 'shared/view/elements';
 import { withComponent } from 'shared/helpers/react';
 import routes from 'modules/routes';
+import CooperativesList, { cooperativesMock } from 'shared/futureView/CooperativesList/CooperativesList';
 
 type IProps = InjectedAuthRouterProps;
 
@@ -45,6 +46,7 @@ function Home(props: IProps & RouteComponentProps<any>) {
           </Grid>
         </Grid>
       </Grid>
+      <CooperativesList cooperatives={cooperativesMock} />
     </BaseLayout>
   );
 }
