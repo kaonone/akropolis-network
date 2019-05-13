@@ -1,12 +1,10 @@
 import { withStyles as muiWithStyles } from '@material-ui/core/styles';
-import { withStyles, WithStyles, Theme } from 'shared/styles';
+import { withStyles, WithStyles } from 'shared/styles';
 import { rule } from 'shared/helpers/style';
 
-const styles = ({ extra: theme }: Theme) => ({
+const styles = () => ({
 
   root: rule({
-    color: theme.palette.text.primary,
-
     '&$medium': {
       fontWeight: 500,
     },

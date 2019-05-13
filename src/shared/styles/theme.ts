@@ -41,6 +41,9 @@ const colors = {
   shamrock: '#2ED573',
   geraldine: '#FF7888',
   ghostWhite: '#F7F5FB',
+  martinique: '#3F3553',
+  mulledWine: '#4A415D',
+  daisyBush: '#502D98',
 };
 
 const gradients = {

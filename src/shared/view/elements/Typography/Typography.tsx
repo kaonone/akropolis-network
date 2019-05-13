@@ -13,7 +13,6 @@ function Typography(props: IProps) {
   const { classes, weight } = props;
   return (
     <MuiTypography
-      color="primary"
       className={cn({ [classes.medium]: weight === 'medium', [classes.bold]: weight === 'bold' })}
       {...props}
       classes={{
