@@ -5,6 +5,7 @@ import { CooperativeEvent } from 'shared/types/models/Cooperative';
 import NewEvent from 'shared/view/elements/Icons/NewEvent';
 
 import { useTranslate, tKeys } from 'services/i18n';
+import { Typography, Grid } from 'shared/view/elements';
 
 interface IComplexCellProps {
   title: string;
@@ -15,10 +16,15 @@ const ComplexCell = React.memo(provideStyles((props: IComplexCellProps & StylesP
 
   const { classes, title, value } = props;
   return (
-    <div className={classes.complexCell}>
-      <div className={classes.complexCellTitle}>{title}</div>
-      <div className={classes.complexCellValue}>{value}</div>
-    </div>
+    <Grid
+      container
+      className={classes.complexCell}
+      alignItems="flex-end"
+      direction={'column'}
+    >
+      <Typography variant="subtitle1" className={classes.complexCellTitle}>{title}</Typography>
+      <Typography variant="body1" className={classes.complexCellValue}>{value}</Typography>
+    </Grid>
   );
 
 }));
@@ -34,10 +40,10 @@ const EventCell = React.memo(provideStyles((props: IEventCellProps & StylesProps
   return (
     <>
       {event === 'new' &&
-        <div className={classes.newEvent}>
-          <span className={classes.eventTag}>{t(tKeys.shared.new.getKey())}</span>
+        <Typography variant="caption" className={classes.newEvent}>{
+          t(tKeys.shared.new.getKey())}
           <NewEvent className={classes.eventIcon} />
-        </div>}
+        </Typography>}
       {event === 'reviewed' && <NewEvent className={classes.eventIcon} />}
 
     </>

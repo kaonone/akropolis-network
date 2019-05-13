@@ -85,6 +85,16 @@ export function configureJss(virtual?: boolean): IJssDependencies {
             alignItems: 'center',
           },
         },
+        MuiAvatar: {
+          root: {
+            fontWeight: 500,
+            fontSize: '0.875rem',
+          },
+          colorDefault: {
+            backgroundColor: extraTheme.colors.whiteLilac,
+            color: extraTheme.colors.royalPurple,
+          },
+        },
       },
     })),
     extra: extraTheme,

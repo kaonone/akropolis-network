@@ -15,19 +15,39 @@ const styles = () => ({
   }),
 
   h3: rule({
-    fontSize: '3rem',
+    fontSize: '48px',
   }),
 
   h4: rule({
-    fontSize: '2.25rem',
+    fontSize: '36px',
   }),
 
   h5: rule({
-    fontSize: '1.75rem',
+    fontSize: '28px',
   }),
 
   h6: rule({
-    fontSize: '1.25rem',
+    fontSize: '20px',
+  }),
+
+  body1: rule({
+    fontSize: '16px',
+  }),
+
+  body2: rule({
+    fontSize: '14px',
+  }),
+
+  subtitle1: rule({
+    fontSize: '12px',
+  }),
+
+  caption: rule({
+    fontSize: '10px',
+  }),
+
+  overline: rule({
+    fontSize: '10px',
   }),
 
   medium: {},

@@ -1,6 +1,7 @@
 export interface ICooperative {
   name: string;
-  goal: string; // description
+  goal: number;
+  description: string;
   balance: number;
   membersCount: number;
   eventType?: CooperativeEvent;

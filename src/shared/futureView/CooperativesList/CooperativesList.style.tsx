@@ -6,6 +6,8 @@ const bottomBorder = `0px 1px 0px rgba(0, 0, 0, 0.1)`;
 const activeBorder = `-3px 0px 0px -1px ${extraTheme.colors.royalPurple}`;
 const hoverBorder = `0 0 0 1px ${extraTheme.colors.coldPurple}`;
 
+const borderRadius = '0.25rem';
+
 const styles = ({ extra: theme }: Theme) => ({
   row: rule({
     boxShadow: bottomBorder,
@@ -31,46 +33,32 @@ const styles = ({ extra: theme }: Theme) => ({
   active: {},
 
   cell: rule({
-
     padding: '1rem',
-    fontSize: '1rem',
 
     '&:first-child': {
-      borderTopLeftRadius: '0.25rem',
-      borderBottomLeftRadius: '0.25rem',
+      borderTopLeftRadius: borderRadius,
+      borderBottomLeftRadius: borderRadius,
     },
 
     '&:last-child': {
-      borderTopRightRadius: '0.25rem',
-      borderBottomRightRadius: '0.25rem',
+      borderTopRightRadius: borderRadius,
+      borderBottomRightRadius: borderRadius,
     },
 
   }),
 
-  complexCell: rule({
-    display: 'flex',
-    alignItems: 'flex-end',
-    flexDirection: 'column',
-  }),
+  complexCell: {},
 
   complexCellTitle: rule({
     color: theme.colors.topaz,
-    fontSize: '0.75rem',
-    marginBottom: '0.25rem',
+    marginBottom: theme.spacing.unit * 0.5,
   }),
 
-  complexCellValue: rule({
-    fontSize: '1rem',
-  }),
+  complexCellValue: {},
 
-  avatar: rule({
-    background: theme.colors.whiteLilac,
-    color: theme.colors.royalPurple,
-    fontWeight: 500,
-    fontSize: '0.875rem',
-  }),
+  avatar: {},
 
-  goal: rule({
+  description: rule({
     display: '-webkit-box',
     lineHeight: '1.25rem',
     maxHeight: '2.5rem',
@@ -82,10 +70,6 @@ const styles = ({ extra: theme }: Theme) => ({
     color: theme.colors.topaz,
   }),
 
-  eventIcon: rule({
-    width: '1rem',
-  }),
-
   newEvent: rule({
     display: 'inline-flex',
     alignItems: 'center',
@@ -93,12 +77,17 @@ const styles = ({ extra: theme }: Theme) => ({
     padding: '0.25rem 0.5rem 0.25rem 0.75rem',
     borderRadius: '2.125rem',
     background: theme.colors.whiteLilac,
+    color: theme.colors.royalPurple,
+
   }),
 
   eventTag: rule({
-    fontSize: '0.625rem',
     color: theme.colors.royalPurple,
-    fontWeight: 500,
+  }),
+
+  eventIcon: rule({
+    width: '1rem',
+    color: theme.colors.royalPurple,
   }),
 });
 
