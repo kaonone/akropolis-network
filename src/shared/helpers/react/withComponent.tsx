@@ -9,8 +9,7 @@ interface IBaseProps {
 type StringType = keyof JSX.IntrinsicElements;
 
 type ExtractProps<T extends StringType | React.ComponentType<any>> =
-  T extends StringType ? JSX.IntrinsicElements[T] :
-  T extends React.ComponentType<any> ? GetProps<T> : never;
+  T extends StringType ? JSX.IntrinsicElements[T] : GetProps<Exclude<T, StringType>>;
 
 export default function withComponent<C extends StringType | React.ComponentType<any>>(component: C) {
   return function decorate<BProps extends IBaseProps>(BaseComponent: React.ComponentType<BProps>) {

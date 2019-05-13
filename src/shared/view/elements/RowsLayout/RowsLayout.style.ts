@@ -1,19 +1,15 @@
 import { withStyles, WithStyles, Theme } from 'shared/styles';
-import { rule, styledBy } from 'shared/helpers/style';
+import { rule } from 'shared/helpers/style';
 
-import { IProps } from './RowsLayout';
-
-const styles = ({ extra: theme }: Theme) => ({
+const styles = (_theme: Theme) => ({
   root: rule({
-    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
     minHeight: '100%',
-    backgroundColor: styledBy<IProps, 'background'>('background', {
-      primary: theme.colors.white,
-      unset: 'unset',
-    }, 'unset'),
+    overflow: 'hidden', // https://github.com/mui-org/material-ui/issues/7466
   }),
-  content: rule({
-    display: ({ fullHeight }: IProps) => fullHeight ? 'flex' : 'unset',
+
+  container: rule({
     flexGrow: 1,
   }),
 });

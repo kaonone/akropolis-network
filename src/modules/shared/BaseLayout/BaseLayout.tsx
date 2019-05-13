@@ -1,32 +1,37 @@
 import * as React from 'react';
+import { GetProps } from '_helpers';
 
-import RowsLayout, { IProps as IRowsLayoutProps } from 'shared/view/elements/RowsLayout/RowsLayout';
+import { Notifications } from 'services/notifications';
+import { RowsLayout } from 'shared/view/elements';
 
 import Header from '../Header/Header';
-
 import { StylesProps, provideStyles } from './BaseLayout.style';
-import { Notifications } from 'services/notifications';
 
 interface IOwnProps {
+  title: string;
+  actions?: React.ReactNode[];
+  backRoutePath?: string;
   children: React.ReactNode;
 }
 
-type IProps = IOwnProps & StylesProps & Pick<IRowsLayoutProps, 'background' | 'fullHeight'>;
+type IProps = IOwnProps & StylesProps;
 
 class BaseLayout extends React.PureComponent<IProps> {
   public render() {
-    const { classes, children, ...rest } = this.props;
+    const { children, actions, backRoutePath, title, classes } = this.props;
+    const headerProps: GetProps<typeof Header> = { actions, backRoutePath, title };
 
     return (
-      <RowsLayout
-        headerContent={<Header />}
-        {...rest}
-      >
+      <>
         <Notifications />
-        <div className={classes.content}>
+        <RowsLayout
+          spacing={32}
+          headerContent={<Header {...headerProps} />}
+          classes={{ root: classes.rootRowsLayout }}
+        >
           {children}
-        </div>
-      </RowsLayout>
+        </RowsLayout>
+      </>
     );
   }
 }

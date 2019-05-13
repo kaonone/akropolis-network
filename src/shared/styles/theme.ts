@@ -68,7 +68,7 @@ export const theme = {
       minHeight: 40,
     },
     page: {
-      maxWidth: 1200,
+      maxWidth: 930,
     },
     header: {
       minHeightMobile: '4rem',

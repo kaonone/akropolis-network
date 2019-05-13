@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router';
 
 import { useDeps } from 'core';
 import { BaseLayout } from 'modules/shared';
+import routes from 'modules/routes';
 
 import { CircleProgressBar, Typography } from 'shared/view/elements';
 import { useCommunication } from 'shared/helpers/react';
@@ -16,7 +17,7 @@ function View(props: RouteComponentProps<{ id: string }>) {
   React.useEffect(daoApiInitializing.execute, [match.params.id]);
 
   return (
-    <BaseLayout>
+    <BaseLayout backRoutePath={routes.daos.getRedirectPath()} title="Dao name">
       {daoApiInitializing.status === 'error' && (
         <Typography color="error">{daoApiInitializing.error}</Typography>
       )}

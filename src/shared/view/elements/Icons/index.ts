@@ -15,3 +15,4 @@ export { default as ContentCopy } from './ContentCopy';
 export { default as QrCode } from './QrCode';
 export { default as CircleArrow } from './CircleArrow';
 export { default as Alert } from './Alert';
+export { default as ArrowBack } from '@material-ui/icons/ArrowBack';

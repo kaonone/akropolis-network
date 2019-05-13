@@ -1,4 +1,6 @@
-import { withStyles, Theme, WithStyles } from 'shared/styles';
+// tslint:disable-next-line:import-blacklist
+import injectSheet from 'react-jss';
+import { Theme, WithStyles } from 'shared/styles';
 import { rule, styledBy } from 'shared/helpers/style';
 
 import { IProps } from './Modal';
@@ -188,6 +190,6 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 });
 
-export const provideStyles = withStyles(styles);
+export const provideStyles = injectSheet(styles);
 
 export type StylesProps = WithStyles<typeof styles>;
