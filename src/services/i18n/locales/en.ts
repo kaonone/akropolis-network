@@ -29,6 +29,7 @@ export default {
     no: 'no',
     yes: 'yes',
     dao: {
+      goal: 'Goal',
       balance: 'Balance',
       members: 'Members',
     },

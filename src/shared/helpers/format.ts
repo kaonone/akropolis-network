@@ -2,8 +2,8 @@ import accounting from 'accounting';
 import { GetProps } from '_helpers';
 import SliderSelectField from 'shared/view/form/SliderSelectField/SliderSelectField';
 
-export function formatUSD(value: number): string {
-  return accounting.formatMoney(value);
+export function formatUSD(value: number, precision: number = 2): string {
+  return accounting.formatMoney(value, { precision });
 }
 
 export const formatNumber = accounting.formatNumber;
