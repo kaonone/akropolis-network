@@ -9,8 +9,9 @@ const styles = ({ extra: theme }: Theme) => ({
   red: {},
 
   progressBar: rule({
-    borderRadius: '4px',
+    borderRadius: '0.25rem',
     height: '2.1px', // if specify exactly 2, some time sizes between progresses may be different
+    overflow: 'hidden',
     backgroundColor: theme.colors.athensGray,
   }),
 
