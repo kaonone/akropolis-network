@@ -7,6 +7,7 @@ const rawTree = {
       id: getParam(null),
     },
   },
+  daos: null,
 };
 
 const routes = build(rawTree);

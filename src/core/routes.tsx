@@ -13,7 +13,7 @@ function getRoutes(modules: IModule[]): React.ReactElement<RouteComponentProps<a
       <App>
         <Switch>
           {modules.map(module => module.getRoutes ? module.getRoutes() : null)}
-          <Redirect exact from={routes.root()} to={routes.dao.getRedirectPath()} />
+          <Redirect exact from={routes.root()} to={routes.daos.getRedirectPath()} />
           <Route component={PageNotFound} />
         </Switch>
       </App>

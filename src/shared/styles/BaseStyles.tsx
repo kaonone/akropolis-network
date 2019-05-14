@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { withStyles, Theme } from './jss';
 import { rule } from 'shared/helpers/style';
 import './fonts/index.scss';
@@ -22,7 +23,6 @@ const styles = ({ extra: theme }: Theme) => ({
     '#root': {
       zIndex: theme.zIndex.newContext,
       position: 'relative',
-      minWidth: 1000,
     },
     '*, *::before, *::after': {
       boxSizing: 'inherit',
@@ -36,4 +36,4 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 });
 
-export default withStyles(styles)();
+export default withStyles(styles)(() => <noscript />);

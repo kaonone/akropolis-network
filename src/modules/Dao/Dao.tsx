@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import routes from 'modules/routes';
 import { IModule } from 'shared/types/app';
 
-import Home from './view/Home/Home';
+import Daos from './view/Daos/Daos';
 import Create from './view/Create/Create';
 import View from './view/View/View';
 
@@ -13,9 +13,9 @@ const HomeModule: IModule = {
     return [(
       <Route
         exact
-        key="Dao Home"
-        path={routes.dao.getRoutePath()}
-        component={Home}
+        key="Daos"
+        path={routes.daos.getRoutePath()}
+        component={Daos}
       />
     ), (
       <Route
