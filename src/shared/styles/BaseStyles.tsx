@@ -1,6 +1,6 @@
 import { withStyles, Theme } from './jss';
 import { rule } from 'shared/helpers/style';
-import './fonts/OpenSans/index.scss';
+import './fonts/index.scss';
 
 const styles = ({ extra: theme }: Theme) => ({
   '@global': rule({

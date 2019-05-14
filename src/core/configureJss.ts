@@ -15,17 +15,22 @@ export function configureJss(virtual?: boolean): IJssDependencies {
         primary: {
           main: extraTheme.colors.purpleHeart,
           light: extraTheme.colors.heliotrope,
-          dark: extraTheme.colors.mediumPurple,
+          dark: extraTheme.colors.royalPurple,
           contrastText: extraTheme.colors.white,
         },
         secondary: {
-          main: extraTheme.colors.electricViolet,
-          light: extraTheme.colors.electricViolet,
-          dark: extraTheme.colors.electricViolet,
-          contrastText: extraTheme.colors.electricViolet,
+          main: extraTheme.colors.white,
+          light: extraTheme.colors.white,
+          dark: extraTheme.colors.white,
+          contrastText: extraTheme.colors.royalPurple,
         },
         error: {
-          main: extraTheme.colors.monza,
+          main: extraTheme.colors.geraldine,
+        },
+        text: {
+          primary: extraTheme.colors.haiti,
+          disabled: extraTheme.colors.frenchGray,
+          hint: extraTheme.colors.heliotrope,
         },
       },
       typography: {
@@ -39,11 +44,34 @@ export function configureJss(virtual?: boolean): IJssDependencies {
         unit: extraTheme.spacing.unit,
       },
       overrides: {
+        MuiInput: {
+          underline: {
+            '&:hover:not($disabled):before': {
+              borderBottom: `1px solid ${extraTheme.colors.royalPurple} !important`,
+            },
+          },
+        },
+        MuiInputLabel: {
+          root: {
+            color: extraTheme.colors.topaz,
+          },
+          error: {
+            color: extraTheme.colors.topaz,
+          },
+        },
+        MuiFormLabel: {
+          root: {
+            color: extraTheme.colors.topaz,
+            '&$error': {
+              color: extraTheme.colors.topaz,
+            },
+          },
+        },
         MuiButton: {
           root: {
             textTransform: 'initial',
             minHeight: extraTheme.sizes.control.minHeight,
-            fontWeight: 600,
+            fontWeight: 500,
           },
         },
         MuiSvgIcon: {
@@ -55,6 +83,16 @@ export function configureJss(virtual?: boolean): IJssDependencies {
           selectMenu: {
             display: 'flex',
             alignItems: 'center',
+          },
+        },
+        MuiAvatar: {
+          root: {
+            fontWeight: 500,
+            fontSize: '0.875rem',
+          },
+          colorDefault: {
+            backgroundColor: extraTheme.colors.whiteLilac,
+            color: extraTheme.colors.royalPurple,
           },
         },
       },
