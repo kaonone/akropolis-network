@@ -11,7 +11,7 @@ const borderRadius = '0.25rem';
 const styles = ({ extra: theme }: Theme) => ({
   row: rule({
     boxShadow: bottomBorder,
-    borderRadius: '0.25rem',
+    borderRadius,
     background: theme.colors.white,
     padding: theme.spacing.unit * 2,
     paddingTop: theme.spacing.unit * 2,
@@ -33,7 +33,7 @@ const styles = ({ extra: theme }: Theme) => ({
   active: {},
 
   cell: rule({
-    padding: '1rem',
+    padding: theme.spacing.unit * 2,
 
     '&:first-child': {
       borderTopLeftRadius: borderRadius,
@@ -47,16 +47,10 @@ const styles = ({ extra: theme }: Theme) => ({
 
   }),
 
-  complexCell: {},
-
   complexCellTitle: rule({
     color: theme.colors.topaz,
     marginBottom: theme.spacing.unit * 0.5,
   }),
-
-  complexCellValue: {},
-
-  avatar: {},
 
   description: rule({
     display: '-webkit-box',

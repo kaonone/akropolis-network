@@ -18,12 +18,11 @@ const ComplexCell = React.memo(provideStyles((props: IComplexCellProps & StylesP
   return (
     <Grid
       container
-      className={classes.complexCell}
       alignItems="flex-end"
       direction={'column'}
     >
       <Typography variant="subtitle1" className={classes.complexCellTitle}>{title}</Typography>
-      <Typography variant="body1" className={classes.complexCellValue}>{value}</Typography>
+      <Typography variant="body1">{value}</Typography>
     </Grid>
   );
 

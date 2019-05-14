@@ -42,7 +42,7 @@ export default React.memo(provideStyles((props: IProps) => {
 
           // tslint:disable:jsx-key
           const cells = [
-            <Avatar className={classes.avatar}>{row.name.slice(0, 2).toUpperCase()}</Avatar>,
+            <Avatar>{row.name.slice(0, 2).toUpperCase()}</Avatar>,
             <Typography variant="body1">{row.name}</Typography>,
             <Typography variant="body1" className={classes.description}>{row.description}</Typography>,
             <ComplexCell title={t(tKeys.balance.getKey())} value={formatUSD(row.balance)} />,
