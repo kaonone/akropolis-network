@@ -1,44 +1,43 @@
 import * as React from 'react';
 
-import { ITranslateProps, i18nConnect, tKeys as allKeys } from 'services/i18n';
+import { Button, Typography, Grid } from 'shared/view/elements';
+import { MetamaskFox } from 'shared/view/elements/Icons';
 import { Modal } from 'shared/view/components';
-import { Button } from 'shared/view/elements';
 
 import { StylesProps, provideStyles } from './RetryModal.style';
 
-const tKeys = allKeys.shared;
-
 interface IProps {
-  isOpen: boolean;
+  title: string;
+  buttonText: string;
   onRetry(): void;
 }
 
-class RetryModal extends React.PureComponent<IProps & StylesProps & ITranslateProps> {
+class RetryModal extends React.PureComponent<IProps & StylesProps> {
   public render() {
 
-    const { classes, isOpen, t, onRetry, children } = this.props;
+    const { classes, onRetry, children, title, buttonText } = this.props;
     return (
-      <Modal size="small" isOpen={isOpen} title={t(tKeys.noEthereumConnection.getKey())}>
-        <div className={classes.root}>
-          <p className={classes.content}>
-            {children}
-          </p>
-          <div className={classes.actions}>
+      <Modal size="large" isOpen={true} title={title}>
+        <Grid container spacing={40} direction="column" alignItems="center" className={classes.root}>
+          <Grid item>
+            <Typography variant="body1" align="center">{children}</Typography>
+          </Grid>
+          <Grid item>
             <Button
               className={classes.action}
-              variant="outlined"
-              color="secondary"
+              variant="contained"
+              color="primary"
               size="small"
               onClick={onRetry}
-              fullWidth
             >
-              {t(tKeys.retry.getKey())}
+              {buttonText}
             </Button>
-          </div>
-        </div>
+          </Grid>
+          <MetamaskFox className={classes.metamaskIcon} />
+        </Grid>
       </Modal>
     );
   }
 }
 
-export default i18nConnect(provideStyles(RetryModal));
+export default provideStyles(RetryModal);
