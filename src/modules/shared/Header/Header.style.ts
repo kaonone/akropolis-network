@@ -4,7 +4,7 @@ import { rule } from 'shared/helpers/style';
 const styles = ({ extra: theme }: Theme) => ({
   root: rule({
     padding: `${theme.spacing.unit * 3.5}px ${theme.spacing.unit * 3}px`,
-    background: 'linear-gradient(360deg, #7357D2 0%, #8E41DC 100%)', // TODO ds: take from theme
+    background: theme.gradients.purple,
     borderRadius: 4,
   }),
 
@@ -14,7 +14,6 @@ const styles = ({ extra: theme }: Theme) => ({
 
   title: rule({
     color: '#fff',
-    fontWeight: 'bold',
   }),
 });
 

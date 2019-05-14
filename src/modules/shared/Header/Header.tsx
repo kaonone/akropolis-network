@@ -7,7 +7,7 @@ import { i18nConnect, ITranslateProps, tKeys as tKeysAll } from 'services/i18n';
 import { SignInButton } from 'features/signIn';
 import { IAppReduxState } from 'shared/types/app';
 import { Grid, IconButton, Typography } from 'shared/view/elements';
-import { ArrowBack } from 'shared/view/elements/Icons';
+import { Back } from 'shared/view/elements/Icons';
 import { withComponent } from 'shared/helpers/react';
 
 import { provideStyles, StylesProps } from './Header.style';
@@ -44,11 +44,11 @@ class Header extends React.PureComponent<IProps> {
         <Grid container wrap="nowrap" alignItems="center" spacing={16}>
           {backRoutePath && (
             <Grid item>
-              <LinkIconButton to={backRoutePath} className={classes.backButton}><ArrowBack /></LinkIconButton>
+              <LinkIconButton to={backRoutePath} className={classes.backButton}><Back /></LinkIconButton>
             </Grid>
           )}
           <Grid item xs zeroMinWidth>
-            <Typography variant="h5" noWrap className={classes.title}>{title}</Typography>
+            <Typography variant="h5" noWrap weight="bold" className={classes.title}>{title}</Typography>
           </Grid>
           {actions && !!actions.length && (
             actions.map((action, index) => (

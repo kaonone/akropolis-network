@@ -6,10 +6,9 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 // tslint:disable:max-line-length
 function Cross(props: GetProps<typeof SvgIcon>) {
   return (
-    <SvgIcon {...props} viewBox="0 0 18 18">
-      <g fill="none" fillRule="evenodd" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5">
-        <path d="M2.58 2.516l13 13M2.58 15.516l13-13" />
-      </g>
+    <SvgIcon {...props} viewBox="0 0 24 24">
+      <path fillRule="evenodd" clipRule="evenodd" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="currentColor" />
+
     </SvgIcon>
   );
 }

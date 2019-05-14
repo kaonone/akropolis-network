@@ -1,0 +1,58 @@
+@function str-replace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+  $src: null;
+  $extmods: (
+    eot: "?",
+    svg: "#" + str-replace($name, " ", "_")
+  );
+  $formats: (
+    otf: "opentype",
+    ttf: "truetype"
+  );
+
+  @each $ext in $exts {
+    $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+  }
+
+  @font-face {
+    font-weight: $weight;
+    font-style: $style;
+    font-family: quote($name);
+    src: $src;
+  }
+}
+
+@include font-face(Roboto, Roboto/Roboto-Thin, 100, null, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-ThinItalic, 100, italic, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-Light, 300, null, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-LightItalic, 300, italic, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-Regular, 400, null, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-RegularItalic, 400, italic, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-Medium, 500, null, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-MediumItalic, 500, italic, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-Bold, 700, null, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-BoldItalic, 700, italic, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-Black, 900, null, ttf);
+
+@include font-face(Roboto, Roboto/Roboto-BlackItalic, 900, italic, ttf);

@@ -28,13 +28,6 @@ const styles = ({ extra: theme }: Theme) => ({
   cell: rule({
     composes: '$text',
     fontSize: '0.9375rem',
-
-    '&:first-child': {
-      paddingLeft: '3.125rem',
-    },
-    '&:last-child': {
-      paddingRight: '3.125rem',
-    },
   }),
 });
 
