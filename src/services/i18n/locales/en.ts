@@ -25,6 +25,9 @@ export default {
     needUseMetamask: 'This browser has no connection to the Ethereum network. Please use the Chrome/FireFox extension MetaMask, or dedicated Ethereum browsers Mist or Parity.',
     makeSureUseKovan: 'Please make sure you are using Kovan Test Network when connecting your Metamask',
     new: 'New',
+    to: 'to',
+    no: 'no',
+    yes: 'yes',
     dao: {
       balance: 'Balance',
       members: 'Members',
@@ -134,6 +137,13 @@ export default {
         createCashFlow: 'Create Cash Flow',
         borrow: 'Borrow',
       },
+    },
+    voting: {
+      withdraw: 'withdraw',
+      timeLeft: 'time left',
+      voted: 'voted',
+      needed: 'needed',
+      reason: 'Reason',
     },
   },
   documents: {},
