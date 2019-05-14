@@ -1,10 +1,9 @@
 import { withStyles, Theme, WithStyles } from 'shared/styles';
 import { rule } from 'shared/helpers/style';
-// import { theme as extraTheme } from 'shared/styles/theme';
 
 const styles = ({ extra: theme }: Theme) => ({
   root: rule({
-    borderRadius: '4px',
+    borderRadius: '0.25rem',
     backgroundColor: theme.colors.white,
     boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1)',
   }),
