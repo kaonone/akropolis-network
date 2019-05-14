@@ -3,8 +3,8 @@ import { rule } from 'shared/helpers/style';
 import { theme as extraTheme } from 'shared/styles/theme';
 
 const bottomBorder = `0px 1px 0px rgba(0, 0, 0, 0.1)`;
-const activeBorder = `-3px 0px 0px -1px ${extraTheme.colors.royalPurple}`;
-const hoverBorder = `0 0 0 1px ${extraTheme.colors.coldPurple}`;
+const activeBorder = `inset 2px 0px 0px 0px ${extraTheme.colors.royalPurple}`;
+const hoverBorder = `inset 0 0 0 1px ${extraTheme.colors.coldPurple}`;
 
 const borderRadius = '0.25rem';
 
@@ -26,7 +26,7 @@ const styles = ({ extra: theme }: Theme) => ({
     },
 
     '&$active&:hover': {
-      boxShadow: `${hoverBorder}, ${bottomBorder}, ${activeBorder}`,
+      boxShadow: `${activeBorder}, ${hoverBorder}, ${bottomBorder}`,
     },
   }),
 

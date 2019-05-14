@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { GetProps } from '_helpers';
 import { provideStyles, StylesProps } from './RowsLayout.style';
 import Grid from '@material-ui/core/Grid/Grid';
 
@@ -6,17 +7,18 @@ interface IProps {
   children?: React.ReactNode;
   footerContent?: React.ReactNode;
   headerContent?: React.ReactNode;
-  background?: 'primary' | 'unset';
-  fullHeight?: boolean;
+  spacing?: GetProps<typeof Grid>['spacing'];
 }
 
-function RowsLayout({ children, footerContent, headerContent, classes }: IProps & StylesProps) {
+function RowsLayout({ children, footerContent, headerContent, classes, spacing }: IProps & StylesProps) {
   return (
-    <Grid container className={classes.root} direction="column" alignItems="stretch">
-      {!!headerContent && <Grid item>{headerContent}</Grid>}
-      {!!children && <Grid item className={classes.content}>{children}</Grid>}
-      {!!footerContent && <Grid item>{footerContent}</Grid>}
-    </Grid>
+    <div className={classes.root}>
+      <Grid container direction="column" spacing={spacing} className={classes.container}>
+        {!!headerContent && <Grid item>{headerContent}</Grid>}
+        {!!children && <Grid item xs>{children}</Grid>}
+        {!!footerContent && <Grid item>{footerContent}</Grid>}
+      </Grid>
+    </div>
   );
 }
 

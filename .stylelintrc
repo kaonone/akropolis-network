@@ -6,6 +6,10 @@
     "stylelint-order",
     "stylelint-scss"
   ],
+  "ignoreFiles": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
   "rules": {
     "at-rule-no-unknown": [
       true,

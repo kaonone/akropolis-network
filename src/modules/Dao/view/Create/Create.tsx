@@ -5,7 +5,6 @@ import routes from 'modules/routes';
 import { BaseLayout } from 'modules/shared';
 import { CreateDaoAsync } from 'features/createDao';
 
-import { Grid, Typography } from 'shared/view/elements';
 import { InjectedAuthRouterProps } from 'shared/helpers/authWrapper';
 
 type IProps = InjectedAuthRouterProps;
@@ -16,15 +15,8 @@ function Create(props: IProps & RouteComponentProps<any>) {
   }, []);
 
   return (
-    <BaseLayout>
-      <Grid container spacing={16}>
-        <Grid item xs={12}>
-          <Typography variant="h4">Create a new co-op</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <CreateDaoAsync onCreate={handleCreateDao} />
-        </Grid>
-      </Grid>
+    <BaseLayout title="Create a new co-op" backRoutePath={routes.daos.getRedirectPath()}>
+      <CreateDaoAsync onCreate={handleCreateDao} />
     </BaseLayout>
   );
 }
