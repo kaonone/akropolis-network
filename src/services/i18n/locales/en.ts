@@ -26,8 +26,8 @@ export default {
     makeSureUseKovan: 'Please make sure you are using Kovan Test Network when connecting your Metamask',
     new: 'New',
     to: 'to',
-    no: 'no',
-    yes: 'yes',
+    no: 'No',
+    yes: 'Yes',
     dao: {
       goal: 'Goal',
       balance: 'Balance',
@@ -141,6 +141,7 @@ export default {
     },
     voting: {
       withdraw: 'withdraw',
+      join: 'join',
       timeLeft: 'time left',
       voted: 'voted',
       needed: 'needed',

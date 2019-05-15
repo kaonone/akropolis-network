@@ -16,11 +16,12 @@ const styles = ({ extra: theme }: Theme) => ({
   mainInformation: rule({
     composes: '$rootChild',
     paddingRight: theme.spacing.unit * 7,
-    minWidth: 0, // need for fix flex box behavior with children that has whiteSpace: 'nowrap'
+    overflow: 'hidden',
   }),
 
   metrics: rule({
     marginBottom: theme.spacing.unit * 2.5,
+    marginRight: '1.5rem',
   }),
 
   title: rule({
@@ -88,6 +89,42 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   expanded: {},
+
+  votingDecision: rule({
+    padding: theme.spacing.unit,
+    borderRadius: '0.25rem',
+    backgroundColor: theme.colors.ghostWhite,
+  }),
+
+  votingIcon: rule({
+    width: '1.25rem',
+    marginRight: theme.spacing.unit * 0.5,
+  }),
+
+  votingForIcon: rule({
+    composes: '$votingIcon',
+    color: theme.colors.shamrock,
+  }),
+
+  votingAgainstIcon: rule({
+    composes: '$votingIcon',
+    color: theme.colors.geraldine,
+  }),
+
+  votingTypeIcon: rule({
+    width: '1rem',
+    marginRight: theme.spacing.unit,
+  }),
+
+  withdrawIcon: rule({
+    composes: '$votingTypeIcon',
+    color: theme.colors.jaffa,
+  }),
+
+  addPersonIcon: rule({
+    composes: '$votingTypeIcon',
+    color: theme.colors.curiousBlue,
+  }),
 
 });
 
