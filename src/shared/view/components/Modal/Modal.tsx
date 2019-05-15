@@ -3,7 +3,7 @@ import * as ReactModal from 'react-modal';
 import * as cn from 'classnames';
 
 import { Cross } from 'shared/view/elements/Icons';
-import { IconButton } from 'shared/view/elements';
+import { IconButton, Typography } from 'shared/view/elements';
 
 import { provideStyles, StylesProps } from './Modal.style';
 
@@ -11,7 +11,6 @@ interface IOwnProps {
   children?: React.ReactNode;
   size: 'small' | 'medium' | 'large' | 'xLarge';
   type?: 'default' | 'signTransaction';
-  variant?: 'primary' | 'secondary';
   isOpen: boolean;
   title?: string;
   titleAlign?: 'center' | 'left';
@@ -24,16 +23,13 @@ ReactModal.setAppElement('#root');
 
 class Modal extends React.Component<IProps> {
   public render() {
-    const { classes, children, isOpen, onClose, title, variant } = this.props;
+    const { classes, children, isOpen, onClose, title } = this.props;
 
     return (
       <ReactModal
         portalClassName={classes.portal}
         className={classes.modal && {
-          base: cn(classes.modal, {
-            [classes.isPrimary]: !variant || variant === 'primary',
-            [classes.isSecondary]: variant === 'secondary',
-          }),
+          base: classes.modal,
           afterOpen: classes.modalAfterOpen,
           beforeClose: classes.modalBeforeClose,
         }}
@@ -46,14 +42,8 @@ class Modal extends React.Component<IProps> {
         onRequestClose={onClose}
         closeTimeoutMS={400}
       >
-        {!!title && (
-          <div className={classes.title}>
-            {variant === 'secondary' && <CrossButton isHidden classes={classes} />}
-            {title}
-            {variant === 'secondary' && <CrossButton classes={classes} onClick={onClose} />}
-          </div>
-        )}
-        {!title && variant === 'secondary' && <CrossButton isAbsolute classes={classes} onClick={onClose} />}
+        {!!title && <Typography variant="h5" className={classes.title}>{title}</Typography>}
+        {onClose && <CrossButton classes={classes} onClick={onClose} />}
         {children}
       </ReactModal>
     );

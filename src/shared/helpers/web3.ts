@@ -2,6 +2,10 @@ import { Provider, ProviderType } from 'shared/types/models';
 
 // https://ethereum.stackexchange.com/questions/24266/elegant-way-to-detect-current-provider-int-web3-js
 export function getCurrentProviderType(): ProviderType {
+  if (!window.web3) {
+    return 'unknown';
+  }
+
   if (window.web3.currentProvider.isMetaMask) {
     return 'metamask';
   }

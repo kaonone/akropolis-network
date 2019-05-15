@@ -36,6 +36,7 @@ const styles = ({ extra: theme }: Theme) => ({
     backgroundColor: theme.palette.control.bg.overlay,
   }),
   modal: rule({
+    position: 'relative',
     flexGrow: 1,
     minHeight: '100%',
     minWidth: '100%',
@@ -49,11 +50,6 @@ const styles = ({ extra: theme }: Theme) => ({
     opacity: 0,
     overflow: 'hidden',
 
-    '&$isPrimary': {
-      border: `solid 1px ${theme.colors.tundora}`,
-      borderRadius: '0.25rem',
-    },
-
     [theme.breakpoints.up('sm')]: rule({
       flexGrow: 0,
       minHeight: 'unset',
@@ -66,6 +62,7 @@ const styles = ({ extra: theme }: Theme) => ({
       }),
       margin: '3rem',
       borderRadius: '0.5rem',
+      boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.2)',
     }),
 
     [theme.breakpoints.up('md')]: rule({
@@ -100,42 +97,16 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   title: rule({
-    display: 'flex',
-    alignItems: 'center',
     textAlign: 'center',
-    fontFamily: theme.typography.primaryFont,
-
-    '$isPrimary &': {
-      justifyContent: 'center',
-      padding: `${theme.spacing.unit}px`,
-      fontSize: '0.75rem',
-      fontWeight: 600,
-      backgroundColor: theme.colors.electricViolet,
-      color: theme.colors.white,
-    },
-
-    '$isSecondary &': {
-      // tslint:disable-next-line:max-line-length
-      margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 4 - iconButtonPadding}px 0 ${theme.spacing.unit * 4}px`,
-      justifyContent: 'space-between',
-      fontSize: '1.25rem',
-      fontWeight: 'bold',
-    },
+    alignSelf: 'center',
+    margin: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 5}px ${theme.spacing.unit * 4}px`,
   }),
 
   cross: rule({
-    position: 'static',
-    top: theme.spacing.unit * 3,
-    right: theme.spacing.unit * 3,
-    marginLeft: theme.spacing.unit * 3,
+    position: 'absolute',
+    top: theme.spacing.unit,
+    right: theme.spacing.unit,
     zIndex: theme.zIndex.newContext + 1,
-
-    '&$isAbsolute': {
-      position: 'absolute',
-    },
-    '&$isHidden': {
-      visibility: 'hidden',
-    },
   }),
 
   isAbsolute: {},
@@ -145,9 +116,6 @@ const styles = ({ extra: theme }: Theme) => ({
       left: 'none',
     }, 'center'),
   },
-
-  isPrimary: {},
-  isSecondary: {},
 
   '@keyframes modal-disappear-animation': rule({
     from: {
