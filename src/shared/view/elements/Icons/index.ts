@@ -25,3 +25,4 @@ export { default as Deposit } from './Deposit';
 export { default as Checked } from './Checked';
 export { default as Increase } from './Increase';
 export { default as Decrease } from './Decrease';
+export { default as MetamaskFox } from './MetamaskFox';
