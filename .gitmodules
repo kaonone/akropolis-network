@@ -1,0 +1,4 @@
+[submodule "dao/apps/nft"]
+	path = dao/apps/nft
+	url = https://github.com/akropolisio/AkropolisNFT.git
+	branch = events
