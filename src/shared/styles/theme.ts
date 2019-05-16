@@ -44,6 +44,7 @@ const colors = {
   martinique: '#3F3553',
   mulledWine: '#4A415D',
   daisyBush: '#502D98',
+  moonRaker: '#E5DCF7',
 };
 
 const gradients = {

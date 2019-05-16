@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import routes from 'modules/routes';
 import { IModule } from 'shared/types/app';
@@ -25,12 +25,14 @@ const HomeModule: IModule = {
         component={Create}
       />
     ), (
-      <Route
-        exact
-        key="View Dao"
-        path={routes.dao.view.id.getRoutePath()}
-        component={View}
-      />
+      <Route key="View Dao" path={routes.dao.view.id.getRoutePath()}>
+        {({ match }) => (
+          <Switch>
+            <Route path={routes.dao.view.id.section.getRoutePath()} component={View} />
+            <Redirect to={routes.dao.view.id.section.getRedirectPath({ id: match.params.id, section: 'overview' })} />
+          </Switch>
+        )}
+      </Route>
     )];
   },
 };

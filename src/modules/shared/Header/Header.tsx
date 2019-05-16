@@ -14,17 +14,14 @@ interface IOwnProps {
   actions?: React.ReactNode[];
   backRoutePath?: string;
   title: string;
+  additionalContent: React.ReactNode;
 }
 
-interface IStateProps {
-  isLogged: boolean;
-}
-
-type IProps = IOwnProps & IStateProps & StylesProps & RouteComponentProps;
+type IProps = IOwnProps & StylesProps & RouteComponentProps;
 
 class Header extends React.PureComponent<IProps> {
   public render() {
-    const { classes, actions, title, backRoutePath } = this.props;
+    const { classes, actions, title, backRoutePath, additionalContent } = this.props;
     return (
       <div className={classes.root}>
         <Grid container wrap="nowrap" alignItems="center" spacing={16}>
@@ -45,6 +42,7 @@ class Header extends React.PureComponent<IProps> {
             <Profile />
           </Grid>
         </Grid>
+        {additionalContent}
       </div>
     );
   }

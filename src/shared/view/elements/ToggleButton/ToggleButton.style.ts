@@ -6,19 +6,22 @@ const styles = (theme: Theme) => ({
 
   root: rule({
     boxSizing: 'border-box',
+    position: 'relative',
     padding: '0.5rem 1rem',
     minHeight: 40,
-    color: theme.extra.colors.black,
     borderStyle: 'solid',
     borderColor: theme.extra.colors.silver,
     zIndex: theme.extra.zIndex.newContext,
     whiteSpace: 'nowrap',
+    color: theme.extra.colors.topaz,
+    fontWeight: 500,
+    fontSize: '1rem',
 
     '&$contained': rule({
       borderWidth: 1,
     }),
     '&$outlined': rule({
-      borderBottomWidth: 1,
+      borderBottomWidth: 2,
       borderRadius: 0,
     }),
 
@@ -50,8 +53,8 @@ const styles = (theme: Theme) => ({
       },
     },
     '&$selected': {
-      borderColor: theme.palette.primary.main,
-      fontWeight: 600,
+      borderColor: theme.extra.colors.royalPurple,
+      color: theme.extra.colors.royalPurple,
 
       '&$contained': {
         color: theme.extra.colors.white,

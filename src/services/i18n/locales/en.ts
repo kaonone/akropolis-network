@@ -142,6 +142,18 @@ export default {
       fundsMarketplace: 'Funds marketplace',
       YouAreInThisFund: 'You’re in this fond',
     },
+    daos: {
+      overview: 'Co-op Overview',
+      activities: 'Activities',
+      members: 'Members',
+      compound: 'Compound',
+      history: 'History',
+      balance: 'Balance',
+      debit: 'Debit',
+      credit: 'Credit',
+      request: 'Request',
+      deposit: 'Deposit',
+    },
   },
   services: {
     dataProvider: {

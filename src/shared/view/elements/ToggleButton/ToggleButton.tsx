@@ -19,8 +19,8 @@ function ToggleButton(props: IProps) {
       {...props}
       classes={{ root, selected, disabled, label }}
       className={cn(props.className, {
-        [classes.outlined]: variant === 'outlined',
-        [classes.contained]: variant === 'contained' || !variant,
+        [classes.outlined]: variant === 'outlined' || !variant,
+        [classes.contained]: variant === 'contained',
       })}
     />
   );
