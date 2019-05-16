@@ -45,6 +45,8 @@ const colors = {
   mulledWine: '#4A415D',
   daisyBush: '#502D98',
   moonRaker: '#E5DCF7',
+  jaffa: '#F2994A',
+  curiousBlue: '#2D9CDB',
 };
 
 const gradients = {
