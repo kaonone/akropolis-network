@@ -3,10 +3,7 @@ import { rule, hexToRGBA } from 'shared/helpers/style';
 
 const styles = ({ extra: theme }: Theme) => ({
 
-  root: rule({
-    marginTop: '2rem',
-    marginBottom: theme.spacing.unit * 1.5,
-  }),
+  root: {},
 
   metric: rule({
     padding: `0 ${theme.spacing.unit * 2.5}px 0 ${theme.spacing.unit * 0.75}px `,

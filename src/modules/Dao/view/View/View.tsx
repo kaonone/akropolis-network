@@ -7,7 +7,7 @@ import { BaseLayout, DaoMetrics } from 'modules/shared';
 import routes from 'modules/routes';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
 
-import { CircleProgressBar, Typography, ToggleButtonGroup, ToggleButton, Button } from 'shared/view/elements';
+import { CircleProgressBar, Typography, ToggleButtonGroup, ToggleButton, Button, Grid } from 'shared/view/elements';
 import { Request, Deposit } from 'shared/view/elements/Icons';
 import { useCommunication, withComponent } from 'shared/helpers/react';
 
@@ -55,28 +55,38 @@ function View(props: IProps) {
 
   const daoActionButtons = daoApiInitializing.status !== 'success' ? undefined :
     actions.map(({ label, Icon }) => (
-      <Button
-        color="secondary"
-        variant="contained"
-        className={classes.headerButton}
-      >
-        <Icon className={classes.headerButtonIcon} />
-        <Typography className={classes.headerButtonTitle} variant="body1">{label}</Typography>
-      </Button>));
+      <Grid item>
+        <Button
+          color="secondary"
+          variant="contained"
+          className={classes.headerButton}
+        >
+          <Icon className={classes.headerButtonIcon} />
+          <Typography className={classes.headerButtonTitle} variant="body1">{label}</Typography>
+        </Button>
+      </Grid>));
 
   return (
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title="Dao name"
       additionalHeaderContent={
-        <DaoMetrics
-          balance={2192.22}
-          debit={1200.92}
-          increase={12.81}
-          decrease={12.81}
-          credit={0.5}
-          actions={daoActionButtons}
-        />}
+        <Grid container wrap="nowrap" justify="space-between" className={classes.metricHeader}>
+          <Grid item>
+            <DaoMetrics
+              balance={2192.22}
+              debit={1200.92}
+              increase={12.81}
+              decrease={12.81}
+              credit={0.5}
+            />
+          </Grid>
+          <Grid item>
+            <Grid container spacing={8}>
+              {daoActionButtons}
+            </Grid>
+          </Grid>
+        </Grid>}
     >
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
         {links.map(({ section, title }, index: number) => (

@@ -5,6 +5,11 @@ const styles = ({ extra: theme }: Theme) => ({
   root: rule({
   }),
 
+  metricHeader: rule({
+    marginTop: theme.spacing.unit * 2.5,
+    marginBottom: theme.spacing.unit * 1.5,
+  }),
+
   headerButton: rule({
     color: theme.colors.royalPurple,
   }),

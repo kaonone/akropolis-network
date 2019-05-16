@@ -23,17 +23,26 @@ interface IOwnProps {
   increase: number;
   decrease: number;
   credit?: number;
-  actions?: React.ReactNode[];
 }
 type IProps = IOwnProps & StylesProps;
 
 const DaoMetrics = (props: IProps) => {
-  const { classes, balance, increase, debit, decrease, actions } = props;
+  const { classes, balance, increase, debit, decrease } = props;
 
   const { t } = useTranslate();
   const metrics: IMetric[] = [
-    { title: t(tKeys.balance.getKey()), value: formatUSD(balance), type: 'increase', percent: formatPercent(increase) },
-    { title: t(tKeys.debit.getKey()), value: formatUSD(debit), type: 'decrease', percent: formatPercent(decrease) },
+    {
+      title: t(tKeys.balance.getKey()),
+      value: formatUSD(balance),
+      type: 'increase',
+      percent: formatPercent(increase, 2),
+    },
+    {
+      title: t(tKeys.debit.getKey()),
+      value: formatUSD(debit),
+      type: 'decrease',
+      percent: formatPercent(decrease, 2),
+    },
     { title: t(tKeys.credit.getKey()), value: formatUSD(0) },
   ];
   return (
@@ -61,16 +70,6 @@ const DaoMetrics = (props: IProps) => {
           </Grid>
         </Grid>
       ))}
-      {actions &&
-        <Grid item className={classes.actions}>
-          <Grid
-            container
-            wrap="nowrap"
-            spacing={8}
-          >
-            {actions.map((action, i) => <Grid key={i} item>{action}</Grid>)}
-          </Grid>
-        </Grid>}
     </Grid>
   );
 };
