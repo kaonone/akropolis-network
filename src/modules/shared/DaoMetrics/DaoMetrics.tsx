@@ -39,12 +39,12 @@ const DaoMetrics = (props: IProps) => {
   return (
     <Grid container wrap="nowrap" alignItems="center" className={classes.root}>
       {metrics.map(metric => (
-        <div className={classes.metric}>
+        <Grid item className={classes.metric}>
           <Typography variant="overline" className={classes.title}>{metric.title}</Typography>
           <Grid container wrap="nowrap" alignItems="baseline">
             <Typography weight="medium" variant="h6" className={classes.value}>{metric.value}</Typography>
             {metric.type &&
-              <Grid container wrap="nowrap" alignItems="baseline">
+              <>
                 {metric.type === 'increase' && <Increase className={cn(classes.arrowIcon, classes.increase)} />}
                 {metric.type === 'decrease' && <Decrease className={cn(classes.arrowIcon, classes.decrease)} />}
                 <Typography
@@ -57,11 +57,20 @@ const DaoMetrics = (props: IProps) => {
                 >
                   {metric.percent}
                 </Typography>
-              </Grid>}
+              </>}
           </Grid>
-        </div>
+        </Grid>
       ))}
-      {actions && <Grid className={classes.actions} container wrap="nowrap">{actions}</Grid>}
+      {actions &&
+        <Grid item className={classes.actions}>
+          <Grid
+            container
+            wrap="nowrap"
+            spacing={8}
+          >
+            {actions.map((action, i) => <Grid key={i} item>{action}</Grid>)}
+          </Grid>
+        </Grid>}
     </Grid>
   );
 };

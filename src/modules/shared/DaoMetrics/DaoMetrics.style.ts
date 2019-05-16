@@ -30,8 +30,9 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   arrowIcon: rule({
-    width: '1.0625rem',
-    marginTop: '-0.0625rem',
+    width: '1rem',
+    height: '1rem',
+    marginTop: '0.1875rem',
     alignSelf: 'center',
   }),
 
@@ -44,8 +45,6 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   actions: rule({
-    width: 'auto',
-    height: '100%',
     marginLeft: 'auto',
   }),
 

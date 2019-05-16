@@ -7,7 +7,6 @@ const styles = ({ extra: theme }: Theme) => ({
 
   headerButton: rule({
     color: theme.colors.royalPurple,
-    marginLeft: theme.spacing.unit,
   }),
 
   headerButtonIcon: rule({
