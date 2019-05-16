@@ -2,8 +2,8 @@ import { withStyles, WithStyles, Theme } from 'shared/styles';
 import { rule } from 'shared/helpers/style';
 
 const styles = ({ extra: theme }: Theme) => ({
-
   root: rule({
+    overflow: 'unset',
     boxShadow: 'unset',
     display: 'flex',
     position: 'relative',

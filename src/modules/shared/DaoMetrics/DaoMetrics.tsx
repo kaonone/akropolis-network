@@ -43,7 +43,10 @@ const DaoMetrics = (props: IProps) => {
       type: 'decrease',
       percent: formatPercent(decrease, 2),
     },
-    { title: t(tKeys.credit.getKey()), value: formatUSD(0) },
+    {
+      title: t(tKeys.credit.getKey()),
+      value: formatUSD(0),
+    },
   ];
   return (
     <Grid container wrap="nowrap" alignItems="center" className={classes.root}>

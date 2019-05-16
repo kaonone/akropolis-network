@@ -7,7 +7,9 @@ import { BaseLayout, DaoMetrics } from 'modules/shared';
 import routes from 'modules/routes';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
 
-import { CircleProgressBar, Typography, ToggleButtonGroup, ToggleButton, Button, Grid } from 'shared/view/elements';
+import {
+  CircleProgressBar, Typography, ToggleButtonGroup, ToggleButton, Button, Grid, Badge,
+} from 'shared/view/elements';
 import { Request, Deposit } from 'shared/view/elements/Icons';
 import { useCommunication, withComponent } from 'shared/helpers/react';
 
@@ -22,17 +24,18 @@ interface IHeaderButton {
   Icon: React.ComponentType<any>;
 }
 
-type Section = 'overview' | 'activities' | 'members' | 'compound' | 'history';
+export type Section = 'overview' | 'activities' | 'members' | 'compound' | 'history';
 
 interface ISectionLink {
   section: Section;
   title: string;
   disabled?: boolean;
+  badge?: number;
 }
 
 const links: ISectionLink[] = [
   { section: 'overview', title: tKeys.overview.getKey() },
-  { section: 'activities', title: tKeys.activities.getKey(), disabled: true },
+  { section: 'activities', title: tKeys.activities.getKey(), disabled: true, badge: 94 },
   { section: 'members', title: tKeys.members.getKey(), disabled: true },
   { section: 'compound', title: tKeys.compound.getKey(), disabled: true },
   { section: 'history', title: tKeys.history.getKey(), disabled: true },
@@ -55,14 +58,10 @@ function View(props: IProps) {
 
   const daoActionButtons = daoApiInitializing.status !== 'success' ? undefined :
     actions.map(({ label, Icon }) => (
-      <Grid item>
-        <Button
-          color="secondary"
-          variant="contained"
-          className={classes.headerButton}
-        >
+      <Grid item key={label}>
+        <Button color="secondary" variant="contained">
           <Icon className={classes.headerButtonIcon} />
-          <Typography className={classes.headerButtonTitle} variant="body1">{label}</Typography>
+          {label}
         </Button>
       </Grid>));
 
@@ -71,8 +70,8 @@ function View(props: IProps) {
       backRoutePath={routes.daos.getRedirectPath()}
       title="Dao name"
       additionalHeaderContent={
-        <Grid container wrap="nowrap" justify="space-between" className={classes.metricHeader}>
-          <Grid item>
+        <Grid container wrap="nowrap" spacing={8}>
+          <Grid item xs>
             <DaoMetrics
               balance={2192.22}
               debit={1200.92}
@@ -81,26 +80,20 @@ function View(props: IProps) {
               credit={0.5}
             />
           </Grid>
-          <Grid item>
-            <Grid container spacing={8}>
-              {daoActionButtons}
-            </Grid>
-          </Grid>
+          {daoActionButtons}
         </Grid>}
     >
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
-        {links.map(({ section, title }, index: number) => (
+        {links.map(({ section, title, badge }, index: number) => (
           <NavToggleButton
             className={classes.sectionLink}
             key={index}
             to={routes.dao.view.id.section.getRedirectPath({ id: daoId, section })}
             value={section}
           >
-            {<>
+            <Badge color="primary" className={classes.withBadge} badgeContent={badge || 0}>
               {t(title)}
-              {section === 'activities' &&
-                <Typography variant="caption" weight="bold" className={classes.activitiesCount}>94</Typography>}
-            </>}
+            </Badge>
           </NavToggleButton>
         ))}
       </ToggleButtonGroup>
