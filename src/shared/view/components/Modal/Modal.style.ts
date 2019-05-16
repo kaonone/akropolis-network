@@ -5,8 +5,6 @@ import { rule, styledBy } from 'shared/helpers/style';
 
 import { IProps } from './Modal';
 
-const iconButtonPadding = 12;
-
 const styles = ({ extra: theme }: Theme) => ({
   portal: rule({
     overflow: 'auto',

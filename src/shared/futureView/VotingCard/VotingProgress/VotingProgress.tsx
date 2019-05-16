@@ -19,8 +19,8 @@ export default React.memo(provideStyles((props: IPropgressProps & StylesProps) =
   return (
     <div className={classes.root}>
       <Grid container justify="space-between" wrap="nowrap">
-        <Typography variant="subtitle1">{title}</Typography>
-        <Typography variant="subtitle1" weight="medium">{formatPercent(value)}</Typography>
+        <Typography component="span" variant="subtitle1">{title}</Typography>
+        <Typography component="span" variant="subtitle1" weight="medium">{formatPercent(value)}</Typography>
       </Grid>
       <div className={classes.progressBar}>
         <div

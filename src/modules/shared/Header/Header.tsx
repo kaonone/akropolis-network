@@ -16,11 +16,7 @@ interface IOwnProps {
   title: string;
 }
 
-interface IStateProps {
-  isLogged: boolean;
-}
-
-type IProps = IOwnProps & IStateProps & StylesProps & RouteComponentProps;
+type IProps = IOwnProps & StylesProps & RouteComponentProps;
 
 class Header extends React.PureComponent<IProps> {
   public render() {

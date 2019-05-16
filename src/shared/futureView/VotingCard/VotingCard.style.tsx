@@ -8,15 +8,8 @@ const styles = ({ extra: theme }: Theme) => ({
     boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1)',
   }),
 
-  rootChild: rule({
-    flexBasis: '100%',
-    padding: theme.spacing.unit * 2,
-  }),
-
   mainInformation: rule({
-    composes: '$rootChild',
-    paddingRight: theme.spacing.unit * 7,
-    overflow: 'hidden',
+    padding: theme.spacing.unit * 2,
   }),
 
   metrics: rule({
@@ -25,7 +18,6 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   title: rule({
-
     '&$purple': {
       color: theme.colors.royalPurple,
     },
@@ -33,14 +25,13 @@ const styles = ({ extra: theme }: Theme) => ({
     '&$grey': {
       color: theme.colors.topaz,
     },
-
   }),
 
   value: rule({
     composes: '$title',
   }),
 
-  addressTo: rule({
+  address: rule({
     alignSelf: 'flex-start',
     borderBottom: 'dotted 1px black',
   }),
@@ -54,17 +45,8 @@ const styles = ({ extra: theme }: Theme) => ({
   grey: {},
 
   voting: rule({
-    composes: '$rootChild',
     borderLeft: `solid ${theme.colors.athensGray} 1px`,
-    maxWidth: '15.75rem',
-  }),
-
-  votingProgress: rule({
-    marginBottom: theme.spacing.unit * 2,
-  }),
-
-  votingButton: rule({
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 5}px`,
+    padding: theme.spacing.unit * 2,
   }),
 
   toggleExpandIcon: rule({
@@ -112,7 +94,7 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   votingTypeIcon: rule({
-    width: '1rem',
+    fontSize: '1rem',
     marginRight: theme.spacing.unit,
   }),
 
@@ -125,7 +107,6 @@ const styles = ({ extra: theme }: Theme) => ({
     composes: '$votingTypeIcon',
     color: theme.colors.curiousBlue,
   }),
-
 });
 
 export const provideStyles = withStyles(styles);
