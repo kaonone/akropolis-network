@@ -4,7 +4,7 @@ import { rule, hexToRGBA } from 'shared/helpers/style';
 const styles = ({ extra: theme }: Theme) => ({
 
   root: rule({
-    marginTop: '32px',
+    marginTop: '2rem',
     marginBottom: theme.spacing.unit * 1.5,
   }),
 
@@ -19,13 +19,13 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   title: rule({
-    lineHeight: '16px',
+    lineHeight: '1rem',
     color: theme.colors.moonRaker,
   }),
 
   value: rule({
     marginRight: theme.spacing.unit,
-    lineHeight: '28px',
+    lineHeight: '1.75rem',
     color: theme.colors.white,
   }),
 
