@@ -15,7 +15,7 @@ const cooperative: ICooperative = {
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   balance: 2192,
   membersCount: 24,
-  goal: 102,
+  goal: 10000,
 };
 
 export const cooperativesMock: ICooperative[] = [
@@ -45,6 +45,7 @@ export default React.memo(provideStyles((props: IProps) => {
             <Avatar>{row.name.slice(0, 2).toUpperCase()}</Avatar>,
             <Typography variant="body1">{row.name}</Typography>,
             <Typography variant="body1" className={classes.description}>{row.description}</Typography>,
+            <ComplexCell title={t(tKeys.goal.getKey())} value={formatUSD(row.goal, 0)} />,
             <ComplexCell title={t(tKeys.balance.getKey())} value={formatUSD(row.balance)} />,
             <ComplexCell title={t(tKeys.members.getKey())} value={row.membersCount} />,
             <EventCell event={row.eventType} />,

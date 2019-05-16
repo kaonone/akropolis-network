@@ -44,6 +44,8 @@ const colors = {
   martinique: '#3F3553',
   mulledWine: '#4A415D',
   daisyBush: '#502D98',
+  jaffa: '#F2994A',
+  curiousBlue: '#2D9CDB',
 };
 
 const gradients = {
