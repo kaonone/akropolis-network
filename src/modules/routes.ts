@@ -4,7 +4,9 @@ const rawTree = {
   dao: {
     create: null,
     view: {
-      id: getParam(null),
+      id: getParam({
+        section: getParam(null),
+      }),
     },
   },
   daos: null,

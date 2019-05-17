@@ -8,8 +8,8 @@ export function formatUSD(value: number, precision: number = 2): string {
 
 export const formatNumber = accounting.formatNumber;
 
-export function formatPercent(value: number): string {
-  return accounting.formatNumber(value) + '%';
+export function formatPercent(value: number, precision?: number): string {
+  return accounting.formatNumber(value, precision) + '%';
 }
 
 export const formatSliderLabelDefault: NonNullable<GetProps<typeof SliderSelectField>['formatLabel']> =

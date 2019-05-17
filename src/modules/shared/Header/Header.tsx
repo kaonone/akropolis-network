@@ -14,16 +14,17 @@ interface IOwnProps {
   actions?: React.ReactNode[];
   backRoutePath?: string;
   title: string;
+  additionalContent?: React.ReactNode;
 }
 
 type IProps = IOwnProps & StylesProps & RouteComponentProps;
 
 class Header extends React.PureComponent<IProps> {
   public render() {
-    const { classes, actions, title, backRoutePath } = this.props;
+    const { classes, actions, title, backRoutePath, additionalContent } = this.props;
     return (
       <div className={classes.root}>
-        <Grid container wrap="nowrap" alignItems="center" spacing={16}>
+        <Grid container alignItems="center" spacing={16}>
           {backRoutePath && (
             <Grid item>
               <LinkIconButton to={backRoutePath} className={classes.backButton}><Back /></LinkIconButton>
@@ -40,6 +41,7 @@ class Header extends React.PureComponent<IProps> {
           <Grid item>
             <Profile />
           </Grid>
+          {!!additionalContent && <Grid item xs={12}>{additionalContent}</Grid>}
         </Grid>
       </div>
     );
