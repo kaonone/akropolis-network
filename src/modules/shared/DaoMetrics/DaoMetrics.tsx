@@ -11,6 +11,12 @@ import { provideStyles, StylesProps } from './DaoMetrics.style';
 
 const tKeys = tkeysAll.modules.daos;
 
+function getType(value: number): ChangeType {
+  return value < 0 ? 'decrease' : 'increase';
+}
+
+type ChangeType = 'increase' | 'decrease';
+
 interface IMetric {
   title: string;
   value: string;
@@ -19,29 +25,29 @@ interface IMetric {
 }
 interface IOwnProps {
   balance: number;
+  balanceChange: number;
   debit: number;
-  increase: number;
-  decrease: number;
+  debitChange: number;
   credit?: number;
 }
 type IProps = IOwnProps & StylesProps;
 
 const DaoMetrics = (props: IProps) => {
-  const { classes, balance, increase, debit, decrease } = props;
+  const { classes, balance, balanceChange, debit, debitChange } = props;
 
   const { t } = useTranslate();
   const metrics: IMetric[] = [
     {
       title: t(tKeys.balance.getKey()),
       value: formatUSD(balance),
-      type: 'increase',
-      percent: formatPercent(increase, 2),
+      type: getType(balanceChange),
+      percent: formatPercent(Math.abs(balanceChange), 2),
     },
     {
       title: t(tKeys.debit.getKey()),
       value: formatUSD(debit),
-      type: 'decrease',
-      percent: formatPercent(decrease, 2),
+      type: getType(debitChange),
+      percent: formatPercent(Math.abs(debitChange), 2),
     },
     {
       title: t(tKeys.credit.getKey()),

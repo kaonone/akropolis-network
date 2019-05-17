@@ -75,8 +75,8 @@ function View(props: IProps) {
             <DaoMetrics
               balance={2192.22}
               debit={1200.92}
-              increase={12.81}
-              decrease={12.81}
+              balanceChange={12.81}
+              debitChange={-12.81}
               credit={0.5}
             />
           </Grid>
