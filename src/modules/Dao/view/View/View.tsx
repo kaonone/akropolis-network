@@ -13,6 +13,7 @@ import {
 import { Request, Deposit } from 'shared/view/elements/Icons';
 import { useCommunication, withComponent } from 'shared/helpers/react';
 
+import { Compound } from './mockViews';
 import { StylesProps, provideStyles } from './View.style';
 
 const tKeys = tkeysAll.modules.daos;
@@ -24,7 +25,7 @@ interface IHeaderButton {
   Icon: React.ComponentType<any>;
 }
 
-export type Section = 'overview' | 'activities' | 'members' | 'compound' | 'history';
+export type Section = 'overview' | 'activities' | 'members' | 'products' | 'history';
 
 interface ISectionLink {
   section: Section;
@@ -37,7 +38,7 @@ const links: ISectionLink[] = [
   { section: 'overview', title: tKeys.overview.getKey() },
   { section: 'activities', title: tKeys.activities.getKey(), disabled: true, badge: 94 },
   { section: 'members', title: tKeys.members.getKey(), disabled: true },
-  { section: 'compound', title: tKeys.compound.getKey(), disabled: true },
+  { section: 'products', title: tKeys.products.getKey(), disabled: true },
   { section: 'history', title: tKeys.history.getKey(), disabled: true },
 ];
 
@@ -109,11 +110,11 @@ function View(props: IProps) {
       }
       {
         daoApiInitializing.status === 'success' &&
-        <div>
+        <div className={classes.section}>
           {selectedSection === 'overview' && 'overview'}
           {selectedSection === 'activities' && 'activities'}
           {selectedSection === 'members' && 'members'}
-          {selectedSection === 'compound' && 'compound'}
+          {selectedSection === 'products' && <Compound />}
           {selectedSection === 'history' && 'history'}
         </div>
       }

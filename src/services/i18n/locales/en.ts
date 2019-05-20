@@ -158,7 +158,7 @@ export default {
       overview: 'Co-op Overview',
       activities: 'Activities',
       members: 'Members',
-      compound: 'Compound',
+      products: 'DeFi Products',
       history: 'History',
       balance: 'Balance',
       debit: 'Debit',
