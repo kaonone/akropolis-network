@@ -30,3 +30,4 @@ export { default as Decrease } from './Decrease';
 export { default as Receipt } from './Receipt';
 export { default as AddPerson } from './AddPerson';
 export { default as MetamaskFox } from './MetamaskFox';
+export { default as Graphic } from './Graphic';

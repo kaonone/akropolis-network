@@ -49,6 +49,11 @@ function Daos(props: IProps & RouteComponentProps<any>) {
         <div style={{ marginBottom: '0.5rem' }}>
           <VotingCard<'join'> {...mockVote} type="join" votingParams={{ address: '0x1a5basdasdasdasdasd77a2' }} />
         </div>
+        <div style={{ marginBottom: '0.5rem' }}>
+          <VotingCard {...mockVote} votingDecision="against" type="deposit" />
+        </div>
+        <div style={{ marginBottom: '0.5rem' }}><VotingCard {...mockVote} votingResult="approved" /></div>
+        <div style={{ marginBottom: '0.5rem' }}><VotingCard {...mockVote} votingResult="declined" /></div>
       </div>
     </BaseLayout>
   );
