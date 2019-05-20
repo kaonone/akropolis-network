@@ -13,7 +13,7 @@ import {
 import { Request, Deposit } from 'shared/view/elements/Icons';
 import { useCommunication, withComponent } from 'shared/helpers/react';
 
-import { Activities, Products } from './mockViews';
+import { Activities, Products, Members } from './mockViews';
 import { StylesProps, provideStyles } from './View.style';
 
 const tKeys = tkeysAll.modules.daos;
@@ -113,7 +113,7 @@ function View(props: IProps) {
         <div className={classes.section}>
           {selectedSection === 'overview' && 'overview'}
           {selectedSection === 'activities' && <Activities />}
-          {selectedSection === 'members' && 'members'}
+          {selectedSection === 'members' && <Members />}
           {selectedSection === 'products' && <Products />}
           {selectedSection === 'history' && 'history'}
         </div>

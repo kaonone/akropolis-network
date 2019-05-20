@@ -13,8 +13,6 @@ const styles = ({ extra: theme }: Theme) => ({
     boxShadow: bottomBorder,
     borderRadius,
     background: theme.colors.white,
-    padding: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 2,
     cursor: 'pointer',
 
     '&$active': {

@@ -28,6 +28,7 @@ export default {
     to: 'to',
     no: 'No',
     yes: 'Yes',
+    you: 'You',
     dao: {
       goal: 'Goal',
       balance: 'Balance',
@@ -150,6 +151,12 @@ export default {
       deposit: 'Deposit',
       approve: 'Approve',
       decline: 'Decline',
+    },
+    members: {
+      address: 'Address',
+      balance: 'Balance',
+      debit: 'Debit',
+      credit: 'Credit',
     },
   },
   documents: {},

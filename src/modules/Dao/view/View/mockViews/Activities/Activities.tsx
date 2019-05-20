@@ -1,21 +1,21 @@
 import * as React from 'react';
 import VotingCard, { mockVote } from 'shared/futureView/VotingCard/VotingCard';
 
-// import { StylesProps, provideStyles } from './Compound.style';
-
+import { StylesProps, provideStyles } from './Activities.style';
 
 function Activities(props: StylesProps) {
   const { classes } = props;
   return (
-    <div>
-      <div style={{ marginBottom: '0.5rem' }}><VotingCard {...mockVote} /></div>
-      <div style={{ marginBottom: '0.5rem' }}><VotingCard {...mockVote} votingDecision="for" /></div>
-      <div style={{ marginBottom: '0.5rem' }}><VotingCard {...mockVote} votingDecision="against" /></div>
-      <div style={{ marginBottom: '0.5rem' }}>
-        <VotingCard<'join'> {...mockVote} type="join" votingParams={{ address: '0x1a5basdasdasdasdasd77a2' }} />
-      </div>
+    <div className={classes.root}>
+      <VotingCard {...mockVote} />
+      <VotingCard {...mockVote} votingDecision="for" />
+      <VotingCard {...mockVote} votingDecision="against" />
+      <VotingCard<'join'> {...mockVote} type="join" votingParams={{ address: '0x1a5basdasdasdasdasd77a2' }} />
+      <VotingCard<'deposit'> {...mockVote} votingDecision="against" type="deposit" votingParams={{ withdraw: 120 }} />
+      <VotingCard {...mockVote} votingResult="approved" />
+      <VotingCard {...mockVote} votingResult="declined" />
     </div>
   );
 }
 
-export default Activities;
+export default provideStyles(Activities);

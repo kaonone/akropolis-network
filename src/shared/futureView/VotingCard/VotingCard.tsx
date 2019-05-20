@@ -46,7 +46,8 @@ interface IDepositVoting {
   withdraw: number;
 }
 
-type VotingParams<T extends VotingType> = T extends 'withdraw' ? IWithdrawVoting : IJoinVoting;
+type VotingParams<T extends VotingType> = T extends 'withdraw' ? IWithdrawVoting :
+  T extends 'deposit' ? IDepositVoting : IJoinVoting;
 
 interface IOwnProps<T extends VotingType> {
   type: VotingType;
