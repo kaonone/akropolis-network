@@ -95,6 +95,11 @@ export function configureJss(virtual?: boolean): IJssDependencies {
             color: extraTheme.colors.royalPurple,
           },
         },
+        MuiTypography: {
+          root: {
+            display: 'unset',
+          },
+        },
       },
     })),
     extra: extraTheme,
