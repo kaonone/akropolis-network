@@ -1,9 +1,11 @@
 import { withStyles, Theme, WithStyles } from 'shared/styles';
 import { rule } from 'shared/helpers/style';
 
-const styles = (_theme: Theme) => ({
-  root: rule({
-
+const styles = (theme: Theme) => ({
+  stages: rule({
+    background: theme.extra.colors.ghostWhite,
+    borderRadius: 4,
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 7}px`,
   }),
 });
 

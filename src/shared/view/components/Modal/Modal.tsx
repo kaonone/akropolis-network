@@ -3,9 +3,9 @@ import * as ReactModal from 'react-modal';
 import * as cn from 'classnames';
 
 import { Cross } from 'shared/view/elements/Icons';
-import { IconButton, Typography } from 'shared/view/elements';
+import { IconButton, Typography, Grid } from 'shared/view/elements';
 
-import { provideStyles, StylesProps } from './Modal.style';
+import { provideStyles, StylesProps, titleVariant } from './Modal.style';
 
 interface IOwnProps {
   children?: React.ReactNode;
@@ -13,6 +13,7 @@ interface IOwnProps {
   type?: 'default' | 'signTransaction';
   isOpen: boolean;
   title?: string;
+  titleIcon?: React.ReactNode;
   titleAlign?: 'center' | 'left';
   onClose?: () => void;
 }
@@ -23,7 +24,7 @@ ReactModal.setAppElement('#root');
 
 class Modal extends React.Component<IProps> {
   public render() {
-    const { classes, children, isOpen, onClose, title } = this.props;
+    const { classes, children, isOpen, onClose, title, titleIcon } = this.props;
 
     return (
       <ReactModal
@@ -42,9 +43,24 @@ class Modal extends React.Component<IProps> {
         onRequestClose={onClose}
         closeTimeoutMS={400}
       >
-        {!!title && <Typography variant="h5" className={classes.title}>{title}</Typography>}
+        {!!title && (
+          <div className={classes.title}>
+            <Grid container spacing={16} wrap="nowrap">
+              {!!titleIcon && (
+                <Grid item>
+                  <div className={classes.titleIcon}>
+                    <div className={classes.titleIconAligner}>
+                      {titleIcon}
+                    </div>
+                  </div>
+                </Grid>
+              )}
+              <Grid item><Typography variant={titleVariant} align="center">{title}</Typography></Grid>
+            </Grid>
+          </div>
+        )}
         {onClose && <CrossButton classes={classes} onClick={onClose} />}
-        {children}
+        <div className={classes.content}>{children}</div>
       </ReactModal>
     );
   }

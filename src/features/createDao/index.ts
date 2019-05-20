@@ -5,4 +5,4 @@ import { loadEntry } from './loader';
 export { namespace };
 export { Entry } from './entry';
 
-export const CreateDaoAsync = getAsyncContainer(loadEntry, 'CreateDao');
+export const CreateDaoButtonAsync = getAsyncContainer(loadEntry, 'CreateDaoButton');

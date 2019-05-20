@@ -1,4 +1,5 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest, all } from 'redux-saga/effects';
+import { PromisedReturnType } from '_helpers';
 import { SagaIterator } from 'redux-saga';
 
 import { IDependencies } from 'shared/types/app';
@@ -19,8 +20,19 @@ function getSaga(deps: IDependencies) {
 export function* createDaoSaga(_: IDependencies, action: NS.ICreateDao) {
   const { domainName } = action.payload;
   try {
-    yield call(buildDao, domainName);
-    yield put(actions.createDaoSuccess());
+    yield put(actions.setProgress('token-creating'));
+    const [tokenPromise, daoPromise]: PromisedReturnType<typeof buildDao> = yield call(buildDao, domainName);
+    yield all([
+      call(function* token() {
+        yield call(() => tokenPromise);
+        yield put(actions.setProgress('dao-creating'));
+      }),
+      call(function* dao() {
+        yield call(() => daoPromise);
+        yield put(actions.setProgress('dao-created'));
+      }),
+    ]);
+    yield put(actions.createDaoSuccess({ createdDao: domainName }));
   } catch (error) {
     const message = getErrorMsg(error);
     yield put(actions.createDaoFail(message));

@@ -1,11 +1,15 @@
 // tslint:disable-next-line:import-blacklist
 import injectSheet from 'react-jss';
+import { GetProps } from '_helpers';
 import { Theme, WithStyles } from 'shared/styles';
 import { rule, styledBy } from 'shared/helpers/style';
+import { Typography } from 'shared/view/elements';
 
 import { IProps } from './Modal';
 
-const styles = ({ extra: theme }: Theme) => ({
+export const titleVariant: NonNullable<GetProps<typeof Typography>['variant']> = 'h5';
+
+const styles = (theme: Theme) => ({
   portal: rule({
     overflow: 'auto',
     position: 'fixed',
@@ -14,8 +18,8 @@ const styles = ({ extra: theme }: Theme) => ({
     bottom: -1,
     left: -1,
     zIndex: styledBy<IProps, 'type'>('type', {
-      default: theme.zIndex.modal,
-      signTransaction: theme.zIndex.signTransactionsModal,
+      default: theme.extra.zIndex.modal,
+      signTransaction: theme.extra.zIndex.signTransactionsModal,
     }, 'default'),
 
     '&:empty': {
@@ -31,7 +35,7 @@ const styles = ({ extra: theme }: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: theme.palette.control.bg.overlay,
+    backgroundColor: theme.extra.palette.control.bg.overlay,
   }),
   modal: rule({
     position: 'relative',
@@ -43,12 +47,12 @@ const styles = ({ extra: theme }: Theme) => ({
     alignItems: 'stretch',
     justifyContent: 'center',
     flexDirection: 'column',
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.extra.colors.white,
     outline: 'none',
     opacity: 0,
     overflow: 'hidden',
 
-    [theme.breakpoints.up('sm')]: rule({
+    [theme.extra.breakpoints.up('sm')]: rule({
       flexGrow: 0,
       minHeight: 'unset',
       minWidth: 'unset',
@@ -63,7 +67,7 @@ const styles = ({ extra: theme }: Theme) => ({
       boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.2)',
     }),
 
-    [theme.breakpoints.up('md')]: rule({
+    [theme.extra.breakpoints.up('md')]: rule({
       width: styledBy<IProps, 'size'>('size', {
         small: '21rem',
         medium: '30rem',
@@ -95,16 +99,28 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   title: rule({
-    textAlign: 'center',
     alignSelf: 'center',
-    margin: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 5}px ${theme.spacing.unit * 4}px`,
+    margin: `${theme.extra.spacing.unit * 5}px ${theme.extra.spacing.unit * 5}px ${theme.extra.spacing.unit * 4}px`,
+  }),
+
+  titleIcon: rule({
+    ...theme.typography[titleVariant],
+    ...theme.overrides && theme.overrides.MuiTypography && theme.overrides.MuiTypography[titleVariant],
+  }),
+
+  titleIconAligner: rule({
+    verticalAlign: 'middle',
+  }),
+
+  content: rule({
+    margin: `0 ${theme.extra.spacing.unit * 5}px ${theme.extra.spacing.unit * 6}px`,
   }),
 
   cross: rule({
     position: 'absolute',
-    top: theme.spacing.unit,
-    right: theme.spacing.unit,
-    zIndex: theme.zIndex.newContext + 1,
+    top: theme.extra.spacing.unit,
+    right: theme.extra.spacing.unit,
+    zIndex: theme.extra.zIndex.newContext + 1,
   }),
 
   isAbsolute: {},

@@ -5,7 +5,6 @@ import routes from 'modules/routes';
 import { IModule } from 'shared/types/app';
 
 import Daos from './view/Daos/Daos';
-import Create from './view/Create/Create';
 import View, { Section } from './view/View/View';
 
 const defaultSection: Section = 'overview';
@@ -14,7 +13,6 @@ const HomeModule: IModule = {
   getRoutes() {
     return [
       <Route exact key="Daos" path={routes.daos.getRoutePath()} component={Daos} />,
-      <Route exact key="Create Dao" path={routes.dao.create.getRoutePath()} component={Create} />,
       // tslint:disable-next-line:jsx-wrap-multiline
       <Redirect
         exact

@@ -18,7 +18,7 @@ class RetryModal extends React.PureComponent<IProps & StylesProps> {
     const { classes, onRetry, children, title, buttonText } = this.props;
     return (
       <Modal size="large" isOpen={true} title={title}>
-        <Grid container spacing={40} direction="column" alignItems="center" className={classes.root}>
+        <Grid container spacing={40} direction="column" alignItems="center">
           <Grid item>
             <Typography variant="body1" align="center">{children}</Typography>
           </Grid>

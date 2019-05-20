@@ -7,4 +7,6 @@ export const initial: NS.IReduxState = {
       isRequesting: false,
     },
   },
+  progress: 'initial',
+  createdDao: '',
 };
