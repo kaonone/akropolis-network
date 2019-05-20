@@ -107,6 +107,22 @@ const styles = ({ extra: theme }: Theme) => ({
     composes: '$votingTypeIcon',
     color: theme.colors.curiousBlue,
   }),
+
+  votingResult: rule({
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: 'auto',
+    padding: theme.spacing.unit * 2,
+  }),
+
+  votingFor: rule({
+    color: theme.colors.shamrock,
+  }),
+
+  votingAgainst: rule({
+    color: theme.colors.geraldine,
+  }),
+
 });
 
 export const provideStyles = withStyles(styles);

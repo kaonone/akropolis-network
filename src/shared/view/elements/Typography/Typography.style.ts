@@ -28,6 +28,7 @@ const styles = () => ({
 
   h6: rule({
     fontSize: '1.25rem',
+    fontWeight: 400,
   }),
 
   body1: rule({
