@@ -1,68 +1,69 @@
 import { withStyles, Theme, WithStyles } from 'shared/styles';
 import { rule } from 'shared/helpers/style';
-import { theme as extraTheme } from 'shared/styles/theme';
 
 const bottomBorder = `0px 1px 0px rgba(0, 0, 0, 0.1)`;
 
-const horizontalCellPadding = extraTheme.spacing.unit * 1.5;
-
 const borderRadius = '0.25rem';
 
-const styles = ({ extra: theme }: Theme) => ({
-  row: rule({
-    boxShadow: bottomBorder,
-    borderRadius,
-    background: theme.colors.white,
-  }),
+const styles = ({ extra: theme }: Theme) => {
+  const horizontalCellPadding = theme.spacing.unit * 1.5;
 
-  header: rule({
-    backgroundColor: '#F4F3F5',
-    borderRadius,
-  }),
+  return {
+    row: rule({
+      boxShadow: bottomBorder,
+      borderRadius,
+      background: theme.colors.white,
+    }),
 
-  active: {},
+    header: rule({
+      backgroundColor: '#F4F3F5',
+      borderRadius,
+    }),
 
-  cell: rule({
-    padding: `${theme.spacing.unit * 1.75}px ${horizontalCellPadding}px`,
+    active: {},
 
-    '&:first-child': {
-      borderTopLeftRadius: borderRadius,
-      borderBottomLeftRadius: borderRadius,
-    },
+    cell: rule({
+      padding: `${theme.spacing.unit * 1.75}px ${horizontalCellPadding}px`,
 
-    '&:last-child': {
-      paddingRight: theme.spacing.unit * 2,
-      borderTopRightRadius: borderRadius,
-      borderBottomRightRadius: borderRadius,
-    },
-  }),
+      '&:first-child': {
+        borderTopLeftRadius: borderRadius,
+        borderBottomLeftRadius: borderRadius,
+      },
 
-  headerCell: rule({
-    composes: '$cell',
-    padding: `${theme.spacing.unit * 0.75}px ${horizontalCellPadding}px`,
-  }),
+      '&:last-child': {
+        paddingRight: theme.spacing.unit * 2,
+        borderTopRightRadius: borderRadius,
+        borderBottomRightRadius: borderRadius,
+      },
+    }),
 
-  headerTitle: rule({
-    color: theme.colors.topaz,
-  }),
+    headerCell: rule({
+      composes: '$cell',
+      padding: `${theme.spacing.unit * 0.75}px ${horizontalCellPadding}px`,
+    }),
 
-  memberNumber: rule({
-    color: theme.colors.topaz,
-  }),
+    headerTitle: rule({
+      color: theme.colors.topaz,
+    }),
 
-  userTag: rule({
-    padding: `${theme.spacing.unit * 0.5}px ${theme.spacing.unit}px`,
-    borderRadius: '2.125rem',
-    background: theme.colors.whiteLilac,
-    color: theme.colors.royalPurple,
-  }),
+    memberNumber: rule({
+      color: theme.colors.topaz,
+    }),
 
-  avatar: rule({
-    width: '1.5rem',
-    height: '1.5rem',
-    marginRight: theme.spacing.unit,
-  }),
-});
+    userTag: rule({
+      padding: `${theme.spacing.unit * 0.5}px ${theme.spacing.unit}px`,
+      borderRadius: '2.125rem',
+      background: theme.colors.whiteLilac,
+      color: theme.colors.royalPurple,
+    }),
+
+    avatar: rule({
+      width: '1.5rem',
+      height: '1.5rem',
+      marginRight: theme.spacing.unit,
+    }),
+  };
+};
 
 export const provideStyles = withStyles(styles);
 
