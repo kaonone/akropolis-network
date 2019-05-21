@@ -21,15 +21,6 @@ function Typography(props: IProps) {
       {...props}
       classes={{
         root: cn(classes.root, { [classes.medium]: weight === 'medium', [classes.bold]: weight === 'bold' }),
-        h3: classes.h3,
-        h4: classes.h4,
-        h5: classes.h5,
-        h6: classes.h6,
-        body1: classes.body1,
-        body2: classes.body2,
-        subtitle1: classes.subtitle1,
-        caption: classes.caption,
-        overline: classes.overline,
       }}
     />
   );

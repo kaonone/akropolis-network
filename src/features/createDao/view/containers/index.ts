@@ -1,1 +1,1 @@
-export { default as CreateDao } from './CreateDao/CreateDao';
+export { default as CreateDaoButton } from './CreateDaoButton/CreateDaoButton';

@@ -3,7 +3,7 @@ import { Omit } from 'react-redux';
 import { GetProps } from '_helpers';
 
 interface IBaseProps {
-  component?: React.ReactType<any>;
+  component?: string | React.ReactType<any>;
 }
 
 type StringType = keyof JSX.IntrinsicElements;

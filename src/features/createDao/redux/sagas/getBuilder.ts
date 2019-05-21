@@ -64,7 +64,7 @@ export const getBuilder = (from: string, { apmOptions, defaultGasPriceFn, web3 }
     templateEnsId: string,
     tokenParams: IParamsWithGasOptions<TokenParams>,
     instanceParams: IParamsWithGasOptions<InstanceParams>,
-  ): Promise<[string, string]> => {
+  ): Promise<[Promise<string>, Promise<string>]> => {
     const { contractAddress, abi } = await apm.getLatestVersion(templateEnsId);
     if (!contractAddress) {
       throw new Error(`No contract found on APM for template '${templateEnsId}'`);
@@ -73,9 +73,9 @@ export const getBuilder = (from: string, { apmOptions, defaultGasPriceFn, web3 }
       throw new Error(`Could not fetch ABI for template '${templateEnsId}'`);
     }
     const template = new web3.eth.Contract(abi, contractAddress);
-    const token = await newToken(template, tokenParams);
-    const instance = await newInstance(template, instanceParams);
-    return [token, instance];
+    const tokenPromise = newToken(template, tokenParams);
+    const instancePromise = tokenPromise.then(() => newInstance(template, instanceParams));
+    return [tokenPromise, instancePromise];
   };
 
   return { newDAO };
