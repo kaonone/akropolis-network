@@ -56,8 +56,8 @@ const DaoMetrics = (props: IProps) => {
   ];
   return (
     <Grid container wrap="nowrap" alignItems="center" className={classes.root}>
-      {metrics.map(metric => (
-        <Grid item className={classes.metric}>
+      {metrics.map((metric, i) => (
+        <Grid key={i} item className={classes.metric}>
           <Typography variant="overline" className={classes.title}>{metric.title}</Typography>
           <Grid container wrap="nowrap" alignItems="baseline">
             <Typography weight="medium" variant="h6" className={classes.value}>{metric.value}</Typography>

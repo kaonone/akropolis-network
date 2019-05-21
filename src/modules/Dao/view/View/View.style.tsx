@@ -5,6 +5,11 @@ const styles = ({ extra: theme }: Theme) => ({
   root: rule({
   }),
 
+  section: rule({
+    paddingTop: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 5.5,
+  }),
+
   headerButtonIcon: rule({
     marginRight: theme.spacing.unit,
   }),

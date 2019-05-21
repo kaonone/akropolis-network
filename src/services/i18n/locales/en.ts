@@ -28,6 +28,7 @@ export default {
     to: 'to',
     no: 'No',
     yes: 'Yes',
+    you: 'You',
     done: 'Done',
     waiting: 'Waiting',
     dao: {
@@ -99,6 +100,12 @@ export default {
       approve: 'Approve',
       decline: 'Decline',
     },
+    members: {
+      address: 'Address',
+      balance: 'Balance',
+      debit: 'Debit',
+      credit: 'Credit',
+    },
   },
   documents: {},
   modules: {
@@ -110,7 +117,7 @@ export default {
       overview: 'Co-op Overview',
       activities: 'Activities',
       members: 'Members',
-      compound: 'Compound',
+      products: 'DeFi Products',
       history: 'History',
       balance: 'Balance',
       debit: 'Debit',
