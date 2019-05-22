@@ -8,7 +8,7 @@ interface IOwnProps {
   total: number;
   current: number;
   description: string;
-  timePassed: string;
+  timeLeft: string;
   hint: string;
 }
 
@@ -16,7 +16,7 @@ type IProps = StylesProps & IOwnProps;
 
 const AccessCard = (props: IProps) => {
   const {
-    classes, total, current, description, timePassed, hint,
+    classes, total, current, description, timeLeft: timePassed, hint,
   } = props;
 
   return (
