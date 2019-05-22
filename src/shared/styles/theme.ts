@@ -47,6 +47,10 @@ const colors = {
   moonRaker: '#E5DCF7',
   jaffa: '#F2994A',
   curiousBlue: '#2D9CDB',
+  whiteMorlac: '#F7F5FC',
+  whiteWine: '#FAF9FD',
+  normalPurple: '#8E44DC',
+  mischka: '#E0DDE6',
 };
 
 const gradients = {

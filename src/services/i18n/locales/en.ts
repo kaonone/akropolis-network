@@ -106,6 +106,17 @@ export default {
       debit: 'Debit',
       credit: 'Credit',
     },
+    cooperativeOverview: {
+      cooperativeBalance: 'Co-op Balance',
+      cooperativeGoal: 'Co-op Goal',
+      personalInformation: 'Personal Information',
+      deposit: 'Deposit',
+      earn: 'Earn',
+      accessToLoan: 'Access to loan in %{date}:',
+      accessToInsurance: 'Access to social insurance in %{date}:',
+      accessToLoanHint: 'Access to loan',
+      accessToInsuranceHint: 'Access to social insurance',
+    },
   },
   documents: {},
   modules: {
