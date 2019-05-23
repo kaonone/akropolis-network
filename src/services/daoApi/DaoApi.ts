@@ -16,6 +16,11 @@ export class DaoApi {
   }
 
   @bind
+  public async getTokenAddress() {
+    return this.base.call('Token Manager', 'token', null);
+  }
+
+  @bind
   public async requestAccess() {
     const account = await this.base.getAccount();
 

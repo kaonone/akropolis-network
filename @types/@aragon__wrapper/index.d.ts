@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 declare module '@aragon/wrapper' {
+  import Web3 from 'web3';
   import { Provider, IAragonApp, IAragonPermissions, ITransactionBag, ITransaction } from '@aragon/types';
   import { ApmOptions } from '@aragon/apm';
   import { Observable, Subscription } from 'rxjs';
@@ -36,6 +37,7 @@ declare module '@aragon/wrapper' {
   }
 
   class AragonWrapper {
+    public web3: Web3;
     public apps: Observable<IAragonApp[]>;
     public permissions: Observable<IAragonPermissions>;
     public forwarders: Observable<IAragonApp[]>;
@@ -62,8 +64,27 @@ declare module '@aragon/wrapper' {
   export default AragonWrapper;
 }
 
+declare module '@aragon/wrapper/dist/core/proxy' {
+  import Web3 from 'web3';
+  import { EventLog } from 'web3/types';
+  import { Observable } from 'rxjs';
+
+  class ContractProxy {
+    public address: string;
+    public initializationBlock: number;
+    public call(method: string, ...params: string[]): Promise<any>;
+    public updateInitializationBlock(): Promise<void>;
+    public events(eventNames?: string[], options?: { fromBlock: number }): Observable<EventLog>;
+  }
+
+  export default ContractProxy;
+}
+
 declare module '@aragon/wrapper/dist/utils' {
   import Web3 from 'web3';
+  import { IAbi } from '@aragon/types';
+  import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 
   export function getRecommendedGasLimit(web3: Web3, estimatedGasLimit: number, options?: { gasFuzzFactor?: number }): number;
+  export function makeProxyFromABI(address: string, abi: IAbi[] | null | undefined, web3: Web3, initializationBlock?: number): ContractProxy;
 }

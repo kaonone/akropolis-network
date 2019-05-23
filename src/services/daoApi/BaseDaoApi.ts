@@ -1,5 +1,7 @@
 import { observable, action, runInAction, when } from 'mobx';
 import AragonWrapper, { ensResolve } from '@aragon/wrapper';
+import ContractProxy from '@aragon/wrapper/dist/core/proxy';
+import { makeProxyFromABI } from '@aragon/wrapper/dist/utils';
 import { IAragonApp, ITransaction } from '@aragon/types';
 
 import { getWeb3, getMainAccount } from 'shared/helpers/web3';
@@ -8,11 +10,15 @@ import { isEthereumAddress } from 'shared/validators/isEthereumAddress/isEthereu
 import { NULL_ADDRESS } from 'shared/constants';
 import { IDaoApiConfig, AppType, MethodByApp, ParamsByAppByMethod } from './types';
 
+interface IExtendedAragonApp extends IAragonApp {
+  proxy: ContractProxy;
+}
+
 export class BaseDaoApi {
   @observable
   private wrapper: AragonWrapper | null = null;
   @observable
-  private apps: IAragonApp[] = [];
+  private apps: IExtendedAragonApp[] = [];
 
   private config: IDaoApiConfig;
 
@@ -80,6 +86,22 @@ export class BaseDaoApi {
     this.wrapper = wrapper;
   }
 
+  public async call<T extends AppType, M extends MethodByApp<T>, P extends ParamsByAppByMethod<T, M>>(
+    appType: T, method: M, params: P,
+  ) {
+    if (!this.wrapper) {
+      throw new Error('AragonWrapper is not initialized');
+    }
+
+    const app = getAppByName(appType, this.apps);
+
+    if (!app) {
+      throw new Error(`app for "${appType}" is not found`);
+    }
+
+    return app.proxy.call(method as any, ...(params as any || []));
+  }
+
   public async sendTransaction<T extends AppType, M extends MethodByApp<T>, P extends ParamsByAppByMethod<T, M>>(
     appType: T, method: M, params: P,
   ) {
@@ -87,7 +109,8 @@ export class BaseDaoApi {
       throw new Error('AragonWrapper is not initialized');
     }
 
-    const proxyAddress = getAppAddressByName(appType, this.apps);
+    const proxy = getAppByName(appType, this.apps);
+    const proxyAddress = proxy ? proxy.proxyAddress : NULL_ADDRESS;
 
     const path = await this.wrapper.getTransactionPath(proxyAddress, method as string, params as any);
 
@@ -134,11 +157,13 @@ export class BaseDaoApi {
 
   @action.bound
   private setApps(apps: IAragonApp[]) {
-    this.apps = apps; // 'this' will always be correct
-  }
+    this.apps = apps.map(app => ({
+      ...app,
+      proxy: makeProxyFromABI(app.proxyAddress, app.abi, this.web3),
+    }));
+}
 }
 
-function getAppAddressByName(appName: string, apps: IAragonApp[]): string {
-  const foundApp = apps.find(app => app.name.toLowerCase() === appName.toLowerCase());
-  return (foundApp || { proxyAddress: NULL_ADDRESS }).proxyAddress;
+function getAppByName(appName: string, apps: IExtendedAragonApp[]): IExtendedAragonApp | null {
+  return apps.find(app => app.name.toLowerCase() === appName.toLowerCase()) || null;
 }

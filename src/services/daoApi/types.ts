@@ -15,7 +15,11 @@ export type ParamsByAppByMethod<T extends AppType, M extends MethodByApp<T>> = I
 
 interface IAppMethodParams {
   'Token Manager': {
+    // set
     mint: readonly [string, string]; // [holder, amount]
+    // get
+    maxAccountTokens: null;
+    token: null;
   };
   Voting: {
     mock: [];
