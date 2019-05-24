@@ -8,9 +8,8 @@ import routes from 'modules/routes';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
 
 import {
-  CircleProgressBar, Typography, ToggleButtonGroup, ToggleButton, Button, Grid, Badge,
+  CircleProgressBar, Typography, ToggleButtonGroup, ToggleButton, Grid, Badge,
 } from 'shared/view/elements';
-import { Request, Deposit } from 'shared/view/elements/Icons';
 import { useCommunication, withComponent } from 'shared/helpers/react';
 
 import { Activities, Products, Members } from './mockViews';
@@ -22,11 +21,6 @@ import { RequestDepositButtonAsync } from 'features/requestDeposit';
 const tKeys = tkeysAll.modules.daos;
 
 const NavToggleButton = withComponent(Link)(ToggleButton);
-
-interface IHeaderButton {
-  label: string;
-  Icon: React.ComponentType<any>;
-}
 
 export type Section = 'overview' | 'activities' | 'members' | 'products' | 'history';
 
@@ -84,8 +78,7 @@ function View(props: IProps) {
                 <RequestDepositButtonAsync />
               </Grid>
             </>}
-          </Grid>
-          }
+          </Grid>}
     >
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
         {links.map(({ section, title, badge }, index: number) => (

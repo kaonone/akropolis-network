@@ -79,7 +79,7 @@ function CreateDaoButton(props: IProps) {
           title={t(intl[showForm ? 'form' : 'progress'].title.getKey())}
           onClose={handleIsOpenedChanging.bind(null, false)}
         >
-          {showForm ? <CreateDaoForm /> : <CreateDaoProgress />}
+          {showForm ? <CreateDaoForm onCancel={handleIsOpenedChanging.bind(null, false)} /> : <CreateDaoProgress />}
         </Modal>
       )}
       {!!creating.error && (

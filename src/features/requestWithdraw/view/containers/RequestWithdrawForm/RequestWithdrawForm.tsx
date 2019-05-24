@@ -1,15 +1,10 @@
 import * as React from 'react';
-import { Form } from 'react-final-form';
-import { connect } from 'react-redux';
 
 import { Request } from 'shared/view/elements/Icons';
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
-import { selectors as userSelectors } from 'services/user';
 import { useDeps } from 'core';
-import { IAppReduxState } from 'shared/types/app';
-import { isRequired, composeValidators, maxStringLength, allowedCharactersForDaoName } from 'shared/validators';
-import { Grid, Button } from 'shared/view/elements';
-import { UserAvatar } from 'shared/view/components';
+import { isRequired } from 'shared/validators';
+import { RequestForm } from 'shared/view/components';
 import { TextInputField, NumberInputField } from 'shared/view/form';
 
 import { IRequestFormData } from '../../../namespace';
@@ -21,19 +16,7 @@ const fieldNames: { [key in keyof IRequestFormData]: key } = {
   amount: 'amount',
 };
 
-interface IStateProps {
-  userAddress: string | null;
-}
-
-function mapState(state: IAppReduxState): IStateProps {
-  return {
-    userAddress: userSelectors.selectConfirmedAddress(state),
-  };
-}
-
 const tKeys = tKeysAll.features.requestWithdraw;
-
-// const syncValidateDao = composeValidators(isRequired, maxStringLength.bind(null, 30), allowedCharactersForDaoName);
 
 interface IOwnProps {
   onSuccess(): void;
@@ -41,10 +24,10 @@ interface IOwnProps {
   onCancel(): void;
 }
 
-type IProps = IOwnProps & IStateProps & StylesProps;
+type IProps = IOwnProps & StylesProps;
 
 function RequestWithdrawForm(props: IProps) {
-  const { onSuccess, onError, onCancel, userAddress, classes } = props;
+  const { onSuccess, onError, onCancel, classes } = props;
   const { t } = useTranslate();
 
   const { daoApi } = useDeps();
@@ -58,63 +41,38 @@ function RequestWithdrawForm(props: IProps) {
     }
   }, []);
 
+  // tslint:disable:jsx-key
+  const formFields = [
+    (
+      <NumberInputField
+        suffix=" DAI"
+        name={fieldNames.amount}
+        label={t(tKeys.fields.amount.getKey())}
+        validate={isRequired}
+        fullWidth
+      />),
+    (
+      <TextInputField
+        name={fieldNames.reason}
+        label={t(tKeys.fields.reason.getKey())}
+        validate={isRequired}
+        fullWidth
+      />),
+  ];
+  // tslint:enable:jsx-key
+
   return (
-    <Form onSubmit={asyncSubmit} subscription={{ validating: true, submitting: true }}>
-      {({ handleSubmit, submitting }) => (
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={40}>
-            <Grid item xs={12}>
-              <Grid container wrap="nowrap" justify="center">
-                {userAddress && <UserAvatar address={userAddress} className={classes.address} />}
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={8}>
-                <Grid item xs={12}>
-                  <NumberInputField
-                    suffix=" DAI"
-                    name={fieldNames.amount}
-                    label={t(tKeys.fields.amount.getKey())}
-                    validate={isRequired}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextInputField
-                    name={fieldNames.reason}
-                    label={t(tKeys.fields.reason.getKey())}
-                    validate={isRequired}
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={32}>
-                <Grid item xs={6} container justify="flex-end" onClick={onCancel}>
-                  <Button>{t(tKeys.form.cancel.getKey())}</Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    disabled={submitting}
-                  >
-                    <Request className={classes.buttonIcon} />
-                    {t(tKeys.form.submit.getKey())}
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </form>
-      )}
-    </Form>
+    <RequestForm
+      onCancel={onCancel}
+      onSubmit={asyncSubmit}
+      cancelButton={t(tKeys.form.cancel.getKey())}
+      submitButton={<>
+        <Request className={classes.buttonIcon} />
+        {t(tKeys.form.submit.getKey())}
+      </>}
+      fields={formFields}
+    />
   );
 }
 
-export default (
-  connect(mapState)(provideStyles(RequestWithdrawForm))
-);
+export default provideStyles(RequestWithdrawForm);

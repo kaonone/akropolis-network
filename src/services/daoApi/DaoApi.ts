@@ -72,24 +72,21 @@ export class DaoApi {
     const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
     const reference = 'requestDeposit';
 
-
-    const periodDuration: string = await this.base.call('Finance', 'getPeriodDuration', null)
-
-    const currentPeriodId: string = await this.base.call('Finance', 'currentPeriodId', null)
-
-    const currentPeriod: ITransitionPeriod = await this.base.call('Finance', 'getPeriod', [currentPeriodId])
+    const periodDuration: string = await this.base.call('Finance', 'getPeriodDuration', null);
+    const currentPeriodId: string = await this.base.call('Finance', 'currentPeriodId', null);
+    const currentPeriod: ITransitionPeriod = await this.base.call('Finance', 'getPeriod', [currentPeriodId]);
 
     let intentParams;
 
     if (tokenAddress === ETHER_TOKEN_FAKE_ADDRESS) {
-      intentParams = { value: resultAmount }
+      intentParams = { value: resultAmount };
     } else {
       // Get the number of period transitions necessary; we floor because we don't need to
       // transition the current period
       const lastPeriodStart = Number(currentPeriod.startTime);
       const periodTransitions = Math.floor(
-        Math.max(Date.now() / 1000 - lastPeriodStart, 0) / Number(periodDuration)
-      )
+        Math.max(Date.now() / 1000 - lastPeriodStart, 0) / Number(periodDuration),
+      );
 
       intentParams = {
         token: { address: tokenAddress, value: resultAmount },
@@ -103,7 +100,7 @@ export class DaoApi {
           400000 +
           20000 * Math.ceil(reference.length / 32) +
           80000 * periodTransitions,
-      }
+      };
     }
 
     const params = [
