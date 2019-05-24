@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import * as R from 'ramda';
 
 import { Typography } from 'shared/view/elements';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
@@ -18,15 +19,7 @@ const TOTAL_WAITING_DAYS_COUNT = 92;
 const getDayLeft = () => {
   const diffWithSeptember = FIRST_SEPTEMBER.diff(moment(), 'days', true);
 
-  if (diffWithSeptember < 0) {
-    return 0;
-  }
-
-  if (diffWithSeptember > TOTAL_WAITING_DAYS_COUNT) {
-    return TOTAL_WAITING_DAYS_COUNT;
-  }
-
-  return Math.ceil(diffWithSeptember);
+  return R.clamp(0, TOTAL_WAITING_DAYS_COUNT, Math.ceil(diffWithSeptember));
 };
 
 type IProps = StylesProps;
