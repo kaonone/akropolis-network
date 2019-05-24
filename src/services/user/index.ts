@@ -3,6 +3,7 @@ import * as namespace from './namespace';
 import { actions, selectors, reducer, getSaga } from './redux';
 
 export * from './containers';
+export * from './hooks';
 export { namespace, selectors, actions };
 
 export const reduxEntry: IReduxEntry = {

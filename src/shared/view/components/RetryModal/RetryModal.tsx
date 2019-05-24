@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { Button, Typography, Grid } from 'shared/view/elements';
 import { MetamaskFox } from 'shared/view/elements/Icons';
-import { Modal } from 'shared/view/components';
 
+import Modal from '../Modal/Modal';
 import { StylesProps, provideStyles } from './RetryModal.style';
 
 interface IProps {
@@ -19,9 +19,11 @@ class RetryModal extends React.PureComponent<IProps & StylesProps> {
     return (
       <Modal size="large" isOpen={true} title={title}>
         <Grid container spacing={40} direction="column" alignItems="center">
-          <Grid item>
-            <Typography variant="body1" align="center">{children}</Typography>
-          </Grid>
+          {!!children && (
+            <Grid item>
+              <Typography variant="body1" align="center">{children}</Typography>
+            </Grid>
+          )}
           <Grid item>
             <Button
               className={classes.action}

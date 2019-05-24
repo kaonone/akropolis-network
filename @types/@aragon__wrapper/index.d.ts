@@ -67,9 +67,11 @@ declare module '@aragon/wrapper' {
 declare module '@aragon/wrapper/dist/core/proxy' {
   import Web3 from 'web3';
   import { EventLog } from 'web3/types';
+  import { IAbi } from '@aragon/types';
   import { Observable } from 'rxjs';
 
   class ContractProxy {
+    public constructor(address: string, jsonInterface: IAbi[], web3: Web3, initializationBlock?: number);
     public address: string;
     public initializationBlock: number;
     public call(method: string, ...params: string[]): Promise<any>;
@@ -86,5 +88,5 @@ declare module '@aragon/wrapper/dist/utils' {
   import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 
   export function getRecommendedGasLimit(web3: Web3, estimatedGasLimit: number, options?: { gasFuzzFactor?: number }): number;
-  export function makeProxyFromABI(address: string, abi: IAbi[] | null | undefined, web3: Web3, initializationBlock?: number): ContractProxy;
+  export function makeProxyFromABI(address: string, abi: IAbi[], web3: Web3, initializationBlock?: number): ContractProxy;
 }
