@@ -9,6 +9,14 @@ export interface IDaoApiConfig {
   defaultGasPriceFn(): string;
 }
 
+export interface ITransitionPeriod {
+  isCurrent: boolean;
+  startTime: string; // at seconds
+  endTime: string; // at seconds
+  firstTransactionId: string;
+  lastTransactionId: string;
+}
+
 export type AppType = keyof IAppMethodParams;
 export type MethodByApp<T extends AppType> = keyof IAppMethodParams[T];
 export type ParamsByAppByMethod<T extends AppType, M extends MethodByApp<T>> = IAppMethodParams[T][M];
@@ -25,6 +33,12 @@ interface IAppMethodParams {
     mock: [];
   };
   Finance: {
-    mock: [];
+    // set
+    newImmediatePayment: readonly [string, string, string, string]; // [tokenAddress, recipient, amount, reference]
+    deposit: readonly [string, string, string, object]; // [tokenAddress, amount, reference, intentParams]
+    // get
+    getPeriodDuration: null;
+    currentPeriodId: null;
+    getPeriod: readonly [string]; // [periodId]
   };
 }

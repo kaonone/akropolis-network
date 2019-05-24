@@ -32,3 +32,5 @@ export { default as AddPerson } from './AddPerson';
 export { default as MetamaskFox } from './MetamaskFox';
 export { default as Graphic } from './Graphic';
 export { default as WarningCircleContained } from './WarningCircleContained';
+export { default as Exit } from './Exit';
+

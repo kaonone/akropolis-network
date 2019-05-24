@@ -106,6 +106,41 @@ export default {
       debit: 'Debit',
       credit: 'Credit',
     },
+    joinToCooperative: {
+      button: 'Join to Coop',
+      fields: {
+        reason: 'Reason',
+      },
+      form: {
+        title: 'Join',
+        cancel: 'Cancel',
+        submit: 'join',
+      },
+    },
+    requestWithdraw: {
+      button: 'Request',
+      fields: {
+        amount: 'Amount',
+        reason: 'Reason',
+      },
+      form: {
+        title: 'Request',
+        cancel: 'Cancel',
+        submit: 'Request',
+      },
+    },
+    requestDeposit: {
+      button: 'Deposit',
+      fields: {
+        amount: 'Amount',
+      },
+      form: {
+        title: 'Deposit',
+        cancel: 'Cancel',
+        submit: 'Deposit',
+        hint: 'Tokens may require a pretransaction to approve the Finance app for your deposit.',
+      },
+    },
   },
   documents: {},
   modules: {

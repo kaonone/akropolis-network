@@ -9,14 +9,13 @@ import { useOnChangeState } from 'shared/helpers/react';
 import { isSucceededByState } from 'shared/helpers/redux';
 import { Button, CircleProgressBar } from 'shared/view/elements';
 import { Cooperative } from 'shared/view/elements/Icons';
-import { Modal } from 'shared/view/components';
+import { Modal, ErrorModal } from 'shared/view/components';
 
 import * as actions from './../../../redux/actions';
 import * as selectors from './../../../redux/selectors';
 import { Progress } from '../../../namespace';
 import CreateDaoForm from '../CreateDaoForm/CreateDaoForm';
 import CreateDaoProgress from '../CreateDaoProgress/CreateDaoProgress';
-import ErrorModal from './ErrorModal/ErrorModal';
 
 const intl = tKeys.features.createDao;
 

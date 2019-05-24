@@ -12,7 +12,7 @@ type IProps = InjectedAuthRouterProps;
 
 function Daos(props: IProps & RouteComponentProps<any>) {
   const handleOpenDao = React.useCallback((daoName: string) => {
-    props.history.push(routes.dao.view.id.getRedirectPath({ id: daoName }));
+    daoName && props.history.push(routes.dao.view.id.getRedirectPath({ id: daoName }));
   }, []);
 
   return (

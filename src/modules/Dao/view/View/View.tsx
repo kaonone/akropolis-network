@@ -15,6 +15,9 @@ import { useCommunication, withComponent } from 'shared/helpers/react';
 
 import { Activities, Products, Members } from './mockViews';
 import { StylesProps, provideStyles } from './View.style';
+import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
+import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
+import { RequestDepositButtonAsync } from 'features/requestDeposit';
 
 const tKeys = tkeysAll.modules.daos;
 
@@ -52,19 +55,7 @@ function View(props: IProps) {
 
   React.useEffect(daoApiInitializing.execute, [daoId]);
 
-  const actions: IHeaderButton[] = [
-    { label: t(tKeys.request.getKey()), Icon: Request },
-    { label: t(tKeys.deposit.getKey()), Icon: Deposit },
-  ];
-
-  const daoActionButtons = daoApiInitializing.status !== 'success' ? undefined :
-    actions.map(({ label, Icon }) => (
-      <Grid item key={label}>
-        <Button color="secondary" variant="contained">
-          <Icon className={classes.headerButtonIcon} />
-          {label}
-        </Button>
-      </Grid>));
+  const isHideCoopButton = daoApiInitializing.status !== 'success';
 
   return (
     <BaseLayout
@@ -81,8 +72,20 @@ function View(props: IProps) {
               credit={0.5}
             />
           </Grid>
-          {daoActionButtons}
-        </Grid>}
+          {!isHideCoopButton &&
+            <>
+              <Grid item>
+                <JointToCooperativeButtonAsync />
+              </Grid>
+              <Grid item>
+                <RequestWithdrawButtonAsync />
+              </Grid>
+              <Grid item>
+                <RequestDepositButtonAsync />
+              </Grid>
+            </>}
+          </Grid>
+          }
     >
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
         {links.map(({ section, title, badge }, index: number) => (
