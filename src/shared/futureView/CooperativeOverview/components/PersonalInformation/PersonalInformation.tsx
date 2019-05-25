@@ -31,8 +31,6 @@ const PersonalInformation = (props: IProps) => {
   const dayLeft = getDayLeft();
   const dayPassed = TOTAL_WAITING_DAYS_COUNT - dayLeft;
 
-  const timeLeft = t(dayLeft > 1 ? tKeysShared.days.getKey() : tKeysShared.day.getKey(), { amount: dayLeft });
-
   return (
     <div className={classes.root}>
       <Typography variant="subtitle1" weight="medium" className={classes.title}>
@@ -60,14 +58,14 @@ const PersonalInformation = (props: IProps) => {
           total={TOTAL_WAITING_DAYS_COUNT}
           current={dayPassed}
           description={t(tKeys.accessToLoan.getKey(), { date: '3 months' })}
-          timeLeft={timeLeft}
+          timeLeft={t(tKeysShared.daysAmount.getKey(), dayLeft)}
           hint={t(tKeys.accessToLoanHint.getKey())}
         />
         <AccessCard
           total={TOTAL_WAITING_DAYS_COUNT}
           current={dayPassed}
           description={t(tKeys.accessToInsurance.getKey(), { date: '3 months' })}
-          timeLeft={timeLeft}
+          timeLeft={t(tKeysShared.daysAmount.getKey(), dayLeft)}
           hint={t(tKeys.accessToInsuranceHint.getKey())}
         />
       </div>

@@ -31,8 +31,7 @@ export default {
     you: 'You',
     done: 'Done',
     waiting: 'Waiting',
-    day: '%{amount} day',
-    days: '%{amount} days',
+    daysAmount: '%{smart_count} day |||| %{smart_count} days',
     dao: {
       goal: 'Goal',
       balance: 'Balance',
