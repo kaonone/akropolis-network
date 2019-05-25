@@ -6,3 +6,8 @@ export type ProviderType =
 
 export type ID = number;
 export type UUID = string;
+
+export interface IHolder {
+  balance: string;
+  address: string;
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { GetProps } from '_helpers';
 
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
+import { DaoApi } from 'services/daoApi';
 
 import { Button } from 'shared/view/elements';
 import { Modal, ErrorModal } from 'shared/view/components';
@@ -12,10 +12,12 @@ import { StylesProps, provideStyles } from './RequestDepositButton.style';
 
 const tKeys = tKeysAll.features.requestDeposit;
 
-type IProps = StylesProps & GetProps<typeof Button>;
+interface IOwnProps {
+  daoApi: DaoApi;
+}
 
-function RequestDepositButton(props: IProps) {
-  const { classes } = props;
+function RequestDepositButton(props: IOwnProps & StylesProps) {
+  const { classes, daoApi } = props;
   const [isOpened, setIsOpened] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
 
@@ -48,6 +50,7 @@ function RequestDepositButton(props: IProps) {
             onSuccess={closeModal}
             onError={handleErrorChanging.bind(null, true)}
             onCancel={closeModal}
+            daoApi={daoApi}
           />
         </Modal>
       )}

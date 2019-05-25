@@ -3,19 +3,43 @@ import { NETWORK_CONFIG } from 'core/constants/network';
 import { ONE_ERC20 } from 'shared/constants';
 import { IDaoApiConfig, ITransitionPeriod } from './types';
 import { BaseDaoApi } from './BaseDaoApi';
+import { DaoStore } from './store';
 
 const ETHER_TOKEN_FAKE_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export class DaoApi {
-  private base: BaseDaoApi;
-
-  constructor(config: IDaoApiConfig) {
-    this.base = new BaseDaoApi(config);
+  public static setConfig(config: IDaoApiConfig) {
+    this.config = config;
   }
 
-  @bind
-  public async setDao(daoEnsName: string) {
-    return this.base.setDao(daoEnsName);
+  public static async getDaoApiOrCreate(daoEnsName: string) {
+    return DaoApi.daos.get(daoEnsName) || DaoApi.createDaoApi(daoEnsName);
+  }
+
+  private static daos = new Map<string, DaoApi>();
+  private static config: IDaoApiConfig | null = null;
+
+  private static async createDaoApi(daoEnsName: string) {
+    if (!DaoApi.config) {
+      throw new Error([
+        'You need to set DaoApi config that create DaoApi.',
+        'Use static method DaoApi.setConfig before creating DaoApi.',
+      ].join(' '));
+    }
+    const daoApi = new DaoApi(DaoApi.config, daoEnsName);
+    await daoApi.initialize();
+    DaoApi.daos.set(daoEnsName, daoApi);
+    return daoApi;
+  }
+
+  public store: DaoStore;
+  private base: BaseDaoApi;
+  private daoEnsName: string;
+
+  private constructor(config: IDaoApiConfig, daoEnsName: string) {
+    this.base = new BaseDaoApi(config);
+    this.store = new DaoStore(this.base);
+    this.daoEnsName = daoEnsName;
   }
 
   @bind
@@ -60,7 +84,7 @@ export class DaoApi {
   }
 
   @bind
-  public async requestDeposit(amount: number) {
+  public async deposit(amount: number) {
     const account = await this.base.getAccount();
 
     if (!account) {
@@ -70,7 +94,7 @@ export class DaoApi {
     const tokenAddress = NETWORK_CONFIG.daiContract;
 
     const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
-    const reference = 'requestDeposit';
+    const reference = 'deposit';
 
     const periodDuration: string = await this.base.call('Finance', 'getPeriodDuration', null);
     const currentPeriodId: string = await this.base.call('Finance', 'currentPeriodId', null);
@@ -111,5 +135,10 @@ export class DaoApi {
     ] as const;
 
     await this.base.sendTransaction('Finance', 'deposit', params);
+  }
+
+  private async initialize() {
+    await this.base.setDao(this.daoEnsName);
+    await this.store.initialize();
   }
 }

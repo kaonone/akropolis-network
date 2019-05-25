@@ -4,8 +4,9 @@ import { Route, Redirect } from 'react-router-dom';
 import routes from 'modules/routes';
 import { IModule } from 'shared/types/app';
 
+import { Section } from './types';
 import Daos from './view/Daos/Daos';
-import View, { Section } from './view/View/View';
+import View from './view/View/View';
 
 const defaultSection: Section = 'overview';
 

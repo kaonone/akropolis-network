@@ -7,7 +7,6 @@ import { Drizzle } from 'drizzle';
 import ApolloClient, { NormalizedCacheObject } from 'apollo-boost';
 
 import { LocalStorage } from 'services/storage';
-import { DaoApi } from 'services/daoApi';
 import Api from 'services/api/Api';
 
 import * as adaptabilityNS from 'services/adaptability/namespace';
@@ -41,7 +40,6 @@ export interface IJssDependencies {
 
 export interface IDependencies {
   api: Api;
-  daoApi: DaoApi;
   drizzle: Drizzle;
   storage: LocalStorage;
   apolloClient: ApolloClient<NormalizedCacheObject>;

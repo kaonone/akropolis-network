@@ -30,6 +30,10 @@ export class BaseDaoApi {
     return getWeb3(this.config.walletWeb3Provider);
   }
 
+  public getAppByName(appName: AppType): IExtendedAragonApp | null {
+    return this.apps.find(app => app.name.toLowerCase() === appName.toLowerCase()) || null;
+  }
+
   public async getAccount() {
     return getMainAccount(this.web3);
   }
@@ -81,9 +85,13 @@ export class BaseDaoApi {
       });
     };
 
+    runInAction(() => {
+      this.wrapper = wrapper;
+    });
+
     await when(() => !!this.apps.length);
 
-    this.wrapper = wrapper;
+    await this.initAppProxies();
   }
 
   public async call<T extends AppType, M extends MethodByApp<T>, P extends ParamsByAppByMethod<T, M>>(
@@ -93,7 +101,7 @@ export class BaseDaoApi {
       throw new Error('AragonWrapper is not initialized');
     }
 
-    const app = getAppByName(appType, this.apps);
+    const app = this.getAppByName(appType);
 
     if (!app) {
       throw new Error(`app for "${appType}" is not found`);
@@ -109,7 +117,7 @@ export class BaseDaoApi {
       throw new Error('AragonWrapper is not initialized');
     }
 
-    const proxy = getAppByName(appType, this.apps);
+    const proxy = this.getAppByName(appType);
     const proxyAddress = proxy ? proxy.proxyAddress : NULL_ADDRESS;
 
     const path = await this.wrapper.getTransactionPath(proxyAddress, method as string, params as any);
@@ -158,11 +166,13 @@ export class BaseDaoApi {
   private setApps(apps: IAragonApp[]) {
     this.apps = apps.map(app => ({
       ...app,
-      proxy: makeProxyFromABI(app.proxyAddress, app.abi, this.web3),
+      proxy: makeProxyFromABI(app.proxyAddress, app.abi!, this.web3),
     }));
   }
-}
 
-function getAppByName(appName: string, apps: IExtendedAragonApp[]): IExtendedAragonApp | null {
-  return apps.find(app => app.name.toLowerCase() === appName.toLowerCase()) || null;
+  private async initAppProxies() {
+    for (const app of this.apps) {
+      await app.proxy.updateInitializationBlock();
+    }
+  }
 }

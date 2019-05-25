@@ -2,10 +2,13 @@ import * as React from 'react';
 
 import { provideStyles, StylesProps } from './GlobalLoader.style';
 import { Logo } from '../Icons';
-import { i18nConnect, ITranslateProps, tKeys } from 'services/i18n';
 
-function GlobalLoader(props: StylesProps & ITranslateProps) {
-  const { classes, t } = props;
+interface IProps {
+  description: string;
+}
+
+function GlobalLoader(props: IProps & StylesProps) {
+  const { classes, description } = props;
   return (
     <div className={classes.root}>
       <div className={classes.content}>
@@ -15,10 +18,10 @@ function GlobalLoader(props: StylesProps & ITranslateProps) {
           <div className={classes.circle} />
           <div className={classes.circle} />
         </div>
-        <div className={classes.message}>{t(tKeys.shared.makeSureUseKovan.getKey())}</div>
+        <div className={classes.message}>{description}</div>
       </div>
     </div>
   );
 }
 
-export default i18nConnect(provideStyles(GlobalLoader));
+export default provideStyles(GlobalLoader);

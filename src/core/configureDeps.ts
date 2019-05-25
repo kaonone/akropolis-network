@@ -23,7 +23,7 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
   const drizzle = new Drizzle(options, drizzleStore);
   const storage = new LocalStorage('v1');
 
-  const daoApi = new DaoApi({
+  DaoApi.setConfig({
     aragonEnsRegistry: NETWORK_CONFIG.aragonEnsRegistry,
     defaultGasPriceFn,
     defaultWeb3Provider: web3Providers.default,
@@ -99,7 +99,6 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
 
   return {
     api,
-    daoApi,
     drizzle,
     storage,
     apolloClient,

@@ -14,8 +14,7 @@ import { ICommunication } from 'shared/types/redux';
 import { withDrizzle } from 'shared/helpers/react';
 import { isFailedByState } from 'shared/helpers/redux';
 import { GlobalLoader } from 'shared/view/elements';
-
-import RetryModal from '../RetryModal/RetryModal';
+import { RetryModal } from 'shared/view/components';
 
 interface IState {
   status: 'ready' | 'loading' | 'unsupported-network' | 'not-found-metamask' | 'login-needed';
@@ -104,7 +103,7 @@ class LoadingContainer extends React.Component<IProps, IState> {
           {t(tKeys.features.signIn.metamaskDescription.getKey())}
         </RetryModal>
       ),
-      loading: () => <GlobalLoader />,
+      loading: () => <GlobalLoader description={t(tKeys.shared.makeSureUseKovan.getKey())} />,
       ready: () => this.props.children,
     };
 
