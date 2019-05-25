@@ -8,6 +8,7 @@ import PreparingView from './PreparingView/PreparingView';
 import MainView from './MainView/MainView';
 
 type IProps = RouteComponentProps<{ id: string, section: string }>;
+
 function View(props: IProps) {
   const { match: { params: { id: daoId, section: selectedSection } } } = props;
 

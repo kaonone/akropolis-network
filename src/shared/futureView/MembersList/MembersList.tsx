@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Table, TableBody, TableRow, TableCell, TableHead, Typography, Grid, Avatar } from 'shared/view/elements';
+import { Table, TableBody, TableRow, TableCell, TableHead, Typography } from 'shared/view/elements';
 import { IMember } from 'shared/types/models/Member';
-import getIdenticonSrc from 'shared/helpers/getIdenticonSrc';
 
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
+import { UserAvatar } from 'shared/view/components';
 
 import { StylesProps, provideStyles } from './MembersList.style';
 
@@ -57,10 +57,7 @@ export default React.memo(provideStyles((props: IProps) => {
             <Typography variant="body1" className={classes.memberNumber}>
               {indexOrYou}
             </Typography>,
-            <Grid container wrap="nowrap" alignItems="center">
-              <Avatar src={getIdenticonSrc(row.address)} className={classes.avatar} />
-              <Typography variant="body2">{row.address}</Typography>
-            </Grid>,
+            <UserAvatar address={row.address}/>,
             <Typography variant="body2">{`${row.balance} DAI`}</Typography>,
             <Typography variant="body2">{`${row.debit} DAI`}</Typography>,
             <Typography variant="body2">{`${row.credit} DAI`}</Typography>,

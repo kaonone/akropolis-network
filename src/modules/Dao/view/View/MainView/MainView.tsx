@@ -8,25 +8,20 @@ import routes from 'modules/routes';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
 import { DaoApi } from 'services/daoApi';
 import { useAccountAddress } from 'services/user';
+import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
+import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
+import { RequestDepositButtonAsync } from 'features/requestDeposit';
 
-import { ToggleButtonGroup, ToggleButton, Button, Grid, Badge } from 'shared/view/elements';
-import { Request, Deposit } from 'shared/view/elements/Icons';
+import { ToggleButtonGroup, ToggleButton, Grid, Badge } from 'shared/view/elements';
 import { withComponent } from 'shared/helpers/react';
 
-import { Activities, Products, Members } from './mockViews';
+import { Section } from '../../../types';
+import { Activities, Products, Members, Cooperative } from './mockViews';
 import { StylesProps, provideStyles } from './MainView.style';
 
 const tKeys = tkeysAll.modules.daos;
 
 const NavToggleButton = withComponent(Link)(ToggleButton);
-
-interface IHeaderButton {
-  label: string;
-  Icon: React.ComponentType<any>;
-}
-
-export type Section = 'overview' | 'activities' | 'members' | 'products' | 'history';
-
 interface ISectionLink {
   section: Section;
   title: string;
@@ -56,26 +51,11 @@ function MainView(props: IProps) {
   const userAccount = useAccountAddress();
   const tokenHolders = useObserver(() => daoApi.store.tokenManager.holders);
 
-  const actions: IHeaderButton[] = [
-    { label: t(tKeys.request.getKey()), Icon: Request },
-    { label: t(tKeys.deposit.getKey()), Icon: Deposit },
-  ];
-
-  const daoActionButtons = actions.map(
-    ({ label, Icon }) => (
-      <Grid item key={label}>
-        <Button color="secondary" variant="contained">
-          <Icon className={classes.headerButtonIcon} />
-          {label}
-        </Button>
-      </Grid>
-    ),
-  );
-
   return (
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title={daoId}
+      actions={[<JointToCooperativeButtonAsync key={1} daoApi={daoApi} />]}
       additionalHeaderContent={
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
@@ -87,7 +67,12 @@ function MainView(props: IProps) {
               credit={0.5}
             />
           </Grid>
-          {daoActionButtons}
+          <Grid item>
+            <RequestWithdrawButtonAsync daoApi={daoApi} />
+          </Grid>
+          <Grid item>
+            <RequestDepositButtonAsync daoApi={daoApi} />
+          </Grid>
         </Grid>}
     >
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
@@ -105,7 +90,7 @@ function MainView(props: IProps) {
         ))}
       </ToggleButtonGroup>
       <div className={classes.section}>
-        {selectedSection === 'overview' && 'overview'}
+        {selectedSection === 'overview' && <Cooperative />}
         {selectedSection === 'activities' && <Activities />}
         {selectedSection === 'members' && <Members tokenHolders={tokenHolders} userAccount={userAccount} />}
         {selectedSection === 'products' && <Products />}

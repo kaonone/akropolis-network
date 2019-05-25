@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { useTranslate, tKeys } from 'services/i18n';
-import { Modal } from 'shared/view/components';
 import { Grid, Button } from 'shared/view/elements';
 import { WarningCircleContained } from 'shared/view/elements/Icons';
 
+import Modal from '../Modal/Modal';
 import { StylesProps, provideStyles } from './ErrorModal.style';
 
 const intl = tKeys.features.createDao;

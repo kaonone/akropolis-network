@@ -128,16 +128,15 @@ export class BaseDaoApi {
       { path },
     );
 
-    return path[0] && this._sendTransaction(path[0]);
+    const transaction = path[0];
+
+    if (transaction) {
+      transaction.pretransaction && await this._sendTransaction(transaction.pretransaction);
+      await this._sendTransaction(transaction);
+    }
   }
 
   private async _sendTransaction(transaction: ITransaction) {
-    notifyDevWarning(
-      !!transaction.pretransaction,
-      'Transaction have pretransaction, check code that sign this pretransaction',
-      { transaction },
-    );
-
     return new Promise<string>((resolve, reject) => {
       this.web3.eth
         .sendTransaction(transaction)

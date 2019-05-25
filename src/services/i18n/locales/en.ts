@@ -32,6 +32,7 @@ export default {
     you: 'You',
     done: 'Done',
     waiting: 'Waiting',
+    daysAmount: '%{smart_count} day |||| %{smart_count} days',
     dao: {
       goal: 'Goal',
       balance: 'Balance',
@@ -106,6 +107,52 @@ export default {
       balance: 'Balance',
       debit: 'Debit',
       credit: 'Credit',
+    },
+    joinToCooperative: {
+      button: 'Join to Coop',
+      fields: {
+        reason: 'Reason',
+      },
+      form: {
+        title: 'Join',
+        cancel: 'Cancel',
+        submit: 'join',
+      },
+    },
+    requestWithdraw: {
+      button: 'Request',
+      fields: {
+        amount: 'Amount',
+        reason: 'Reason',
+      },
+      form: {
+        title: 'Request',
+        cancel: 'Cancel',
+        submit: 'Request',
+      },
+    },
+    requestDeposit: {
+      button: 'Deposit',
+      fields: {
+        amount: 'Amount',
+      },
+      form: {
+        title: 'Deposit',
+        cancel: 'Cancel',
+        submit: 'Deposit',
+        hint: 'Tokens may require a pretransaction to approve the Finance app for your deposit.',
+      },
+    },
+    cooperativeOverview: {
+      cooperativeBalance: 'Co-op Balance',
+      cooperativeGoal: 'Co-op Goal',
+      personalInformation: 'Personal Information',
+      deposit: 'Deposit',
+      earn: 'Earn',
+      accessToLoan: 'Access to loan in %{date}:',
+      accessToInsurance: 'Access to social insurance in %{date}:',
+      accessToLoanHint: 'Access to loan',
+      accessToInsuranceHint: 'Access to social insurance',
     },
   },
   documents: {},
