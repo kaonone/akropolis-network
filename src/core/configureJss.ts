@@ -97,7 +97,7 @@ export function configureJss(virtual?: boolean): IJssDependencies {
         },
         MuiTypography: {
           root: {
-            display: 'unset',
+            display: '',
           },
           h3: { fontSize: '3rem' },
           h4: { fontSize: '2.25rem' },

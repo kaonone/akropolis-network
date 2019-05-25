@@ -13,7 +13,7 @@ import {
 import { Request, Deposit } from 'shared/view/elements/Icons';
 import { useCommunication, withComponent } from 'shared/helpers/react';
 
-import { Activities, Products, Members } from './mockViews';
+import { Activities, Products, Members, Cooperative } from './mockViews';
 import { StylesProps, provideStyles } from './View.style';
 
 const tKeys = tkeysAll.modules.daos;
@@ -111,7 +111,7 @@ function View(props: IProps) {
       {
         daoApiInitializing.status === 'success' &&
         <div className={classes.section}>
-          {selectedSection === 'overview' && 'overview'}
+          {selectedSection === 'overview' && <Cooperative />}
           {selectedSection === 'activities' && <Activities />}
           {selectedSection === 'members' && <Members />}
           {selectedSection === 'products' && <Products />}

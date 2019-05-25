@@ -3,7 +3,7 @@ import { rule } from 'shared/helpers/style';
 
 const styles = (theme: Theme) => ({
   rootRowsLayout: rule({
-    maxWidth: theme.extra.sizes.page.maxWidth,
+    width: theme.extra.sizes.page.maxWidth,
     margin: '0 auto',
   }),
 });
