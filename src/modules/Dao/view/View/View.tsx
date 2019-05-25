@@ -12,7 +12,7 @@ import {
 } from 'shared/view/elements';
 import { useCommunication, withComponent } from 'shared/helpers/react';
 
-import { Activities, Products, Members } from './mockViews';
+import { Activities, Products, Members, Cooperative } from './mockViews';
 import { StylesProps, provideStyles } from './View.style';
 import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
 import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
@@ -107,7 +107,7 @@ function View(props: IProps) {
       {
         daoApiInitializing.status === 'success' &&
         <div className={classes.section}>
-          {selectedSection === 'overview' && 'overview'}
+          {selectedSection === 'overview' && <Cooperative />}
           {selectedSection === 'activities' && <Activities />}
           {selectedSection === 'members' && <Members />}
           {selectedSection === 'products' && <Products />}
