@@ -9,11 +9,11 @@ import { ICommunication } from 'shared/types/redux';
 import { isNameUsed } from 'shared/helpers/aragon-wrapper';
 import { isRequired, composeValidators, maxStringLength, allowedCharactersForDaoName } from 'shared/validators';
 import { TextInputField, NumberInputField } from 'shared/view/form';
+import { RequestForm } from 'shared/view/components';
 
 import * as actions from './../../../redux/actions';
 import * as selectors from './../../../redux/selectors';
 import { ICreateFormData } from '../../../namespace';
-import { RequestForm } from 'shared/view/components';
 
 const fieldNames: { [key in keyof ICreateFormData]: key } = {
   domainName: 'domainName',

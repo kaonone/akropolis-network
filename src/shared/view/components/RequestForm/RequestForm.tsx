@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { Form } from 'react-final-form';
 import { connect } from 'react-redux';
+import { GetProps } from '_helpers';
 
 import { selectors as userSelectors } from 'services/user';
 import { IAppReduxState } from 'shared/types/app';
 import { Grid, Button } from 'shared/view/elements';
-import { GetProps } from '_helpers';
 
 import UserAvatar from '../UserAvatar/UserAvatar';
-
 import { StylesProps, provideStyles } from './RequestForm.style';
 
 interface IStateProps {
@@ -39,21 +38,26 @@ function RequestForm(props: IProps) {
   } = props;
 
   return (
-    <Form subscription={{ validating: true, submitting: true }} {...formRest} >
+    <Form subscription={{ submitting: true }} {...formRest} >
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <Grid container spacing={40}>
-            {!withoutAddress && userAddress &&
-              <Grid item xs={12}>
-                <Grid container wrap="nowrap" justify="center">
-                  <UserAvatar address={userAddress} className={classes.address} />}
+            <Grid item xs={12}>
+              <Grid container spacing={24}>
+                {!withoutAddress && userAddress &&
+                  <Grid item xs={12}>
+                    <Grid container wrap="nowrap" justify="center">
+                      <UserAvatar address={userAddress} className={classes.address} />
+                    </Grid>
+                  </Grid>
+                }
+                {fields.map((field, i) => (
+                  <Grid item xs={12} key={i}>
+                    {field}
+                  </Grid>
+                ))}
               </Grid>
-              </Grid>}
-            {fields.map((field, i) => (
-              <Grid item xs={12} key={i}>
-                {field}
-              </Grid>
-            ))}
+            </Grid>
             <Grid item xs={12}>
               <Grid container spacing={32}>
                 <Grid item xs={6} container justify="flex-end" onClick={onCancel}>

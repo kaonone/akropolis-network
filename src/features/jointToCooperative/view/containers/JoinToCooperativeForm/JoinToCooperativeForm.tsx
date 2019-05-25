@@ -7,7 +7,6 @@ import { RequestForm } from 'shared/view/components';
 import { TextInputField } from 'shared/view/form';
 
 import { IJoinToCooperativeFormData } from '../../../namespace';
-
 import { StylesProps, provideStyles } from './JoinToCooperativeForm.style';
 
 const fieldNames: { [key in keyof IJoinToCooperativeFormData]: key } = {

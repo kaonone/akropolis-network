@@ -1,8 +1,8 @@
 import { bind } from 'decko';
+import { NETWORK_CONFIG } from 'core/constants/network';
 import { ONE_ERC20 } from 'shared/constants';
 import { IDaoApiConfig, ITransitionPeriod } from './types';
 import { BaseDaoApi } from './BaseDaoApi';
-import { NETWORK_CONFIG } from 'core/constants/network';
 
 const ETHER_TOKEN_FAKE_ADDRESS = '0x0000000000000000000000000000000000000000';
 

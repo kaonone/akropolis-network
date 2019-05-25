@@ -1,14 +1,13 @@
 import * as React from 'react';
 
-import { Request } from 'shared/view/elements/Icons';
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
 import { useDeps } from 'core';
 import { isRequired } from 'shared/validators';
+import { Request } from 'shared/view/elements/Icons';
 import { RequestForm } from 'shared/view/components';
 import { TextInputField, NumberInputField } from 'shared/view/form';
 
 import { IRequestFormData } from '../../../namespace';
-
 import { StylesProps, provideStyles } from './RequestWithdrawForm.style';
 
 const fieldNames: { [key in keyof IRequestFormData]: key } = {

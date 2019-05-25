@@ -46,7 +46,7 @@ class NumberInput extends React.PureComponent<IProps> {
         onChange={rest.onChange as any}
         InputLabelProps={{
           ...rest.InputLabelProps,
-          shrink: !!prefix,
+          shrink: prefix ? true : rest.InputLabelProps && rest.InputLabelProps.shrink,
         }}
         InputProps={{
           ...rest.InputProps,

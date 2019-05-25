@@ -6,6 +6,9 @@ import { useDeps } from 'core';
 import { BaseLayout, DaoMetrics } from 'modules/shared';
 import routes from 'modules/routes';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
+import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
+import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
+import { RequestDepositButtonAsync } from 'features/requestDeposit';
 
 import {
   CircleProgressBar, Typography, ToggleButtonGroup, ToggleButton, Grid, Badge,
@@ -14,9 +17,6 @@ import { useCommunication, withComponent } from 'shared/helpers/react';
 
 import { Activities, Products, Members, Cooperative } from './mockViews';
 import { StylesProps, provideStyles } from './View.style';
-import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
-import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
-import { RequestDepositButtonAsync } from 'features/requestDeposit';
 
 const tKeys = tkeysAll.modules.daos;
 
@@ -55,6 +55,7 @@ function View(props: IProps) {
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title="Dao name"
+      actions={isHideCoopButton ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
       additionalHeaderContent={
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
@@ -69,16 +70,13 @@ function View(props: IProps) {
           {!isHideCoopButton &&
             <>
               <Grid item>
-                <JointToCooperativeButtonAsync />
-              </Grid>
-              <Grid item>
                 <RequestWithdrawButtonAsync />
               </Grid>
               <Grid item>
                 <RequestDepositButtonAsync />
               </Grid>
             </>}
-          </Grid>}
+        </Grid>}
     >
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
         {links.map(({ section, title, badge }, index: number) => (

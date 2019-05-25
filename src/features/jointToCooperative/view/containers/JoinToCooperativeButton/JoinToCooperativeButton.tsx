@@ -3,9 +3,8 @@ import * as React from 'react';
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
 
 import { Button } from 'shared/view/elements';
-
-import { ErrorModal, Modal } from 'shared/view/components';
 import { Exit } from 'shared/view/elements/Icons';
+import { ErrorModal, Modal } from 'shared/view/components';
 
 import JoinToCooperativeForm from '../JoinToCooperativeForm/JoinToCooperativeForm';
 import { StylesProps, provideStyles } from './JoinToCooperativeButton.style';

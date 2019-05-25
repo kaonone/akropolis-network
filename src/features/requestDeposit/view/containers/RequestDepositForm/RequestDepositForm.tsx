@@ -9,7 +9,6 @@ import { NumberInputField } from 'shared/view/form';
 import { Deposit } from 'shared/view/elements/Icons';
 
 import { IRequestDepositFormData } from '../../../namespace';
-
 import { StylesProps, provideStyles } from './RequestDepositForm.style';
 
 const fieldNames: { [key in keyof IRequestDepositFormData]: key } = {
