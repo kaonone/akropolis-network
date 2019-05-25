@@ -6,11 +6,13 @@ import { useDeps } from 'core';
 import { BaseLayout, DaoMetrics } from 'modules/shared';
 import routes from 'modules/routes';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
+import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
+import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
+import { RequestDepositButtonAsync } from 'features/requestDeposit';
 
 import {
-  CircleProgressBar, Typography, ToggleButtonGroup, ToggleButton, Button, Grid, Badge,
+  CircleProgressBar, Typography, ToggleButtonGroup, ToggleButton, Grid, Badge,
 } from 'shared/view/elements';
-import { Request, Deposit } from 'shared/view/elements/Icons';
 import { useCommunication, withComponent } from 'shared/helpers/react';
 
 import { Activities, Products, Members, Cooperative } from './mockViews';
@@ -19,11 +21,6 @@ import { StylesProps, provideStyles } from './View.style';
 const tKeys = tkeysAll.modules.daos;
 
 const NavToggleButton = withComponent(Link)(ToggleButton);
-
-interface IHeaderButton {
-  label: string;
-  Icon: React.ComponentType<any>;
-}
 
 export type Section = 'overview' | 'activities' | 'members' | 'products' | 'history';
 
@@ -52,24 +49,13 @@ function View(props: IProps) {
 
   React.useEffect(daoApiInitializing.execute, [daoId]);
 
-  const actions: IHeaderButton[] = [
-    { label: t(tKeys.request.getKey()), Icon: Request },
-    { label: t(tKeys.deposit.getKey()), Icon: Deposit },
-  ];
-
-  const daoActionButtons = daoApiInitializing.status !== 'success' ? undefined :
-    actions.map(({ label, Icon }) => (
-      <Grid item key={label}>
-        <Button color="secondary" variant="contained">
-          <Icon className={classes.headerButtonIcon} />
-          {label}
-        </Button>
-      </Grid>));
+  const isHideCoopButton = daoApiInitializing.status !== 'success';
 
   return (
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title="Dao name"
+      actions={isHideCoopButton ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
       additionalHeaderContent={
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
@@ -81,7 +67,15 @@ function View(props: IProps) {
               credit={0.5}
             />
           </Grid>
-          {daoActionButtons}
+          {!isHideCoopButton &&
+            <>
+              <Grid item>
+                <RequestWithdrawButtonAsync />
+              </Grid>
+              <Grid item>
+                <RequestDepositButtonAsync />
+              </Grid>
+            </>}
         </Grid>}
     >
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
