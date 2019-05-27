@@ -62,6 +62,11 @@ const styles = ({ extra: theme }: Theme) => {
       height: '1.5rem',
       marginRight: theme.spacing.unit,
     }),
+
+    pagination: rule({
+      marginBottom: theme.spacing.unit * 2,
+    }),
+
   };
 };
 

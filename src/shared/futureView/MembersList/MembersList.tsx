@@ -4,6 +4,7 @@ import { IMember } from 'shared/types/models/Member';
 
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { UserAvatar } from 'shared/view/components';
+import { usePagination } from 'shared/view/hooks';
 
 import { StylesProps, provideStyles } from './MembersList.style';
 
@@ -34,7 +35,10 @@ export default React.memo(provideStyles((props: IProps) => {
   const userMember = members.find(item => item.address === userAccountAddress);
   const rows = userMember ? [userMember, ...members.filter(item => item.address !== userAccountAddress)] : members;
 
+  const { items: paginatedRows, paginationView } = usePagination(rows);
+
   return (
+    <div>
     <Table separated>
       <TableHead>
         <TableRow className={classes.header}>
@@ -46,7 +50,7 @@ export default React.memo(provideStyles((props: IProps) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {rows.map((row, i) => {
+        {paginatedRows.map((row, i) => {
           const indexOrYou = userMember && i === 0 ? (
             <Typography variant="caption" weight="medium" className={classes.userTag}>
               {t(tKeysShared.you.getKey())}
@@ -80,5 +84,9 @@ export default React.memo(provideStyles((props: IProps) => {
         })}
       </TableBody>
     </Table>
+      <div className={classes.pagination}>
+        {paginationView}
+      </div>
+    </div>
   );
 }));
