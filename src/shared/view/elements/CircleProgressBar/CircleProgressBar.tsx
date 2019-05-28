@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as cn from 'classnames';
 import CircularProgress, { CircularProgressProps } from '@material-ui/core/CircularProgress';
 
 import { StylesProps, provideStyles } from './CircleProgressBar.style';
@@ -7,9 +8,9 @@ import { Omit } from '_helpers';
 type IProps = Omit<CircularProgressProps, 'classes'> & StylesProps;
 
 function CircleProgressBar(props: IProps) {
-  const { classes, ...rest } = props;
+  const { classes, className, ...rest } = props;
   return (
-    <div className={props.classes.root}>
+    <div className={cn(props.classes.root, className)}>
       <CircularProgress
         className={props.classes.overlay}
         variant="determinate"

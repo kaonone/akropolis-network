@@ -32,6 +32,8 @@ interface IAppMethodParams {
   Voting: {
     // set
     vote: readonly [string, boolean, boolean]; // [voteId, isConfirmed, executesIfDecided]
+    executeVote: readonly [string]; // [voteId]
+
   };
   Finance: {
     // set

@@ -150,6 +150,15 @@ export class DaoApi {
     await this.base.sendTransaction('Voting', 'vote', params);
   }
 
+  @bind
+  public async executeVote(voteId: string) {
+    const params = [
+      voteId,
+    ] as const;
+
+    await this.base.sendTransaction('Voting', 'executeVote', params);
+  }
+
   private async initialize() {
     await this.base.setDao(this.daoEnsName);
     await this.store.initialize();

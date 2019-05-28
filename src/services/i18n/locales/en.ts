@@ -105,6 +105,7 @@ export default {
       deposit: 'Deposit',
       approve: 'Approve',
       decline: 'Decline',
+      executeVote: 'Execute voting',
     },
     members: {
       address: 'Address',

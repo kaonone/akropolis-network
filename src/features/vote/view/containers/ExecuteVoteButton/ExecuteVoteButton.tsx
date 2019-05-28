@@ -4,27 +4,25 @@ import { GetProps } from '_helpers';
 import { ErrorModal } from 'shared/view/components';
 import { useDaoApi } from 'services/daoApi';
 import { Button } from 'shared/view/elements';
-import { VotingDecision } from 'shared/types/models/Voting';
 
 interface IOwnProps {
   voteId: string;
-  decisionType: VotingDecision;
   onChangeCommunication: (isRequesting: boolean) => void;
   children: React.ReactNode;
 }
 
 type IProps = IOwnProps & GetProps<typeof Button>;
 
-function VoteButton(props: IProps) {
-  const { voteId, decisionType, children, onChangeCommunication, ...buttonRest } = props;
+function ExecuteVoteButton(props: IProps) {
+  const { voteId, children, onChangeCommunication, ...buttonRest } = props;
   const [hasError, setHasError] = React.useState(false);
 
   const daoApi = useDaoApi();
 
-  const vote = React.useCallback(async () => {
+  const executeVote = React.useCallback(async () => {
     try {
       onChangeCommunication(true);
-      await daoApi.vote(voteId, decisionType);
+      await daoApi.executeVote(voteId);
       onChangeCommunication(false);
     } catch (e) {
       onChangeCommunication(false);
@@ -38,7 +36,7 @@ function VoteButton(props: IProps) {
 
   return (
     <>
-      <Button onClick={vote} {...buttonRest}>
+      <Button onClick={executeVote} {...buttonRest}>
         {children}
       </Button>
       <ErrorModal
@@ -49,4 +47,4 @@ function VoteButton(props: IProps) {
     </>);
 }
 
-export default VoteButton;
+export default ExecuteVoteButton;

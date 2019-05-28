@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as cn from 'classnames';
 
 import { VotingDecision } from 'shared/types/models/Voting';
-import { VoteButtonAsync } from 'features/vote';
-import { Typography, Grid } from 'shared/view/elements';
+import { VoteButtonAsync, ExecuteVoteButtonAsync } from 'features/vote';
+import { Typography, Grid, CircleProgressBar } from 'shared/view/elements';
 import { formatPercent, shortenString } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 
@@ -67,6 +67,7 @@ interface IOwnProps<T extends VotingType> {
   votingResult?: VotingResult;
   voteForCount: number;
   voteAgainstCount: number;
+  canExecute?: boolean;
   onVoteFor(): void;
   onVoteAgainst(): void;
 }
@@ -75,11 +76,12 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
   const {
     classes, timeLeft, votedPercent, neededPercent, reason,
     voteForCount, voteAgainstCount, votingDecision,
-    type, votingParams, votingResult, id,
+    type, votingParams, votingResult, id, canExecute,
   } = props;
   const { t } = useTranslate();
 
   const [expanded, setExpanded] = React.useState(false);
+  const [isRequesting, setIsRequesting] = React.useState(false);
 
   const expandReason = React.useCallback(() => {
     setExpanded(true);
@@ -186,31 +188,66 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
           <Grid item xs={12}>
             <VotingProgress title={t(tKeysShared.no.getKey())} value={voteAgainstCount} type="against" />
           </Grid>
-          {!votingDecision && (
-            <>
-              <Grid item xs={6}>
-                <VoteButtonAsync fullWidth color="purple" voteId={id} decisionType="confirm">
-                  {t(tKeysShared.yes.getKey())}
-                </VoteButtonAsync>
-              </Grid>
-              <Grid item xs={6}>
-                <VoteButtonAsync fullWidth color="purple" voteId={id} decisionType="reject">
-                  {t(tKeysShared.no.getKey())}
-                </VoteButtonAsync>
-              </Grid>
-            </>
-          )}
-          {votingDecision &&
-            <Grid item xs={12}>
-              <Grid container wrap="nowrap" className={classes.votingDecision} justify="center">
-                {votingDecision === 'confirm' && <Checked className={classes.votingForIcon} />}
-                {votingDecision === 'reject' && <ContainedCross className={classes.votingAgainstIcon} />}
-                <Typography weight="medium">
-                  {votingDecision === 'confirm' ? t(tKeysShared.yes.getKey()) : t(tKeysShared.no.getKey())}
-                </Typography>
-              </Grid>
-            </Grid>
-          }
+          {(() => {
+            if (isRequesting) {
+              return (
+                <Grid item xs={12}>
+                  <Grid container wrap="nowrap" className={classes.votingDecision} justify="center">
+                    <CircleProgressBar size={16} />
+                  </Grid>
+                </Grid>);
+            }
+
+            if (canExecute) {
+              return (
+                <Grid item xs={12}>
+                  <ExecuteVoteButtonAsync fullWidth color="purple" voteId={id} onChangeCommunication={setIsRequesting}>
+                    {t(tKeys.executeVote.getKey())}
+                  </ExecuteVoteButtonAsync>
+                </Grid>);
+            }
+
+            if (votingDecision) {
+              return (
+                <Grid item xs={12}>
+                  <Grid container wrap="nowrap" className={classes.votingDecision} justify="center">
+                    {votingDecision === 'confirm' && <Checked className={classes.votingForIcon} />}
+                    {votingDecision === 'reject' && <ContainedCross className={classes.votingAgainstIcon} />}
+                    <Typography weight="medium">
+                      {votingDecision === 'confirm' ? t(tKeysShared.yes.getKey()) : t(tKeysShared.no.getKey())}
+                    </Typography>
+                  </Grid>
+                </Grid>);
+            }
+
+            if (!votingDecision) {
+              return (
+                <>
+                  <Grid item xs={6}>
+                    <VoteButtonAsync
+                      fullWidth
+                      color="purple"
+                      voteId={id}
+                      decisionType="confirm"
+                      onChangeCommunication={setIsRequesting}
+                    >
+                      {t(tKeysShared.yes.getKey())}
+                    </VoteButtonAsync>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <VoteButtonAsync
+                      fullWidth
+                      color="purple"
+                      voteId={id}
+                      decisionType="reject"
+                      onChangeCommunication={setIsRequesting}
+                    >
+                      {t(tKeysShared.no.getKey())}
+                    </VoteButtonAsync>
+                  </Grid>
+                </>);
+            }
+          })()}
         </Grid>
       </Grid>}
       {votingResult &&
