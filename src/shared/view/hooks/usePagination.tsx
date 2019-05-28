@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
+import { useOnChangeState } from 'shared/helpers/react';
+import { notEquals } from 'shared/helpers/notEqual';
 import { Pagination } from 'shared/view/components';
 
 const steps = [10, 25, 50, 100];
@@ -16,9 +18,14 @@ export default function usePagination(items: any[]) {
   const changePerPage = useCallback((itemPerPage) => {
     setPage(Math.floor(from / itemPerPage));
     setPerPage(itemPerPage);
-  }, [currentPage, perPage]);
+  }, [from]);
 
-  const changePage = useCallback((pageNumber) => setPage(pageNumber), []);
+  useOnChangeState(items.length, notEquals, () => {
+    const maxPageNumber = Math.floor(items.length / perPage);
+    if (maxPageNumber < currentPage) {
+      setPage(maxPageNumber);
+    }
+  });
 
   const paginationView = (
     <Pagination
@@ -26,7 +33,7 @@ export default function usePagination(items: any[]) {
       perPage={perPage}
       currentPage={currentPage}
       onChangePerPage={changePerPage}
-      onChangePage={changePage}
+      onChangePage={setPage}
       paginationSteps={steps}
     />);
   return { items: paginatedItems, paginationView };

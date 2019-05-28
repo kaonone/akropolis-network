@@ -75,4 +75,4 @@ function Pagination(props: IProps & StylesProps) {
   );
 }
 
-export default provideStyles(Pagination);
+export default React.memo(provideStyles(Pagination));
