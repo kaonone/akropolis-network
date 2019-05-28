@@ -5,6 +5,10 @@ export default {
       myCashflows: 'My cashflows',
       marketplace: 'Marketplace',
     },
+    pagination: {
+      itemsPerPage: 'Items per page',
+      currentPagination: '%{from} - %{to} of %{total}',
+    },
     validation: {
       isRequired: 'Field is required',
       moreThen: 'Should be more then %{value}',

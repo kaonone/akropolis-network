@@ -7,6 +7,7 @@ import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 
 import { ComplexCell, EventCell } from './cells';
 import { StylesProps, provideStyles } from './CooperativesList.style';
+import { usePagination } from 'shared/view/hooks';
 
 const tKeys = tKeysAll.shared.dao;
 
@@ -18,11 +19,23 @@ const cooperative: ICooperative = {
   goal: 10000,
 };
 
-export const cooperativesMock: ICooperative[] = [
+const _cooperativesMock: ICooperative[] = [
   { ...cooperative, description: cooperative.description + ' ' + cooperative.description },
   { ...cooperative, name: 'Uniq fincoop' },
   { ...cooperative, eventType: 'new' },
   { ...cooperative, eventType: 'reviewed' },
+];
+
+export const cooperativesMock = [
+  ..._cooperativesMock,
+  ..._cooperativesMock,
+  ..._cooperativesMock,
+  ..._cooperativesMock,
+  ..._cooperativesMock,
+  ..._cooperativesMock,
+  ..._cooperativesMock,
+  ..._cooperativesMock,
+  ..._cooperativesMock,
 ];
 
 interface IOwnProps {
@@ -35,39 +48,46 @@ export default React.memo(provideStyles((props: IProps) => {
   const { classes, cooperatives } = props;
   const { t } = useTranslate();
 
+  const { items: paginatedCooperatives, paginationView } = usePagination(cooperatives);
+
   return (
-    <Table separated>
-      <TableBody>
-        {cooperatives.map((row, i) => {
+    <div>
+      <Table separated>
+        <TableBody>
+          {paginatedCooperatives.map((row, i) => {
 
-          // tslint:disable:jsx-key
-          const cells = [
-            <Avatar>{row.name.slice(0, 2).toUpperCase()}</Avatar>,
-            <Typography variant="body1">{row.name}</Typography>,
-            <Typography variant="body1" className={classes.description}>{row.description}</Typography>,
-            <ComplexCell title={t(tKeys.goal.getKey())} value={formatUSD(row.goal, 0)} />,
-            <ComplexCell title={t(tKeys.balance.getKey())} value={formatUSD(row.balance)} />,
-            <ComplexCell title={t(tKeys.members.getKey())} value={row.membersCount} />,
-            <EventCell event={row.eventType} />,
-          ];
-          // tslint:enable:jsx-key
-          const lastCellIndex = cells.length - 1;
+            // tslint:disable:jsx-key
+            const cells = [
+              <Avatar>{row.name.slice(0, 2).toUpperCase()}</Avatar>,
+              <Typography variant="body1">{row.name}</Typography>,
+              <Typography variant="body1" className={classes.description}>{row.description}</Typography>,
+              <ComplexCell title={t(tKeys.goal.getKey())} value={formatUSD(row.goal, 0)} />,
+              <ComplexCell title={t(tKeys.balance.getKey())} value={formatUSD(row.balance)} />,
+              <ComplexCell title={t(tKeys.members.getKey())} value={row.membersCount} />,
+              <EventCell event={row.eventType} />,
+            ];
+            // tslint:enable:jsx-key
+            const lastCellIndex = cells.length - 1;
 
-          return (
-            <TableRow key={i} className={cn(classes.row, { [classes.active]: row.eventType === 'new' })}>
-              {
-                cells.map((cell, k) =>
-                  <TableCell
-                    key={k}
-                    align={k === lastCellIndex ? 'right' : 'left'}
-                    className={classes.cell}
-                  >
-                    {cell}
-                  </TableCell>)}
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+            return (
+              <TableRow key={i} className={cn(classes.row, { [classes.active]: row.eventType === 'new' })}>
+                {
+                  cells.map((cell, k) =>
+                    <TableCell
+                      key={k}
+                      align={k === lastCellIndex ? 'right' : 'left'}
+                      className={classes.cell}
+                    >
+                      {cell}
+                    </TableCell>)}
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+      <div className={classes.pagination}>
+        {paginationView}
+      </div>
+    </div>
   );
 }));

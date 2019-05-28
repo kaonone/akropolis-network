@@ -81,6 +81,10 @@ const styles = ({ extra: theme }: Theme) => ({
     width: '1rem',
     color: theme.colors.royalPurple,
   }),
+
+  pagination: rule({
+    marginBottom: theme.spacing.unit * 2,
+  }),
 });
 
 export const provideStyles = withStyles(styles);
