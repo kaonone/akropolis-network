@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { GetProps } from '_helpers';
 
 import { useDaoApi } from 'services/daoApi';
 import { Button } from 'shared/view/elements';
 import { VotingDecision } from 'shared/types/models/Voting';
-import { GetProps } from '_helpers';
 
 interface IOwnProps {
   voteId: string;
