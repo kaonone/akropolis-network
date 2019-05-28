@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
-import { DaoApi } from 'services/daoApi';
+import { useDaoApi } from 'services/daoApi';
 import { isRequired } from 'shared/validators';
 import { Typography } from 'shared/view/elements';
 import { RequestForm } from 'shared/view/components';
@@ -18,7 +18,6 @@ const fieldNames: { [key in keyof IRequestDepositFormData]: key } = {
 const tKeys = tKeysAll.features.requestDeposit;
 
 interface IOwnProps {
-  daoApi: DaoApi;
   onSuccess(): void;
   onError(error: string): void;
   onCancel(): void;
@@ -27,8 +26,9 @@ interface IOwnProps {
 type IProps = IOwnProps & StylesProps;
 
 function RequestDepositForm(props: IProps) {
-  const { onSuccess, onError, onCancel, daoApi, classes } = props;
+  const { onSuccess, onError, onCancel, classes } = props;
   const { t } = useTranslate();
+  const daoApi = useDaoApi();
 
   const asyncSubmit = React.useCallback(async (values: IRequestDepositFormData) => {
     try {

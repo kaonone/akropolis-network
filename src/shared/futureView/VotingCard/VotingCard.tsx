@@ -1,6 +1,9 @@
 import * as React from 'react';
 import * as cn from 'classnames';
-import { Typography, Grid, Button } from 'shared/view/elements';
+
+import { VotingDecision } from 'shared/types/models/Voting';
+import { VoteButtonAsync } from 'features/vote';
+import { Typography, Grid } from 'shared/view/elements';
 import { formatPercent, shortenString } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 
@@ -15,6 +18,7 @@ const tKeys = tKeysAll.features.voting;
 const tKeysShared = tKeysAll.shared;
 
 export const mockVote: IOwnProps<'withdraw'> = {
+  id: '41',
   type: 'withdraw',
   votingParams: { withdraw: 120, addressTo: '0x1a5basdasdasdasdasd77a2' },
   timeLeft: '15 hours',
@@ -30,8 +34,7 @@ export const mockVote: IOwnProps<'withdraw'> = {
 
 type VotingType = 'withdraw' | 'join' | 'deposit';
 
-type VotingDecision = 'for' | 'against';
-type VotingResult = 'approved' | 'declined';
+type VotingResult = 'confirmed' | 'rejected';
 
 interface IWithdrawVoting {
   withdraw: number;
@@ -53,6 +56,7 @@ type VotingParams<T extends VotingType> = {
 }[T];
 
 interface IOwnProps<T extends VotingType> {
+  id: string;
   type: VotingType;
   votingParams: VotingParams<T>;
   timeLeft: string;
@@ -70,8 +74,8 @@ interface IOwnProps<T extends VotingType> {
 const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => {
   const {
     classes, timeLeft, votedPercent, neededPercent, reason,
-    voteForCount, voteAgainstCount, onVoteFor, onVoteAgainst, votingDecision,
-    type, votingParams, votingResult,
+    voteForCount, voteAgainstCount, votingDecision,
+    type, votingParams, votingResult, id,
   } = props;
   const { t } = useTranslate();
 
@@ -185,20 +189,24 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
           {!votingDecision && (
             <>
               <Grid item xs={6}>
-                <Button fullWidth color="purple" onClick={onVoteFor}>{t(tKeysShared.yes.getKey())}</Button>
+                <VoteButtonAsync fullWidth color="purple" voteId={id} decisionType="confirm">
+                  {t(tKeysShared.yes.getKey())}
+                </VoteButtonAsync>
               </Grid>
               <Grid item xs={6}>
-                <Button fullWidth color="purple" onClick={onVoteAgainst}>{t(tKeysShared.no.getKey())}</Button>
+                <VoteButtonAsync fullWidth color="purple" voteId={id} decisionType="reject">
+                  {t(tKeysShared.no.getKey())}
+                </VoteButtonAsync>
               </Grid>
             </>
           )}
           {votingDecision &&
             <Grid item xs={12}>
               <Grid container wrap="nowrap" className={classes.votingDecision} justify="center">
-                {votingDecision === 'for' && <Checked className={classes.votingForIcon} />}
-                {votingDecision === 'against' && <ContainedCross className={classes.votingAgainstIcon} />}
+                {votingDecision === 'confirm' && <Checked className={classes.votingForIcon} />}
+                {votingDecision === 'reject' && <ContainedCross className={classes.votingAgainstIcon} />}
                 <Typography weight="medium">
-                  {votingDecision === 'for' ? t(tKeysShared.yes.getKey()) : t(tKeysShared.no.getKey())}
+                  {votingDecision === 'confirm' ? t(tKeysShared.yes.getKey()) : t(tKeysShared.no.getKey())}
                 </Typography>
               </Grid>
             </Grid>
@@ -210,10 +218,10 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
           <Grid container spacing={16} justify="center" direction="column">
             <Grid item>
               <Grid container wrap="nowrap" alignItems="center">
-                {votingResult === 'approved' && <Checked className={classes.votingForIcon} />}
-                {votingResult === 'declined' && <ContainedCross className={classes.votingAgainstIcon} />}
+                {votingResult === 'confirmed' && <Checked className={classes.votingForIcon} />}
+                {votingResult === 'rejected' && <ContainedCross className={classes.votingAgainstIcon} />}
                 <Typography variant="h6" weight="medium">
-                  {votingResult === 'approved' ? t(tKeys.approve.getKey()) : t(tKeys.decline.getKey())}
+                  {votingResult === 'confirmed' ? t(tKeys.approve.getKey()) : t(tKeys.decline.getKey())}
                 </Typography>
               </Grid>
             </Grid>

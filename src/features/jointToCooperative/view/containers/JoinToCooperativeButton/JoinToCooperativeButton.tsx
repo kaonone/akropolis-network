@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
-import { DaoApi } from 'services/daoApi';
 
 import { Button } from 'shared/view/elements';
 import { Exit } from 'shared/view/elements/Icons';
@@ -12,12 +11,10 @@ import { StylesProps, provideStyles } from './JoinToCooperativeButton.style';
 
 const tKeys = tKeysAll.features.joinToCooperative;
 
-interface IOwnProps {
-  daoApi: DaoApi;
-}
+type IProps = StylesProps;
 
-function JoinToCooperativeButton(props: IOwnProps & StylesProps) {
-  const { classes, daoApi } = props;
+function JoinToCooperativeButton(props: IProps) {
+  const { classes } = props;
   const { t } = useTranslate();
   const [isOpened, setIsOpened] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
@@ -49,7 +46,6 @@ function JoinToCooperativeButton(props: IOwnProps & StylesProps) {
             onSuccess={closeModal}
             onError={handleErrorChanging.bind(null, true)}
             onCancel={closeModal}
-            daoApi={daoApi}
           />
         </Modal>
       )}

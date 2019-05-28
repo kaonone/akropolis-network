@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 
-import { DaoApi } from 'services/daoApi';
+import { DaoApi, DaoApiContext } from 'services/daoApi';
 import { useCommunication } from 'shared/helpers/react';
 
 import PreparingView from './PreparingView/PreparingView';
@@ -26,11 +26,12 @@ function View(props: IProps) {
   }
 
   return (
-    <MainView
-      daoId={daoId}
-      daoApi={daoApiCreating.result}
-      selectedSection={selectedSection}
-    />
+    <DaoApiContext.Provider value={daoApiCreating.result}>
+      <MainView
+        daoId={daoId}
+        selectedSection={selectedSection}
+      />
+    </DaoApiContext.Provider>
   );
 }
 

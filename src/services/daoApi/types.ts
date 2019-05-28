@@ -30,7 +30,8 @@ interface IAppMethodParams {
     token: null;
   };
   Voting: {
-    mock: [];
+    // set
+    vote: readonly [string, boolean, boolean]; // [voteId, isConfirmed, executesIfDecided]
   };
   Finance: {
     // set
