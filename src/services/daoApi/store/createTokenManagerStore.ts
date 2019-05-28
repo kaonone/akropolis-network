@@ -1,7 +1,11 @@
 import Web3 from 'web3';
+import BN from 'bignumber.js';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
+
 import tokenAbi from 'blockchain/abi/minimeToken.json';
 import { IHolder } from 'shared/types/models';
+import { ONE_ERC20 } from 'shared/constants';
+import { addressesEqual } from 'shared/helpers/web3';
 
 import { IEvent, ITokenManagerState } from './types';
 import { getStore } from './getStore';
@@ -78,10 +82,6 @@ export async function createTokenManagerStore(web3: Web3, proxy: ContractProxy) 
   );
 }
 
-function addressesEqual(a: string, b: string) {
-  return a.toLowerCase() === b.toLowerCase();
-}
-
 /***********************
  *                     *
  *       Helpers       *
@@ -113,7 +113,7 @@ async function loadNewBalances(token: ContractProxy, ...addresses: string[]): Pr
     return Promise.all(
       addresses.map(async address => {
         const balance: string = await token.call('balanceOf', address);
-        return { address, balance };
+        return { address, balance: new BN(balance).div(ONE_ERC20).toNumber() };
       }),
     );
   }

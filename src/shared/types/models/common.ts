@@ -8,6 +8,22 @@ export type ID = number;
 export type UUID = string;
 
 export interface IHolder {
-  balance: string;
+  balance: number;
   address: string;
+}
+
+export interface IFinanceTransaction {
+  id: string;
+  amount: number;
+  date: number;
+  entity: string;
+  isIncoming: boolean;
+  paymentId: string;
+  periodId: string;
+  token: string;
+}
+
+export interface IFinanceHolder extends IHolder {
+  debit: number;
+  credit: number;
 }

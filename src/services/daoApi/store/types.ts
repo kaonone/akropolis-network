@@ -1,10 +1,19 @@
 import { EventLog } from 'web3/types';
-import { IHolder } from 'shared/types/models';
+import { Omit } from '_helpers';
+import { IHolder, IFinanceHolder, IFinanceTransaction } from 'shared/types/models';
 
 export interface ITokenManagerState {
   holders: IHolder[];
   tokenAddress: string;
   tokenSupply: string;
+  ready: boolean;
+}
+
+export interface IFinanceState {
+  transactions: Record<string, IFinanceTransaction>;
+  holders: Record<string, IFinanceHolder>;
+  vaultAddress: string;
+  daoOverview: Omit<IFinanceHolder, 'address'>;
   ready: boolean;
 }
 

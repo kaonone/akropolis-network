@@ -50,21 +50,25 @@ function MainView(props: IProps) {
 
   const userAccount = useAccountAddress();
   const tokenHolders = useObserver(() => daoApi.store.tokenManager.holders);
+  const financeHolders = useObserver(() => daoApi.store.finance.holders);
+  const daoOverview = useObserver(() => daoApi.store.finance.daoOverview);
+
+  const isInCoopUser = tokenHolders.find(item => item.address === userAccount);
 
   return (
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title={daoId}
-      actions={[<JointToCooperativeButtonAsync key={1} daoApi={daoApi} />]}
+      actions={isInCoopUser ? undefined : [<JointToCooperativeButtonAsync key={1} daoApi={daoApi} />]}
       additionalHeaderContent={
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
             <DaoMetrics
-              balance={2192.22}
-              debit={1200.92}
+              balance={daoOverview.balance}
+              debit={daoOverview.debit}
+              credit={daoOverview.credit}
               balanceChange={12.81}
               debitChange={-12.81}
-              credit={0.5}
             />
           </Grid>
           <Grid item>
@@ -92,7 +96,9 @@ function MainView(props: IProps) {
       <div className={classes.section}>
         {selectedSection === 'overview' && <Cooperative />}
         {selectedSection === 'activities' && <Activities />}
-        {selectedSection === 'members' && <Members tokenHolders={tokenHolders} userAccount={userAccount} />}
+        {selectedSection === 'members' && (
+          <Members tokenHolders={tokenHolders} financeHolders={financeHolders} userAccount={userAccount} />
+        )}
         {selectedSection === 'products' && <Products />}
         {selectedSection === 'history' && 'history'}
       </div>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import MembersList from 'shared/futureView/MembersList/MembersList';
-import { IHolder } from 'shared/types/models';
+import { IHolder, IFinanceHolder } from 'shared/types/models';
 import { IMember } from 'shared/types/models/Member';
 
 import { StylesProps, provideStyles } from './Members.style';
@@ -9,19 +9,29 @@ import { StylesProps, provideStyles } from './Members.style';
 interface IProps {
   userAccount: string;
   tokenHolders: IHolder[];
+  financeHolders: Record<string, IFinanceHolder>;
 }
 
 function Members(props: IProps & StylesProps) {
-  const { classes, tokenHolders, userAccount } = props;
+  const { classes, tokenHolders, financeHolders, userAccount } = props;
 
   const members: IMember[] = React.useMemo(() => {
-    return tokenHolders.map<IMember>(item => ({
-      address: item.address,
-      balance: 10,
-      credit: 5,
-      debit: 15,
-    }));
-  }, [tokenHolders]);
+    return tokenHolders.map<IMember>(item => {
+      const financeHolder = financeHolders[item.address] || {
+        address: '',
+        balance: 0,
+        credit: 0,
+        debit: 0,
+      };
+
+      return {
+        address: item.address,
+        balance: financeHolder.balance,
+        credit: financeHolder.credit,
+        debit: financeHolder.debit,
+      };
+    });
+  }, [tokenHolders, financeHolders]);
 
   return (
     <div className={classes.root}>

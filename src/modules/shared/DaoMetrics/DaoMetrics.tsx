@@ -28,12 +28,12 @@ interface IOwnProps {
   balanceChange: number;
   debit: number;
   debitChange: number;
-  credit?: number;
+  credit: number;
 }
 type IProps = IOwnProps & StylesProps;
 
 const DaoMetrics = (props: IProps) => {
-  const { classes, balance, balanceChange, debit, debitChange } = props;
+  const { classes, balance, balanceChange, debit, debitChange, credit } = props;
 
   const { t } = useTranslate();
   const metrics: IMetric[] = [
@@ -51,7 +51,7 @@ const DaoMetrics = (props: IProps) => {
     },
     {
       title: t(tKeys.credit.getKey()),
-      value: formatUSD(0),
+      value: formatUSD(credit),
     },
   ];
   return (
