@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as cn from 'classnames';
+import * as moment from 'moment';
 
-import { VotingDecision } from 'shared/types/models/Voting';
+import { VotingDecision, IVoting } from 'shared/types/models/Voting';
 import { VoteButtonAsync, ExecuteVoteButtonAsync } from 'features/vote';
 import { Typography, Grid, CircleProgressBar } from 'shared/view/elements';
 import { formatPercent, shortenString } from 'shared/helpers/format';
@@ -17,67 +18,16 @@ const tKeys = tKeysAll.features.voting;
 
 const tKeysShared = tKeysAll.shared;
 
-export const mockVote: IOwnProps<'withdraw'> = {
-  id: '41',
-  type: 'withdraw',
-  votingParams: { withdraw: 120, addressTo: '0x1a5basdasdasdasdasd77a2' },
-  timeLeft: '15 hours',
-  neededPercent: 52,
-  votedPercent: 43,
-  // tslint:disable-next-line:max-line-length
-  reason: `Hey guys, I broke an arm snowboarding and will have to miss a couple of months off work. Sadly, not covered by a regular insurance, could I request an insurance call? Will post a hash of doctor's note just in case. Thanks!`,
-  voteForCount: 19,
-  voteAgainstCount: 31,
-  onVoteFor: console.log,
-  onVoteAgainst: console.log,
-};
-
-type VotingType = 'withdraw' | 'join' | 'deposit';
-
 type VotingResult = 'confirmed' | 'rejected';
 
-interface IWithdrawVoting {
-  withdraw: number;
-  addressTo: string;
+interface IOwnProps {
+  voting: IVoting;
+  votingDecision: VotingDecision;
 }
 
-interface IJoinVoting {
-  address: string;
-}
-
-interface IDepositVoting {
-  withdraw: number;
-}
-
-type VotingParams<T extends VotingType> = {
-  withdraw: IWithdrawVoting;
-  deposit: IDepositVoting;
-  join: IJoinVoting;
-}[T];
-
-interface IOwnProps<T extends VotingType> {
-  id: string;
-  type: VotingType;
-  votingParams: VotingParams<T>;
-  timeLeft: string;
-  neededPercent: number;
-  votedPercent: number;
-  reason: string;
-  votingDecision?: VotingDecision;
-  votingResult?: VotingResult;
-  voteForCount: number;
-  voteAgainstCount: number;
-  isNeedExecute?: boolean;
-  onVoteFor(): void;
-  onVoteAgainst(): void;
-}
-
-const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => {
-  const {
-    classes, timeLeft, votedPercent, neededPercent, reason,
-    voteForCount, voteAgainstCount, votingDecision,
-    type, votingParams, votingResult, id, isNeedExecute,
-  } = props;
+function VotingCard(props: StylesProps & IOwnProps) {
+  const { classes, votingDecision, voting } = props;
+  const { id, intent, startDate, minAcceptQuorum, supportRequired, votingPower, yea, nay, executed } = voting;
   const { t } = useTranslate();
 
   const [expanded, setExpanded] = React.useState(false);
@@ -91,72 +41,96 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
     setExpanded(false);
   }, []);
 
-  const columnsByType: Record<VotingType, () => React.ReactNode> = {
-    withdraw: () => (
-      <>
-        <Grid item xs container direction="column">
-          <Grid container wrap="nowrap" alignItems="center">
-            <Receipt className={classes.withdrawIcon} />
+  const renderIntentColumns = React.useCallback(() => {
+    switch (intent.type) {
+      case 'withdrawRequest': return (
+        <>
+          <Grid item xs container direction="column">
+            <Grid container wrap="nowrap" alignItems="center">
+              <Receipt className={classes.withdrawIcon} />
+              <Typography variant="overline" className={cn(classes.title, classes.grey)}>
+                {t(tKeys.withdraw.getKey())}
+              </Typography>
+            </Grid>
+            <Typography variant="h6">{`${intent.payload.amount} DAI`}</Typography>
+          </Grid>
+          <Grid item xs container direction="column">
             <Typography variant="overline" className={cn(classes.title, classes.grey)}>
-              {t(tKeys.withdraw.getKey())}
+              {t(tKeysShared.to.getKey())}
+            </Typography>
+            <Typography variant="h6" className={classes.address}>
+              {shortenString(intent.payload.to, 10)}
             </Typography>
           </Grid>
-          <Typography variant="h6">{`${(votingParams as IWithdrawVoting).withdraw} DAI`}</Typography>
-        </Grid>
+        </>
+      );
+      case 'joinToDao': return (
         <Grid item xs container direction="column">
-          <Typography variant="overline" className={cn(classes.title, classes.grey)}>
-            {t(tKeysShared.to.getKey())}
-          </Typography>
+          <Grid container wrap="nowrap" alignItems="center">
+            <AddPerson className={classes.addPersonIcon} />
+            <Typography variant="overline" className={cn(classes.title, classes.grey)}>
+              {t(tKeys.join.getKey())}
+            </Typography>
+          </Grid>
           <Typography variant="h6" className={classes.address}>
-            {shortenString((votingParams as IWithdrawVoting).addressTo, 10)}
+            {shortenString(intent.payload.address, 10)}
           </Typography>
         </Grid>
-      </>
-    ),
-    join: () => (
-      <Grid item xs container direction="column">
-        <Grid container wrap="nowrap" alignItems="center">
-          <AddPerson className={classes.addPersonIcon} />
-          <Typography variant="overline" className={cn(classes.title, classes.grey)}>
-            {t(tKeys.join.getKey())}
-          </Typography>
-        </Grid>
-        <Typography variant="h6" className={classes.address}>
-          {shortenString((votingParams as IJoinVoting).address, 10)}
-        </Typography>
-      </Grid>
-    ),
-    deposit: () => (
-      <>
-        <Grid item xs container direction="column">
-          <Grid container wrap="nowrap" alignItems="center">
-            <Graphic className={classes.votingTypeIcon} />
-            <Typography variant="overline" className={cn(classes.title, classes.grey)}>
-              {t(tKeys.deposit.getKey())}
-            </Typography>
+      );
+      case 'invest': return (
+        <>
+          <Grid item xs container direction="column">
+            <Grid container wrap="nowrap" alignItems="center">
+              <Graphic className={classes.votingTypeIcon} />
+              <Typography variant="overline" className={cn(classes.title, classes.grey)}>
+                {t(tKeys.deposit.getKey())}
+              </Typography>
+            </Grid>
+            <Typography variant="h6">{`${intent.payload.amount} DAI`}</Typography>
           </Grid>
-          <Typography variant="h6">{`${(votingParams as IDepositVoting).withdraw} DAI`}</Typography>
-        </Grid>
-        <Grid item xs container direction="column">
-          <Typography variant="overline" className={cn(classes.title, classes.grey)}>
-            {t(tKeysShared.to.getKey())}
-          </Typography>
-          <Typography variant="h6">{t(tKeys.compound.getKey())}</Typography>
-        </Grid>
-      </>
-    ),
-  };
+          <Grid item xs container direction="column">
+            <Typography variant="overline" className={cn(classes.title, classes.grey)}>
+              {t(tKeysShared.to.getKey())}
+            </Typography>
+            <Typography variant="h6">{intent.payload.to}</Typography>
+          </Grid>
+        </>
+      );
+      default: return <noscript />;
+    }
+  }, [intent]);
+
+  // TODO ds: update timeLeft
+  const timeLeft = moment(startDate).add(24, 'hours').diff(Date.now());
+  const endedByTimeout = timeLeft <= 0;
+
+  const votedPercent = (yea + nay) / votingPower * 100;
+
+  const isOver = executed || endedByTimeout;
+
+  const yeaPercent = yea / (yea + nay) * 100;
+  const nayPercent = nay / (yea + nay) * 100;
+  const yeaPercentByPower = yea / (votingPower) * 100;
+  const nayPercentByPower = nay / (votingPower) * 100;
+  const votingResult: VotingResult = yeaPercent >= supportRequired && votedPercent >= minAcceptQuorum
+    ? 'confirmed'
+    : 'rejected';
 
   return (
     <Grid className={classes.root} container wrap="nowrap">
       <Grid item xs={9} className={classes.mainInformation}>
         <Grid container spacing={16}>
-          {columnsByType[type]()}
+          {renderIntentColumns()}
           <Grid item xs={3} container direction="column">
             <Typography variant="overline" className={cn(classes.title, classes.purple)}>
               {t(tKeys.timeLeft.getKey())}
             </Typography>
-            <Typography variant="h6" className={cn(classes.value, classes.purple)}>{timeLeft}</Typography>
+            <Typography variant="h6" className={cn(classes.value, classes.purple)}>
+              {isOver
+                ? t(tKeys.timeEnded.getKey())
+                : moment.duration(timeLeft).humanize()
+              }
+            </Typography>
           </Grid>
           <Grid item xs={3} container direction="column">
             <Typography variant="overline" className={cn(classes.title, classes.purple)}>
@@ -167,26 +141,29 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
                 {formatPercent(votedPercent)}
               </Typography>
               <Typography variant="subtitle1" className={classes.subValue}>
-                {`${formatPercent(neededPercent)} ${t(tKeys.needed.getKey())}`}
+                {`${formatPercent(minAcceptQuorum)} ${t(tKeys.needed.getKey())}`}
               </Typography>
             </Grid>
           </Grid>
-          <Grid item xs={12} zeroMinWidth container wrap="nowrap">
-            {expanded && <ContainedCircleArrow className={classes.toggleExpandIcon} onClick={hideReason} />}
-            {!expanded && <OutlinedCircleArrow className={classes.toggleExpandIcon} onClick={expandReason} />}
-            <Typography className={cn(classes.reason, { [classes.expanded]: expanded })} variant="body2">
-              <span className={classes.reasonFirstWord}>{`${t(tKeys.reason.getKey())}:`}</span>{' '}{reason}
-            </Typography>
-          </Grid>
+          {(intent.type === 'withdrawRequest' || intent.type === 'invest') && (
+            <Grid item xs={12} zeroMinWidth container wrap="nowrap">
+              {expanded && <ContainedCircleArrow className={classes.toggleExpandIcon} onClick={hideReason} />}
+              {!expanded && <OutlinedCircleArrow className={classes.toggleExpandIcon} onClick={expandReason} />}
+              <Typography className={cn(classes.reason, { [classes.expanded]: expanded })} variant="body2">
+                <span className={classes.reasonFirstWord}>{`${t(tKeys.reason.getKey())}:`}</span>
+                {' '}{intent.payload.reason}
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </Grid>
-      {!votingResult && <Grid item xs={3} className={classes.voting}>
+      {!isOver && <Grid item xs={3} className={classes.voting}>
         <Grid container spacing={16}>
           <Grid item xs={12}>
-            <VotingProgress title={t(tKeysShared.yes.getKey())} value={voteForCount} type="for" />
+            <VotingProgress title={t(tKeysShared.yes.getKey())} value={yeaPercentByPower} type="for" />
           </Grid>
           <Grid item xs={12}>
-            <VotingProgress title={t(tKeysShared.no.getKey())} value={voteAgainstCount} type="against" />
+            <VotingProgress title={t(tKeysShared.no.getKey())} value={nayPercentByPower} type="against" />
           </Grid>
           {(() => {
             if (isRequesting) {
@@ -198,7 +175,7 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
                 </Grid>);
             }
 
-            if (votingDecision) {
+            if (votingDecision !== 'absent') {
               return (
                 <Grid item xs={12}>
                   <Grid container wrap="nowrap" className={classes.votingDecision} justify="center">
@@ -211,7 +188,7 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
                 </Grid>);
             }
 
-            if (!votingDecision) {
+            if (votingDecision === 'absent') {
               return (
                 <>
                   <Grid item xs={6}>
@@ -241,14 +218,15 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
           })()}
         </Grid>
       </Grid>}
-      {votingResult &&
-        <Grid item xs={2} className={classes.votingResult}>
+      {isOver &&
+        <Grid item xs={3} className={classes.votingResult}>
           <Grid container spacing={16} justify="center" direction="column">
-            {isNeedExecute &&
+            {votingResult === 'confirmed' && !executed &&
               <Grid item xs={12}>
                 <ExecuteVoteButtonAsync
                   fullWidth
                   color="primary"
+                  variant="contained"
                   voteId={id}
                   onChangeCommunication={setIsRequesting}
                   disabled={isRequesting}
@@ -257,24 +235,24 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
                 </ExecuteVoteButtonAsync>
               </Grid>
             }
-            {!isNeedExecute &&
+            {(votingResult === 'rejected' || executed) &&
               <Grid item>
-                <Grid container wrap="nowrap" alignItems="center">
+                <Grid container wrap="nowrap" alignItems="center" justify="center">
                   {votingResult === 'confirmed' && <Checked className={classes.votingForIcon} />}
                   {votingResult === 'rejected' && <ContainedCross className={classes.votingAgainstIcon} />}
                   <Typography variant="h6" weight="medium">
-                    {votingResult === 'confirmed' ? t(tKeys.approve.getKey()) : t(tKeys.decline.getKey())}
+                    {votingResult === 'confirmed' ? t(tKeys.approved.getKey()) : t(tKeys.declined.getKey())}
                   </Typography>
                 </Grid>
               </Grid>}
             <Grid item>
-              <Grid container wrap="nowrap" spacing={16} justify={isNeedExecute ? 'center' : 'flex-start'}>
+              <Grid container wrap="nowrap" spacing={16} justify="center">
                 <Grid item>
                   <Typography component="span" variant="subtitle1" weight="medium">
-                    {t(tKeysShared.no.getKey())}
+                    {t(tKeysShared.yes.getKey())}
                   </Typography>{' '}
                   <Typography component="span" variant="subtitle1" weight="bold" className={classes.votingFor}>
-                    {formatPercent(voteForCount)}
+                    {formatPercent(yeaPercent)}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -282,7 +260,7 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
                     {t(tKeysShared.no.getKey())}
                   </Typography>{' '}
                   <Typography component="span" variant="subtitle1" weight="bold" className={classes.votingAgainst}>
-                    {formatPercent(voteAgainstCount)}
+                    {formatPercent(nayPercent)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -292,7 +270,6 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
       }
     </Grid>
   );
-};
+}
 
-type StubForVotingCard = <T extends VotingType>(props: IOwnProps<T>) => JSX.Element;
-export default React.memo(provideStyles(VotingCard)) as StubForVotingCard;
+export default React.memo(provideStyles(VotingCard));

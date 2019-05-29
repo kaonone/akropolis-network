@@ -4,7 +4,8 @@ import { observable, when } from 'mobx';
 import { BaseDaoApi } from '../BaseDaoApi';
 import { createTokenManagerStore, initialTokenManagerState } from './createTokenManagerStore';
 import { createFinanceStore, initialFinanceState } from './createFinanceStore';
-import { ITokenManagerState, IFinanceState } from './types';
+import { createVotingStore, initialVotingState } from './createVotingStore';
+import { ITokenManagerState, IFinanceState, IVotingState } from './types';
 
 export class DaoStore {
   @observable
@@ -15,6 +16,10 @@ export class DaoStore {
   public finance: IFinanceState = initialFinanceState;
   public finance$: Observable<IFinanceState> = empty();
 
+  @observable
+  public voting: IVotingState = initialVotingState;
+  public voting$: Observable<IVotingState> = empty();
+
   private base: BaseDaoApi;
 
   public constructor(base: BaseDaoApi) {
@@ -24,9 +29,14 @@ export class DaoStore {
   public async initialize() {
     const tokenManagerApp = this.base.getAppByName('Token Manager');
     const financeApp = this.base.getAppByName('Finance');
+    const votingApp = this.base.getAppByName('Voting');
 
-    if (!tokenManagerApp || !financeApp) {
+    if (!tokenManagerApp || !financeApp || !votingApp) {
       throw new Error('Unable to initialize DaoStore because one of wrapper apps is missing');
+    }
+
+    if (!this.base.wrapper) {
+      throw new Error('Unable to initialize DaoStore because aragon wrapper is not initialized');
     }
 
     this.tokenManager$ = await createTokenManagerStore(this.base.web3, tokenManagerApp.proxy);
@@ -35,9 +45,13 @@ export class DaoStore {
     this.finance$ = await createFinanceStore(this.base.web3, financeApp.proxy);
     this.finance$.subscribe(state => this.finance = state);
 
+    this.voting$ = await createVotingStore(this.base.wrapper, votingApp.proxy);
+    this.voting$.subscribe(state => this.voting = state);
+
     await when(() => (
       !!this.tokenManager && this.tokenManager.ready &&
-      !!this.finance && this.finance.ready
+      !!this.finance && this.finance.ready &&
+      !!this.voting && this.voting.ready
     ));
   }
 }

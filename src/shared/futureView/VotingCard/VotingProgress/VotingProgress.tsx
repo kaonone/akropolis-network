@@ -29,7 +29,7 @@ export default React.memo(provideStyles((props: IPropgressProps & StylesProps) =
               [classes.green]: type === 'for',
               [classes.red]: type === 'against',
             })}
-          style={{ width: `${value}%` }}
+          style={{ width: `${value.toFixed(2)}%` }}
         />
       </div>
     </div>

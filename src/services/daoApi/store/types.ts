@@ -1,5 +1,17 @@
+import BigNumber from 'bignumber.js';
 import { EventLog } from 'web3/types';
-import { IHolder, IFinanceHolder, IFinanceTransaction } from 'shared/types/models';
+import { IHolder, IFinanceHolder, IFinanceTransaction, IVoting, VotingDecision } from 'shared/types/models';
+
+export interface IVotingState {
+  config: {
+    token: string;
+    voteTime: number;
+    PCT_BASE: BigNumber;
+  };
+  votings: Record<string, IVoting>;
+  connectedAccountVotes: Record<string, VotingDecision>;
+  ready: boolean;
+}
 
 export interface ITokenManagerState {
   holders: Record<string, IHolder>;
@@ -16,12 +28,17 @@ export interface IFinanceState {
   ready: boolean;
 }
 
+export interface ISimpleEvent<E extends string | symbol = string, V = any> {
+  event: E;
+  returnValues: V;
+}
+
 export interface IEvent<E extends string = string, V = any> extends EventLog {
   event: E;
   returnValues: V;
 }
 
-export type StoreReducer<T> = (state: T, events: EventLog[], isCompleteLoading: boolean) => Promise<T> | T;
+export type StoreReducer<S, E> = (state: S, events: E[], isCompleteLoading: boolean) => Promise<S> | S;
 
 export type DaoOverview = Record<'balance' | 'debit' | 'credit', IDaoOverviewMetric>;
 

@@ -14,7 +14,7 @@ import { addressesEqual } from 'shared/helpers/web3';
 import { IEvent, IFinanceState } from './types';
 import { getStore } from './getStore';
 
-type VaultEvent = IEvent<string, {
+type VaultEvent = IEvent<'MockEventName', {
   token: string;
 }>;
 
@@ -23,9 +23,11 @@ type NewTransactionEvent = IEvent<'NewTransaction', {
   transactionId: string;
 }>;
 
+type FinanceEvent = NewTransactionEvent;
+
 type Event =
   | VaultEvent
-  | NewTransactionEvent;
+  | FinanceEvent;
 
 export const initialFinanceState: IFinanceState = {
   holders: {},
@@ -49,10 +51,10 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
       const vaultMainCoinEvents = events
         .filter((event): event is VaultEvent => event.address === vaultAddress)
         .filter(event => event.returnValues.token === NETWORK_CONFIG.daiContract);
-      const otherEvents = events.filter((event): event is Exclude<Event, VaultEvent> => event.address !== vaultAddress);
+      const financeEvents = events.filter((event): event is FinanceEvent => event.address !== vaultAddress);
 
       const isNeedLoadBalance = !!vaultMainCoinEvents.length;
-      const transactionsForLoad = R.uniq(otherEvents
+      const transactionsForLoad = R.uniq(financeEvents
         .filter((event): event is NewTransactionEvent => event.event === 'NewTransaction')
         .map(event => event.returnValues.transactionId));
 

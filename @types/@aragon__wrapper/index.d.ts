@@ -36,6 +36,25 @@ declare module '@aragon/wrapper' {
     defaultGasPriceFn(): string | undefined;
   }
 
+  interface IDecodedPathSegment {
+    data: string;
+    to: string;
+  }
+
+  export interface IDescribedPathSegment extends IDecodedPathSegment {
+    data: string;
+    to: string;
+    description: string,
+    annotatedDescription: IAnnotatedDescription[],
+    name: string;
+    identifier: string;
+  }
+
+  interface IAnnotatedDescription {
+    type: 'any-account' | 'app' | 'address' | 'role' | 'apmPackage' | 'kernelNamespace' | 'bytes32' | 'text',
+    value: string;
+  }
+
   class AragonWrapper {
     public web3: Web3;
     public apps: Observable<IAragonApp[]>;
@@ -59,6 +78,10 @@ declare module '@aragon/wrapper' {
     public getTransactionPath(
       destination: string, methodName: string, params: string[], finalForwarder?: string,
     ): Promise<ITransaction[]>;
+
+    public describeTransactionPath(segments: IDecodedPathSegment[]): Promise<IDescribedPathSegment[]>;
+
+    public decodeTransactionPath(script: string): IDecodedPathSegment[];
   }
 
   export default AragonWrapper;

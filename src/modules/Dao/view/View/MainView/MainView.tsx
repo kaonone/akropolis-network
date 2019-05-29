@@ -29,14 +29,6 @@ interface ISectionLink {
   badge?: number;
 }
 
-const links: ISectionLink[] = [
-  { section: 'overview', title: tKeys.overview.getKey() },
-  { section: 'activities', title: tKeys.activities.getKey(), disabled: true, badge: 94 },
-  { section: 'members', title: tKeys.members.getKey(), disabled: true },
-  { section: 'products', title: tKeys.products.getKey(), disabled: true },
-  { section: 'history', title: tKeys.history.getKey(), disabled: true },
-];
-
 interface IOwnProps {
   daoId: string;
   selectedSection: string;
@@ -53,6 +45,23 @@ function MainView(props: IProps) {
   const tokenHolders = useObserver(() => daoApi.store.tokenManager.holders);
   const financeHolders = useObserver(() => daoApi.store.finance.holders);
   const daoOverview = useObserver(() => daoApi.store.finance.daoOverview);
+  const votes = useObserver(() => daoApi.store.voting.votings);
+  const connectedAccountVotes = useObserver(() => daoApi.store.voting.connectedAccountVotes);
+
+  const preparedVotes = React.useMemo(
+    () => Object.values(votes)
+      .filter(vote => vote.intent.type !== 'unknown')
+      .sort((a, b) => b.startDate - a.startDate),
+    [votes],
+  );
+
+  const links: ISectionLink[] = React.useMemo(() => ([
+    { section: 'overview', title: tKeys.overview.getKey() },
+    { section: 'activities', title: tKeys.activities.getKey(), disabled: true, badge: preparedVotes.length },
+    { section: 'members', title: tKeys.members.getKey(), disabled: true },
+    { section: 'products', title: tKeys.products.getKey(), disabled: true },
+    { section: 'history', title: tKeys.history.getKey(), disabled: true },
+  ]), [preparedVotes]);
 
   const userAccount = tokenHolders[userAccountAddress];
   const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
@@ -97,7 +106,9 @@ function MainView(props: IProps) {
       </ToggleButtonGroup>
       <div className={classes.section}>
         {selectedSection === 'overview' && <Cooperative />}
-        {selectedSection === 'activities' && <Activities />}
+        {selectedSection === 'activities' && (
+          <Activities votings={preparedVotes} connectedAccountVotes={connectedAccountVotes} />
+        )}
         {selectedSection === 'members' && (
           <Members
             tokenHolders={memoTokenHolders}

@@ -6,7 +6,7 @@ import { Pagination } from 'shared/view/components';
 
 const steps = [10, 25, 50, 100];
 
-export default function usePagination(items: any[]) {
+export default function usePagination<T>(items: T[]) {
 
   const [currentPage, setPage] = useState(0);
   const [perPage, setPerPage] = useState(10);

@@ -1,32 +1,33 @@
 import * as React from 'react';
-import VotingCard, { mockVote } from 'shared/futureView/VotingCard/VotingCard';
+
+import { IVoting, VotingDecision } from 'shared/types/models';
+import VotingCard from 'shared/futureView/VotingCard/VotingCard';
 import { usePagination } from 'shared/view/hooks';
 
 import { StylesProps, provideStyles } from './Activities.style';
 
-type Props = StylesProps;
+interface IOwnProps {
+  votings: IVoting[];
+  connectedAccountVotes: Record<string, VotingDecision>;
+}
+
+type Props = StylesProps & IOwnProps;
 
 function Activities(props: Props) {
-  const { classes } = props;
+  const { classes, votings: votes, connectedAccountVotes } = props;
 
-  // tslint:disable:max-line-length
-  const activities = [
-    <VotingCard {...mockVote} key={1} />,
-    <VotingCard {...mockVote} votingDecision="confirm" key={2} />,
-    <VotingCard {...mockVote} votingDecision="reject" key={3} />,
-    <VotingCard<'join'> {...mockVote} type="join" votingParams={{ address: '0x1a5basdasdasdasdasd77a2' }} key={4} />,
-    <VotingCard<'deposit'> {...mockVote} votingDecision="reject" type="deposit" votingParams={{ withdraw: 120 }} key={5} />,
-    <VotingCard {...mockVote} votingResult="confirmed" key={6} />,
-    <VotingCard {...mockVote} votingResult="rejected" key={7} />,
-  ];
-  // tslint:enable:max-line-length
-
-  const { items: paginatedActivities, paginationView } = usePagination(activities);
+  const { items: paginatedVotings, paginationView } = usePagination(votes);
 
   return (
     <div className={classes.root}>
       <div className={classes.activities}>
-        {paginatedActivities}
+        {paginatedVotings.map(voting => (
+          <VotingCard
+            key={voting.id}
+            voting={voting}
+            votingDecision={connectedAccountVotes[voting.id] || 'absent'}
+          />
+        ))}
       </div>
       <div className={classes.pagination}>
         {paginationView}

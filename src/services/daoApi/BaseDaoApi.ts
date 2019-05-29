@@ -16,7 +16,7 @@ interface IExtendedAragonApp extends IAragonApp {
 
 export class BaseDaoApi {
   @observable
-  private wrapper: AragonWrapper | null = null;
+  public wrapper: AragonWrapper | null = null;
   @observable
   private apps: IExtendedAragonApp[] = [];
 
