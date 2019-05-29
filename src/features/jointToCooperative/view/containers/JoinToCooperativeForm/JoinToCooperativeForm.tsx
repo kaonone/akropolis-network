@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
-import { DaoApi } from 'services/daoApi';
+import { useDaoApi } from 'services/daoApi';
 import { Exit } from 'shared/view/elements/Icons';
+import { CircleProgressBar } from 'shared/view/elements';
 import { RequestForm } from 'shared/view/components';
 import { TextInputField } from 'shared/view/form';
 
@@ -20,7 +21,6 @@ const initialValue: IJoinToCooperativeFormData = {
 const tKeys = tKeysAll.features.joinToCooperative;
 
 interface IOwnProps {
-  daoApi: DaoApi;
   onSuccess(): void;
   onError(error: string): void;
   onCancel(): void;
@@ -29,14 +29,19 @@ interface IOwnProps {
 type IProps = IOwnProps & StylesProps;
 
 function RequestWithdrawForm(props: IProps) {
-  const { onSuccess, onError, onCancel, daoApi, classes } = props;
+  const { onSuccess, onError, onCancel, classes } = props;
   const { t } = useTranslate();
+  const daoApi = useDaoApi();
+  const [isRequesting, setIsRequesting] = React.useState(false);
 
   const asyncSubmit = React.useCallback(async () => {
     try {
+      setIsRequesting(true);
       await daoApi.joinToCooperative();
+      setIsRequesting(false);
       onSuccess();
     } catch (e) {
+      setIsRequesting(false);
       onError(String(e));
     }
   }, []);
@@ -60,7 +65,8 @@ function RequestWithdrawForm(props: IProps) {
       initialValues={initialValue}
       cancelButton={t(tKeys.form.cancel.getKey())}
       submitButton={<>
-        <Exit className={classes.buttonIcon} />
+        {isRequesting && <CircleProgressBar className={classes.buttonIcon} size={16} />}
+        {!isRequesting && <Exit className={classes.buttonIcon} />}
         {t(tKeys.form.submit.getKey())}
       </>}
       fields={formFields}

@@ -6,7 +6,7 @@ import { BaseLayout, DaoMetrics } from 'modules/shared';
 import routes from 'modules/routes';
 
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
-import { DaoApi } from 'services/daoApi';
+import { useDaoApi } from 'services/daoApi';
 import { useAccountAddress } from 'services/user';
 import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
 import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
@@ -38,15 +38,16 @@ const links: ISectionLink[] = [
 ];
 
 interface IOwnProps {
-  daoApi: DaoApi;
   daoId: string;
   selectedSection: string;
 }
 
 type IProps = IOwnProps & StylesProps;
 function MainView(props: IProps) {
-  const { classes, daoApi, daoId, selectedSection } = props;
+  const { classes, daoId, selectedSection } = props;
   const { t } = useTranslate();
+
+  const daoApi = useDaoApi();
 
   const userAccount = useAccountAddress();
   const tokenHolders = useObserver(() => daoApi.store.tokenManager.holders);
@@ -59,7 +60,7 @@ function MainView(props: IProps) {
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title={daoId}
-      actions={isInCoopUser ? undefined : [<JointToCooperativeButtonAsync key={1} daoApi={daoApi} />]}
+      actions={isInCoopUser ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
       additionalHeaderContent={
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
@@ -72,10 +73,10 @@ function MainView(props: IProps) {
             />
           </Grid>
           <Grid item>
-            <RequestWithdrawButtonAsync daoApi={daoApi} />
+            <RequestWithdrawButtonAsync />
           </Grid>
           <Grid item>
-            <RequestDepositButtonAsync daoApi={daoApi} />
+            <RequestDepositButtonAsync />
           </Grid>
         </Grid>}
     >

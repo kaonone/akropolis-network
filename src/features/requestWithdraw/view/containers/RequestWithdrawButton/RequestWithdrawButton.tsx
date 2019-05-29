@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
-import { DaoApi } from 'services/daoApi';
 
 import { Button } from 'shared/view/elements';
 import { Modal, ErrorModal } from 'shared/view/components';
@@ -12,12 +11,10 @@ import { StylesProps, provideStyles } from './RequestWithdrawButton.style';
 
 const tKeys = tKeysAll.features.requestWithdraw;
 
-interface IOwnProps {
-  daoApi: DaoApi;
-}
+type IProps = StylesProps;
 
-function RequestWithdrawButton(props: IOwnProps & StylesProps) {
-  const { classes, daoApi } = props;
+function RequestWithdrawButton(props: IProps) {
+  const { classes } = props;
   const [isOpened, setIsOpened] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
 
@@ -50,7 +47,6 @@ function RequestWithdrawButton(props: IOwnProps & StylesProps) {
             onSuccess={closeModal}
             onError={handleErrorChanging.bind(null, true)}
             onCancel={closeModal}
-            daoApi={daoApi}
           />
         </Modal>
       )}

@@ -1,5 +1,6 @@
 import { bind } from 'decko';
 import { NETWORK_CONFIG } from 'core/constants/network';
+import { VotingDecision } from 'shared/types/models/Voting';
 import { ONE_ERC20 } from 'shared/constants';
 import { IDaoApiConfig, ITransitionPeriod } from './types';
 import { BaseDaoApi } from './BaseDaoApi';
@@ -135,6 +136,27 @@ export class DaoApi {
     ] as const;
 
     await this.base.sendTransaction('Finance', 'deposit', params);
+  }
+
+  @bind
+  public async vote(voteId: string, voteType: VotingDecision) {
+    const votingDecision = voteType === 'confirm';
+    const params = [
+      voteId,
+      votingDecision,
+      true,
+    ] as const;
+
+    await this.base.sendTransaction('Voting', 'vote', params);
+  }
+
+  @bind
+  public async executeVote(voteId: string) {
+    const params = [
+      voteId,
+    ] as const;
+
+    await this.base.sendTransaction('Voting', 'executeVote', params);
   }
 
   private async initialize() {
