@@ -67,7 +67,7 @@ interface IOwnProps<T extends VotingType> {
   votingResult?: VotingResult;
   voteForCount: number;
   voteAgainstCount: number;
-  canExecute?: boolean;
+  isNeedExecute?: boolean;
   onVoteFor(): void;
   onVoteAgainst(): void;
 }
@@ -76,7 +76,7 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
   const {
     classes, timeLeft, votedPercent, neededPercent, reason,
     voteForCount, voteAgainstCount, votingDecision,
-    type, votingParams, votingResult, id, canExecute,
+    type, votingParams, votingResult, id, isNeedExecute,
   } = props;
   const { t } = useTranslate();
 
@@ -198,15 +198,6 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
                 </Grid>);
             }
 
-            if (canExecute) {
-              return (
-                <Grid item xs={12}>
-                  <ExecuteVoteButtonAsync fullWidth color="purple" voteId={id} onChangeCommunication={setIsRequesting}>
-                    {t(tKeys.executeVote.getKey())}
-                  </ExecuteVoteButtonAsync>
-                </Grid>);
-            }
-
             if (votingDecision) {
               return (
                 <Grid item xs={12}>
@@ -253,17 +244,25 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
       {votingResult &&
         <Grid item xs={2} className={classes.votingResult}>
           <Grid container spacing={16} justify="center" direction="column">
-            <Grid item>
-              <Grid container wrap="nowrap" alignItems="center">
-                {votingResult === 'confirmed' && <Checked className={classes.votingForIcon} />}
-                {votingResult === 'rejected' && <ContainedCross className={classes.votingAgainstIcon} />}
-                <Typography variant="h6" weight="medium">
-                  {votingResult === 'confirmed' ? t(tKeys.approve.getKey()) : t(tKeys.decline.getKey())}
-                </Typography>
+            {isNeedExecute &&
+              <Grid item xs={12}>
+                <ExecuteVoteButtonAsync fullWidth color="purple" voteId={id} onChangeCommunication={setIsRequesting}>
+                  {t(tKeys.executeVote.getKey())}
+                </ExecuteVoteButtonAsync>
               </Grid>
-            </Grid>
+            }
+            {!isNeedExecute &&
+              <Grid item>
+                <Grid container wrap="nowrap" alignItems="center">
+                  {votingResult === 'confirmed' && <Checked className={classes.votingForIcon} />}
+                  {votingResult === 'rejected' && <ContainedCross className={classes.votingAgainstIcon} />}
+                  <Typography variant="h6" weight="medium">
+                    {votingResult === 'confirmed' ? t(tKeys.approve.getKey()) : t(tKeys.decline.getKey())}
+                  </Typography>
+                </Grid>
+              </Grid>}
             <Grid item>
-              <Grid container wrap="nowrap" spacing={16}>
+              <Grid container wrap="nowrap" spacing={16} justify={isNeedExecute ? 'center' : 'flex-start'}>
                 <Grid item>
                   <Typography component="span" variant="subtitle1" weight="medium">
                     {t(tKeysShared.no.getKey())}
