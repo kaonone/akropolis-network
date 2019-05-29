@@ -12,7 +12,7 @@ export interface IFinanceState {
   transactions: Record<string, IFinanceTransaction>;
   holders: Record<string, IFinanceHolder>;
   vaultAddress: string;
-  daoOverview: IDaoOverview;
+  daoOverview: DaoOverview;
   ready: boolean;
 }
 
@@ -23,12 +23,7 @@ export interface IEvent<E extends string = string, V = any> extends EventLog {
 
 export type StoreReducer<T> = (state: T, events: EventLog[], isCompleteLoading: boolean) => Promise<T> | T;
 
-export interface IDaoOverview {
-  balance: IDaoOverviewMetric;
-  debit: IDaoOverviewMetric;
-  credit: IDaoOverviewMetric;
-
-}
+export type DaoOverview = Record<'balance' | 'debit' | 'credit', IDaoOverviewMetric>;
 
 interface IDaoOverviewMetric {
   value: number;
