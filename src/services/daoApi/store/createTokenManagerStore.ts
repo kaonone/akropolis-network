@@ -90,25 +90,15 @@ export async function createTokenManagerStore(web3: Web3, proxy: ContractProxy) 
 function updateHolders(prevHolders: Record<string, IHolder>, changes: IHolder[]) {
   return changes
     .reduce((holders: Record<string, IHolder>, changed: IHolder): Record<string, IHolder> => {
-      const holder = holders[changed.address];
-
-      // new holder
-      if (!holder) {
-        return Number(changed.balance) ?
-          { ...holders, [changed.address]: changed } :
-          { ...holders };
+      if (!Number(changed.balance)) {
+        // remove holder with zero balance
+        delete holders[changed.address];
+      } else {
+        holders[changed.address] = changed;
       }
 
-      // existing holder now has no balance
-      if (!Number(holder.balance)) {
-        const nextHolders = { ...holders };
-        delete nextHolders[changed.address];
-        return { ...nextHolders, [holder.address]: changed };
-      }
-
-      return { ...holders, [holder.address]: changed };
-
-    }, prevHolders);
+      return holders;
+    }, { ...prevHolders });
 }
 
 async function loadNewBalances(token: ContractProxy, ...addresses: string[]): Promise<IHolder[]> {

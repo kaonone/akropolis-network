@@ -22,10 +22,12 @@ const CooperativeOverview = (props: StylesProps) => {
   const cooperativeBalanceChange = useObserver(() => daoApi.store.finance.daoOverview.balance.change);
 
   const cooperativeHolders = useObserver(() => daoApi.store.tokenManager.holders);
+  const financeHolders = useObserver(() => daoApi.store.finance.holders);
 
   const holdersCount = Object.values(cooperativeHolders).length;
 
   const userAccount = cooperativeHolders[userAccountAddress];
+  const userBalance = (financeHolders[userAccountAddress] || { balance: 0 }).balance;
 
   return (
     <Grid container wrap="nowrap" className={classes.root} spacing={32} alignItems="stretch" >
@@ -46,7 +48,7 @@ const CooperativeOverview = (props: StylesProps) => {
       {userAccount &&
         <Grid item xs={4}>
           <div className={classes.section}>
-            <PersonalInformation earn={0} deposit={userAccount.balance} />
+            <PersonalInformation earn={0} deposit={userBalance} />
           </div>
         </Grid>}
     </Grid>

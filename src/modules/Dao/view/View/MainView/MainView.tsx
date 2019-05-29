@@ -55,6 +55,7 @@ function MainView(props: IProps) {
   const daoOverview = useObserver(() => daoApi.store.finance.daoOverview);
 
   const userAccount = tokenHolders[userAccountAddress];
+  const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
 
   return (
     <BaseLayout
@@ -99,7 +100,7 @@ function MainView(props: IProps) {
         {selectedSection === 'activities' && <Activities />}
         {selectedSection === 'members' && (
           <Members
-            tokenHolders={Object.values(tokenHolders)}
+            tokenHolders={memoTokenHolders}
             financeHolders={financeHolders}
             userAccount={userAccountAddress}
           />
