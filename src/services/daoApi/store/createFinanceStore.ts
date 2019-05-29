@@ -1,12 +1,14 @@
 import Web3 from 'web3';
 import * as R from 'ramda';
 import BN from 'bignumber.js';
+import * as moment from 'moment';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 
 import vaultAbi from 'blockchain/abi/vault.json';
 import { NETWORK_CONFIG } from 'core/constants';
 import { IFinanceTransaction, IFinanceHolder } from 'shared/types/models';
 import { ONE_ERC20 } from 'shared/constants';
+import { difference } from 'shared/helpers/integer';
 import { addressesEqual } from 'shared/helpers/web3';
 
 import { IEvent, IFinanceState } from './types';
@@ -30,9 +32,9 @@ export const initialFinanceState: IFinanceState = {
   transactions: {},
   vaultAddress: '',
   daoOverview: {
-    balance: 0,
-    credit: 0,
-    debit: 0,
+    balance: { value: 0, change: 0 },
+    credit: { value: 0, change: 0 },
+    debit: { value: 0, change: 0 },
   },
   ready: false,
 };
@@ -56,10 +58,10 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
 
       const daoBalance = isNeedLoadBalance
         ? new BN(await vaultProxy.call('balance', NETWORK_CONFIG.daiContract)).div(ONE_ERC20).toNumber()
-        : state.daoOverview.balance;
+        : state.daoOverview.balance.value;
 
       const mainCoinNewTransactions: IFinanceTransaction[] = (await Promise.all(
-        transactionsForLoad.map(async id => ({ id, ...await proxy.call('getTransaction', id)})),
+        transactionsForLoad.map(async id => ({ id, ...await proxy.call('getTransaction', id) })),
       )).map<IFinanceTransaction>(item => ({
         ...item,
         amount: new BN(item.amount).div(ONE_ERC20).toNumber(),
@@ -73,13 +75,33 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
         } : state.transactions;
 
       const holders: Record<string, IFinanceHolder> = mainCoinNewTransactions.length
-        ? reduceHolders(nextTransactions)
+        ? reduceHolders(Object.values(nextTransactions))
         : state.holders;
 
+      const dayAgo = moment().subtract(1, 'days').valueOf();
+      const holdersForDay: IFinanceHolder[] = Object.values(
+        reduceHolders(Object.values(nextTransactions).filter(transaction => transaction.date > dayAgo)),
+      );
+      const balanceChangeForDay = R.sum((holdersForDay).map(item => item.balance));
+      const debitChangeForDay = R.sum((holdersForDay).map(item => item.debit));
+      const creditChangeForDay = R.sum((holdersForDay).map(item => item.credit));
+
+      const daoDebit = R.sum(Object.values(holders).map(item => item.debit));
+      const daoCredit = R.sum(Object.values(holders).map(item => item.credit));
+
       const daoOverview: IFinanceState['daoOverview'] = {
-        balance: daoBalance,
-        credit: R.sum(Object.values(holders).map(item => item.credit)),
-        debit: R.sum(Object.values(holders).map(item => item.debit)),
+        balance: {
+          value: daoBalance,
+          change: difference(daoBalance, balanceChangeForDay),
+        },
+        debit: {
+          value: daoDebit,
+          change: difference(daoDebit, debitChangeForDay),
+        },
+        credit: {
+          value: daoCredit,
+          change: difference(daoCredit, creditChangeForDay),
+        },
       };
 
       return {
@@ -99,9 +121,8 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
   );
 }
 
-function reduceHolders(nextTransactions: { [x: string]: IFinanceTransaction; }): Record<string, IFinanceHolder> {
-  return Object
-    .values(nextTransactions)
+function reduceHolders(nextTransactions: IFinanceTransaction[]): Record<string, IFinanceHolder> {
+  return nextTransactions
     .reduce<Record<string, IFinanceHolder>>((acc, cur) => {
       const prevHolderState: IFinanceHolder = acc[cur.entity] || {
         address: cur.entity,
