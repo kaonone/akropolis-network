@@ -5,7 +5,6 @@ import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 import tokenAbi from 'blockchain/abi/minimeToken.json';
 import { IHolder } from 'shared/types/models';
 import { ONE_ERC20 } from 'shared/constants';
-import { addressesEqual } from 'shared/helpers/web3';
 
 import { IEvent, ITokenManagerState } from './types';
 import { getStore } from './getStore';
@@ -25,7 +24,7 @@ type Event =
   | TransferEvent;
 
 export const initialTokenManagerState: ITokenManagerState = {
-  holders: [],
+  holders: {},
   tokenAddress: '',
   tokenSupply: '0',
   ready: false,
@@ -88,24 +87,28 @@ export async function createTokenManagerStore(web3: Web3, proxy: ContractProxy) 
  *                     *
  ***********************/
 
-function updateHolders(prevHolders: IHolder[], changes: IHolder[]) {
+function updateHolders(prevHolders: Record<string, IHolder>, changes: IHolder[]) {
   return changes
-    .reduce((holders: IHolder[], changed: IHolder): IHolder[] => {
-      const holderIndex = holders.findIndex(holder =>
-        addressesEqual(holder.address, changed.address),
-      );
+    .reduce((holders: Record<string, IHolder>, changed: IHolder): Record<string, IHolder> => {
+      const holder = holders[changed.address];
 
-      if (holderIndex === -1) {
-        // If we can't find it, concat
-        return holders.concat(changed);
-      } else {
-        const nextHolders = Array.from(holders);
-        nextHolders[holderIndex] = changed;
-        return nextHolders;
+      // new holder
+      if (!holder) {
+        return Number(changed.balance) ?
+          { ...holders, [changed.address]: changed } :
+          { ...holders };
       }
-    }, prevHolders)
-    // Filter out any addresses that now have no balance
-    .filter(({ balance }) => Number(balance) > 0);
+
+      // existing holder now has no balance
+      if (!Number(holder.balance)) {
+        const nextHolders = { ...holders };
+        delete nextHolders[changed.address];
+        return { ...nextHolders, [holder.address]: changed };
+      }
+
+      return { ...holders, [holder.address]: changed };
+
+    }, prevHolders);
 }
 
 async function loadNewBalances(token: ContractProxy, ...addresses: string[]): Promise<IHolder[]> {

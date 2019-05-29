@@ -217,7 +217,7 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
                   <Grid item xs={6}>
                     <VoteButtonAsync
                       fullWidth
-                      color="purple"
+                      color="primary"
                       voteId={id}
                       decisionType="confirm"
                       onChangeCommunication={setIsRequesting}
@@ -228,7 +228,7 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
                   <Grid item xs={6}>
                     <VoteButtonAsync
                       fullWidth
-                      color="purple"
+                      color="primary"
                       voteId={id}
                       decisionType="reject"
                       onChangeCommunication={setIsRequesting}
@@ -246,7 +246,13 @@ const VotingCard = <T extends VotingType>(props: StylesProps & IOwnProps<T>) => 
           <Grid container spacing={16} justify="center" direction="column">
             {isNeedExecute &&
               <Grid item xs={12}>
-                <ExecuteVoteButtonAsync fullWidth color="purple" voteId={id} onChangeCommunication={setIsRequesting}>
+                <ExecuteVoteButtonAsync
+                  fullWidth
+                  color="primary"
+                  voteId={id}
+                  onChangeCommunication={setIsRequesting}
+                  disabled={isRequesting}
+                >
                   {t(tKeys.executeVote.getKey())}
                 </ExecuteVoteButtonAsync>
               </Grid>

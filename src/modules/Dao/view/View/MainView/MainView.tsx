@@ -49,27 +49,27 @@ function MainView(props: IProps) {
 
   const daoApi = useDaoApi();
 
-  const userAccount = useAccountAddress();
+  const userAccountAddress = useAccountAddress();
   const tokenHolders = useObserver(() => daoApi.store.tokenManager.holders);
   const financeHolders = useObserver(() => daoApi.store.finance.holders);
   const daoOverview = useObserver(() => daoApi.store.finance.daoOverview);
 
-  const isInCoopUser = tokenHolders.find(item => item.address === userAccount);
+  const userAccount = tokenHolders[userAccountAddress];
 
   return (
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title={daoId}
-      actions={isInCoopUser ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
+      actions={userAccount ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
       additionalHeaderContent={
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
             <DaoMetrics
-              balance={daoOverview.balance}
-              debit={daoOverview.debit}
-              credit={daoOverview.credit}
-              balanceChange={12.81}
-              debitChange={-12.81}
+              balance={daoOverview.balance.value}
+              debit={daoOverview.debit.value}
+              credit={daoOverview.credit.value}
+              balanceChange={daoOverview.balance.change}
+              debitChange={daoOverview.debit.change}
             />
           </Grid>
           <Grid item>
@@ -98,7 +98,11 @@ function MainView(props: IProps) {
         {selectedSection === 'overview' && <Cooperative />}
         {selectedSection === 'activities' && <Activities />}
         {selectedSection === 'members' && (
-          <Members tokenHolders={tokenHolders} financeHolders={financeHolders} userAccount={userAccount} />
+          <Members
+            tokenHolders={Object.values(tokenHolders)}
+            financeHolders={financeHolders}
+            userAccount={userAccountAddress}
+          />
         )}
         {selectedSection === 'products' && <Products />}
         {selectedSection === 'history' && 'history'}

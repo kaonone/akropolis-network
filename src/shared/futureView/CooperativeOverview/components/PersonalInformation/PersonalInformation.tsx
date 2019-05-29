@@ -4,9 +4,11 @@ import * as R from 'ramda';
 
 import { Typography } from 'shared/view/elements';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
+import { formatUSD } from 'shared/helpers/format';
+
+import AccessCard from './AccessCard/AccessCard';
 
 import { StylesProps, provideStyles } from './PersonalInformation.style';
-import AccessCard from './AccessCard/AccessCard';
 
 const tKeys = tKeysAll.features.cooperativeOverview;
 
@@ -22,10 +24,15 @@ const getDayLeft = () => {
   return R.clamp(0, TOTAL_WAITING_DAYS_COUNT, Math.ceil(diffWithSeptember));
 };
 
-type IProps = StylesProps;
+interface IOwnProps {
+  deposit: number;
+  earn: number;
+}
+
+type IProps = IOwnProps & StylesProps;
 
 const PersonalInformation = (props: IProps) => {
-  const { classes } = props;
+  const { classes, deposit, earn } = props;
   const { t } = useTranslate();
 
   const dayLeft = getDayLeft();
@@ -41,7 +48,7 @@ const PersonalInformation = (props: IProps) => {
           {t(tKeys.deposit.getKey())}
         </Typography>
         <Typography component="div" variant="h6">
-          {'$192.22'}
+          {formatUSD(deposit)}
         </Typography>
       </div>
       <div className={classes.metricRow}>
@@ -50,7 +57,7 @@ const PersonalInformation = (props: IProps) => {
           {t(tKeys.earn.getKey())}
         </Typography>
         <Typography component="div" variant="h6">
-          {'$16.49'}
+          {formatUSD(earn)}
         </Typography>
       </div>
       <div className={classes.accessCards}>

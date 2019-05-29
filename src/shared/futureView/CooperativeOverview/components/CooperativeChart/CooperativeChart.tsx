@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as cn from 'classnames';
 
 import { Typography, Grid, Avatar } from 'shared/view/elements';
 import { formatPercent, formatUSD } from 'shared/helpers/format';
@@ -29,6 +30,8 @@ const CooperativeChart = (props: IProps) => {
   } = props;
   const { t } = useTranslate();
 
+  const isPositiveBalanceChange = balanceChange >= 0;
+
   return (
     <div className={classes.root}>
       <Grid container wrap="nowrap" justify="space-between" className={classes.header}>
@@ -50,10 +53,17 @@ const CooperativeChart = (props: IProps) => {
       </Grid>
       <Grid container wrap="nowrap" alignItems="flex-start" className={classes.balance}>
         <Typography className={classes.balanceValue} variant="h5">{formatUSD(balance)}</Typography>
-        <Typography variant="body2" weight="medium" className={classes.balanceChange}>
-          {balanceChange >= 0 && <Increase className={classes.arrowIcon} />}
-          {balanceChange < 0 && <Decrease className={classes.arrowIcon} />}
-          {formatPercent(balanceChange)}
+        <Typography
+          variant="body2"
+          weight="medium"
+          className={cn(classes.balanceChange, {
+            [classes.positive]: isPositiveBalanceChange,
+            [classes.negative]: !isPositiveBalanceChange,
+          })}
+        >
+          {isPositiveBalanceChange && <Increase className={cn(classes.arrowIcon, classes.positive)} />}
+          {!isPositiveBalanceChange && <Decrease className={cn(classes.arrowIcon, classes.negative)} />}
+          {formatPercent(Math.abs(balanceChange))}
         </Typography>
       </Grid>
       <img className={classes.graphic} src={chartMock} />
