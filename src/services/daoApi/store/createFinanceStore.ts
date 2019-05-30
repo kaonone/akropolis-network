@@ -35,8 +35,8 @@ export const initialFinanceState: IFinanceState = {
   vaultAddress: '',
   daoOverview: {
     balance: { value: 0, change: 0 },
-    credit: { value: 0, change: 0 },
-    debit: { value: 0, change: 0 },
+    withdraw: { value: 0, change: 0 },
+    deposit: { value: 0, change: 0 },
   },
   ready: false,
 };
@@ -85,24 +85,24 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
         reduceHolders(Object.values(nextTransactions).filter(transaction => transaction.date > dayAgo)),
       );
       const balanceChangeForDay = R.sum((holdersForDay).map(item => item.balance));
-      const debitChangeForDay = R.sum((holdersForDay).map(item => item.debit));
-      const creditChangeForDay = R.sum((holdersForDay).map(item => item.credit));
+      const depositChangeForDay = R.sum((holdersForDay).map(item => item.deposit));
+      const withdrawChangeForDay = R.sum((holdersForDay).map(item => item.withdraw));
 
-      const daoDebit = R.sum(Object.values(holders).map(item => item.debit));
-      const daoCredit = R.sum(Object.values(holders).map(item => item.credit));
+      const daoDeposit = R.sum(Object.values(holders).map(item => item.deposit));
+      const daoWithdraw = R.sum(Object.values(holders).map(item => item.withdraw));
 
       const daoOverview: IFinanceState['daoOverview'] = {
         balance: {
           value: daoBalance,
           change: difference(daoBalance, balanceChangeForDay),
         },
-        debit: {
-          value: daoDebit,
-          change: difference(daoDebit, debitChangeForDay),
+        deposit: {
+          value: daoDeposit,
+          change: difference(daoDeposit, depositChangeForDay),
         },
-        credit: {
-          value: daoCredit,
-          change: difference(daoCredit, creditChangeForDay),
+        withdraw: {
+          value: daoWithdraw,
+          change: difference(daoWithdraw, withdrawChangeForDay),
         },
       };
 
@@ -126,14 +126,14 @@ function reduceHolders(nextTransactions: IFinanceTransaction[]): Record<string, 
       const prevHolderState: IFinanceHolder = acc[cur.entity] || {
         address: cur.entity,
         balance: 0,
-        credit: 0,
-        debit: 0,
+        withdraw: 0,
+        deposit: 0,
       };
       const holder: IFinanceHolder = {
         ...prevHolderState,
         balance: prevHolderState.balance + (cur.isIncoming ? cur.amount : -cur.amount),
-        credit: prevHolderState.credit + (cur.isIncoming ? 0 : cur.amount),
-        debit: prevHolderState.debit + (cur.isIncoming ? cur.amount : 0),
+        withdraw: prevHolderState.withdraw + (cur.isIncoming ? 0 : cur.amount),
+        deposit: prevHolderState.deposit + (cur.isIncoming ? cur.amount : 0),
       };
       return { ...acc, [cur.entity]: holder };
     }, {});

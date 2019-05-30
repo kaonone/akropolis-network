@@ -77,10 +77,11 @@ function MainView(props: IProps) {
           <Grid item xs>
             <DaoMetrics
               balance={daoOverview.balance.value}
-              debit={daoOverview.debit.value}
-              credit={daoOverview.credit.value}
+              deposit={daoOverview.deposit.value}
+              withdraw={daoOverview.withdraw.value}
               balanceChange={daoOverview.balance.change}
-              debitChange={daoOverview.debit.change}
+              depositChange={daoOverview.deposit.change}
+              withdrawChange={daoOverview.withdraw.change}
             />
           </Grid>
           <Grid item>

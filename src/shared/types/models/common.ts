@@ -24,6 +24,6 @@ export interface IFinanceTransaction {
 }
 
 export interface IFinanceHolder extends IHolder {
-  debit: number;
-  credit: number;
+  deposit: number;
+  withdraw: number;
 }
