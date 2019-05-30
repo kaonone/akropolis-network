@@ -1,10 +1,8 @@
 import * as React from 'react';
 
 import { StylesProps, provideStyles } from './CooperativesList.style';
-import { CooperativeEvent } from 'shared/types/models/Cooperative';
 import NewEvent from 'shared/view/elements/Icons/NewEvent';
 
-import { useTranslate, tKeys } from 'services/i18n';
 import { Typography, Grid } from 'shared/view/elements';
 
 interface IComplexCellProps {
@@ -28,25 +26,22 @@ const ComplexCell = React.memo(provideStyles((props: IComplexCellProps & StylesP
 
 }));
 
-interface IEventCellProps {
-  event?: CooperativeEvent;
-}
+const EventCell = React.memo(provideStyles((props: StylesProps) => {
 
-const EventCell = React.memo(provideStyles((props: IEventCellProps & StylesProps) => {
+  const { classes } = props;
 
-  const { classes, event } = props;
-  const { t } = useTranslate();
-  return (
-    <>
-      {event === 'new' &&
-        <Typography variant="caption" className={classes.newEvent}>{
-          t(tKeys.shared.new.getKey())}
-          <NewEvent className={classes.eventIcon} />
-        </Typography>}
-      {event === 'reviewed' && <NewEvent className={classes.eventIcon} />}
+  return <NewEvent className={classes.eventIcon} />;
 
-    </>
-  );
+  // return (
+  //   <>
+  //     {event === 'new' &&
+  //       <Typography variant="caption" className={classes.newEvent}>{
+  //         t(tKeys.shared.new.getKey())}
+  //         <NewEvent className={classes.eventIcon} />
+  //       </Typography>}
+  //     {event === 'reviewed' && <NewEvent className={classes.eventIcon} />}
+  //   </>
+  // );
 
 }));
 

@@ -4,7 +4,4 @@ export interface ICooperative {
   description: string;
   balance: number;
   membersCount: number;
-  eventType?: CooperativeEvent;
 }
-
-export type CooperativeEvent = 'new' | 'reviewed';

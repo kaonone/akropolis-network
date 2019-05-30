@@ -6,7 +6,7 @@ import routes from 'modules/routes';
 import { CreateDaoButtonAsync } from 'features/createDao';
 
 import { InjectedAuthRouterProps } from 'shared/helpers/authWrapper';
-import CooperativesList, { cooperativesMock } from 'shared/futureView/CooperativesList/CooperativesList';
+import CooperativesList from 'shared/futureView/CooperativesList/CooperativesList';
 
 type IProps = InjectedAuthRouterProps;
 
@@ -17,7 +17,7 @@ function Daos(props: IProps & RouteComponentProps<any>) {
 
   return (
     <BaseLayout title="My co-ops" actions={[<CreateDaoButtonAsync key="1" onCreate={handleOpenDao} />]}>
-      <CooperativesList cooperatives={cooperativesMock} />
+      <CooperativesList onSelectCooperative={handleOpenDao}/>
     </BaseLayout>
   );
 }

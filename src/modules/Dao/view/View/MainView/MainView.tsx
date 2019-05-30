@@ -14,11 +14,11 @@ import { RequestDepositButtonAsync } from 'features/requestDeposit';
 
 import { ToggleButtonGroup, ToggleButton, Grid, Badge } from 'shared/view/elements';
 import { withComponent } from 'shared/helpers/react';
+import { useNewVotingEvents } from 'shared/helpers/voting';
 
 import { Section } from '../../../types';
 import { Activities, Products, Members, Cooperative } from './mockViews';
 import { StylesProps, provideStyles } from './MainView.style';
-
 const tKeys = tkeysAll.modules.daos;
 
 const NavToggleButton = withComponent(Link)(ToggleButton);
@@ -56,13 +56,15 @@ function MainView(props: IProps) {
     [votes],
   );
 
+  const newEvents = useNewVotingEvents(daoApi, preparedVotes);
+
   const links: ISectionLink[] = React.useMemo(() => ([
     { section: 'overview', title: tKeys.overview.getKey() },
-    { section: 'activities', title: tKeys.activities.getKey(), disabled: true, badge: preparedVotes.length },
+    { section: 'activities', title: tKeys.activities.getKey(), disabled: true, badge: newEvents.length },
     { section: 'members', title: tKeys.members.getKey(), disabled: true },
     { section: 'products', title: tKeys.products.getKey(), disabled: true },
     { section: 'history', title: tKeys.history.getKey(), disabled: true },
-  ]), [preparedVotes]);
+  ]), [newEvents]);
 
   const userAccount = tokenHolders[userAccountAddress];
   const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
@@ -72,7 +74,7 @@ function MainView(props: IProps) {
       backRoutePath={routes.daos.getRedirectPath()}
       title={daoId}
       actions={userAccount ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
-      additionalHeaderContent={
+      additionalHeaderContent={(
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
             <DaoMetrics
@@ -84,13 +86,18 @@ function MainView(props: IProps) {
               withdrawChange={daoOverview.withdraw.change}
             />
           </Grid>
-          <Grid item>
-            <RequestWithdrawButtonAsync />
-          </Grid>
-          <Grid item>
-            <RequestDepositButtonAsync />
-          </Grid>
-        </Grid>}
+          {!!userAccount && (
+            <>
+              <Grid item>
+                <RequestWithdrawButtonAsync />
+              </Grid>
+              <Grid item>
+                <RequestDepositButtonAsync />
+              </Grid>
+            </>
+          )}
+        </Grid>
+      )}
     >
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
         {links.map(({ section, title, badge }, index: number) => (

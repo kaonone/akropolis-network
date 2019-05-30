@@ -10,6 +10,7 @@ import { isNameUsed } from 'shared/helpers/aragon-wrapper';
 import { isRequired, composeValidators, maxStringLength, allowedCharactersForDaoName } from 'shared/validators';
 import { TextInputField, NumberInputField } from 'shared/view/form';
 import { RequestForm } from 'shared/view/components';
+import { DAO_GOAL, DAO_DESCRIPTION } from 'services/daoApi';
 
 import * as actions from './../../../redux/actions';
 import * as selectors from './../../../redux/selectors';
@@ -19,6 +20,12 @@ const fieldNames: { [key in keyof ICreateFormData]: key } = {
   domainName: 'domainName',
   description: 'description',
   goal: 'goal',
+};
+
+const initialValues: ICreateFormData = {
+  domainName: '',
+  description: DAO_DESCRIPTION,
+  goal: DAO_GOAL,
 };
 
 interface IStateProps {
@@ -74,6 +81,7 @@ function CreateDaoForm(props: IProps) {
         label={t(intl.fields.goal.getKey())}
         validate={isRequired}
         fullWidth
+        disabled
       />),
     (
       <TextInputField
@@ -81,6 +89,7 @@ function CreateDaoForm(props: IProps) {
         label={t(intl.fields.description.getKey())}
         validate={isRequired}
         fullWidth
+        disabled
       />),
   ];
   // tslint:enable:jsx-key
@@ -89,6 +98,7 @@ function CreateDaoForm(props: IProps) {
     <RequestForm
       onCancel={onCancel}
       onSubmit={createDao}
+      initialValues={initialValues}
       cancelButton={t(intl.form.cancel.getKey())}
       submitButton={t(intl.form.submit.getKey())}
       withoutAddress

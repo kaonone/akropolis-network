@@ -4,15 +4,16 @@ import { StylesProps, provideStyles } from './Table.style';
 
 type MakeFnComponentProps<P = {}, C = any> = P & { children?: C };
 
-type ISharedProps = StylesProps & { className?: string };
+type ISharedProps = StylesProps & { className?: string, onClick?(): void };
 
 interface ICellProps {
   align?: 'left' | 'center' | 'right';
+  colSpan?: number;
 }
 
 interface ITableProps {
   separated?: boolean;
-
+  onClick?(): void;
 }
 class Table extends React.Component<ISharedProps & ITableProps> {
 
@@ -43,13 +44,13 @@ const TableBody = provideStyles((props: MakeFnComponentProps<ISharedProps>) => {
 });
 
 const TableRow = provideStyles((props: MakeFnComponentProps<ISharedProps>) => {
-  const { classes, children, className } = props;
-  return <tr className={cn(classes.row, className)}>{children}</tr>;
+  const { classes, children, className, ...rest } = props;
+  return <tr className={cn(classes.row, className)} {...rest}>{children}</tr>;
 });
 
 const TableCell = React.memo(provideStyles((props: MakeFnComponentProps<ISharedProps & ICellProps>) => {
-  const { classes, children, align, className } = props;
-  return <td align={align} className={cn(classes.cell, className)}>{children}</td>;
+  const { classes, children, className, ...tableRest } = props;
+  return <td className={cn(classes.cell, className)} {...tableRest}>{children}</td>;
 }));
 
 export { TableComponent as Table, TableHead, TableBody, TableRow, TableCell };
