@@ -78,7 +78,7 @@ const getTemplateInstanceParams = (
   );
 
   return [
-    domainName,
+    domainName.toLowerCase(),
     accounts,
     stakes,
     supportNeeded,
