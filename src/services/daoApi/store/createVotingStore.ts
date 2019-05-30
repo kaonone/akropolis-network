@@ -66,6 +66,7 @@ export const initialVotingState: IVotingState = {
     voteTime: 0,
   },
   connectedAccountVotes: {},
+  canVoteConnectedAccount: {},
   votings: {},
   ready: false,
 };
@@ -110,9 +111,9 @@ export async function createVotingStore(wrapper: AragonWrapper, proxy: ContractP
       );
 
       const currentAddress = await getCurrentAccount();
-      const isNeedToReloadAllAccountVotes = !!events.find(item => item.event === ACCOUNTS_TRIGGER);
+      const isChangedAccount = !!events.find(item => item.event === ACCOUNTS_TRIGGER);
 
-      const votingIdsForReloadAccountVote = isNeedToReloadAllAccountVotes
+      const votingIdsForReloadAccountVote = isChangedAccount
         ? Object.values(votings).map(item => item.id)
         : events
           .filter((item): item is StartVote | CastVote => (
@@ -124,10 +125,20 @@ export async function createVotingStore(wrapper: AragonWrapper, proxy: ContractP
       const loadedConnectedAccountVotes = await loadAccountVotes(proxy, votingIdsForReloadAccountVote, currentAddress);
       const connectedAccountVotes = R.mergeDeepRight(state.connectedAccountVotes, loadedConnectedAccountVotes);
 
+      const votingIdsForReloadCanVote = isChangedAccount
+        ? Object.values(votings).map(item => item.id)
+        : events
+          .filter((item): item is StartVote => item.event === 'StartVote')
+          .map(item => item.returnValues.voteId);
+
+      const loadedCanVoteConnectedAccount = await loadCanVotes(proxy, votingIdsForReloadCanVote, currentAddress);
+      const canVoteConnectedAccount = R.mergeDeepRight(state.canVoteConnectedAccount, loadedCanVoteConnectedAccount);
+
       return {
         ...state,
         votings,
         connectedAccountVotes,
+        canVoteConnectedAccount,
         ready: isCompleteLoading,
       };
     },
@@ -142,7 +153,22 @@ export async function createVotingStore(wrapper: AragonWrapper, proxy: ContractP
  *       Helpers       *
  *                     *
  ***********************/
-// Default votes to an empty array to prevent errors on initial load
+async function loadCanVotes(
+  proxy: ContractProxy, voteIds: string[], connectedAccount: string,
+): Promise<Record<string, boolean>> {
+  const connectedAccountVotes = await Promise.all(
+    R.uniq(voteIds).map(async voteId => {
+      const canVote: boolean = await proxy.call('canVote', voteId, connectedAccount);
+      return { voteId, canVote };
+    }),
+  );
+
+  return R.map(
+    R.prop('canVote'),
+    R.indexBy(R.prop('voteId'), connectedAccountVotes),
+  );
+}
+
 async function loadAccountVotes(
   proxy: ContractProxy, voteIds: string[], connectedAccount: string,
 ): Promise<Record<string, VotingDecision>> {
