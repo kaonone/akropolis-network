@@ -19,7 +19,7 @@ import { StylesProps, provideStyles } from './CooperativesList.style';
 
 const tKeys = tKeysAll.shared.dao;
 
-const DAO_IDS = ['tost', 'test', 'serdtsev', 'Cooperative3'];
+const DAO_IDS = ['Cooperative1', 'Cooperative2', 'Cooperative3'];
 
 interface IOwnProps {
   onSelectCooperative(daoName: string): void;
@@ -108,7 +108,7 @@ const Cooperative = React.memo(provideStyles((props: ICooperativeProps & StylesP
     <ComplexCell title={t(tKeys.goal.getKey())} value={formatUSD(cooperative.goal, 0)} />,
     <ComplexCell title={t(tKeys.balance.getKey())} value={formatUSD(cooperative.balance)} />,
     <ComplexCell title={t(tKeys.members.getKey())} value={cooperative.membersCount} />,
-  ].concat(hasNewEvent ? <EventCell /> : <div/>);
+  ].concat(hasNewEvent ? <EventCell /> : <div />);
 
   // tslint:enable:jsx-key
   const lastCellIndex = cells.length - 1;
