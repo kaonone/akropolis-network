@@ -74,10 +74,7 @@ export async function createTokenManagerStore(web3: Web3, proxy: ContractProxy) 
       };
     },
     initialTokenManagerState,
-    [
-      proxy.events(),
-      tokenProxy.events(),
-    ],
+    [proxy, tokenProxy],
   );
 }
 

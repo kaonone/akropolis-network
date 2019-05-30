@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import MembersList from 'shared/futureView/MembersList/MembersList';
 import { IHolder, IFinanceHolder } from 'shared/types/models';
-import { IMember } from 'shared/types/models/Member';
 
 import { StylesProps, provideStyles } from './Members.style';
 
@@ -15,20 +14,13 @@ interface IProps {
 function Members(props: IProps & StylesProps) {
   const { classes, tokenHolders, financeHolders, userAccount } = props;
 
-  const members: IMember[] = React.useMemo(() => {
-    return tokenHolders.map<IMember>(item => {
-      const financeHolder = financeHolders[item.address] || {
-        address: '',
-        balance: 0,
-        credit: 0,
-        debit: 0,
-      };
-
-      return {
+  const members: IFinanceHolder[] = React.useMemo(() => {
+    return tokenHolders.map<IFinanceHolder>(item => {
+      return financeHolders[item.address] || {
         address: item.address,
-        balance: financeHolder.balance,
-        credit: financeHolder.credit,
-        debit: financeHolder.debit,
+        balance: 0,
+        withdraw: 0,
+        deposit: 0,
       };
     });
   }, [tokenHolders, financeHolders]);
