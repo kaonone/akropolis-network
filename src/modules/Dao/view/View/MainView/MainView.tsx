@@ -74,7 +74,7 @@ function MainView(props: IProps) {
       backRoutePath={routes.daos.getRedirectPath()}
       title={daoId}
       actions={userAccount ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
-      additionalHeaderContent={userAccount ?
+      additionalHeaderContent={(
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
             <DaoMetrics
@@ -86,13 +86,18 @@ function MainView(props: IProps) {
               withdrawChange={daoOverview.withdraw.change}
             />
           </Grid>
-          <Grid item>
-            <RequestWithdrawButtonAsync />
-          </Grid>
-          <Grid item>
-            <RequestDepositButtonAsync />
-          </Grid>
-        </Grid> : undefined}
+          {!!userAccount && (
+            <>
+              <Grid item>
+                <RequestWithdrawButtonAsync />
+              </Grid>
+              <Grid item>
+                <RequestDepositButtonAsync />
+              </Grid>
+            </>
+          )}
+        </Grid>
+      )}
     >
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
         {links.map(({ section, title, badge }, index: number) => (

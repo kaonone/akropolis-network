@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useObserver } from 'mobx-react-lite';
 
 import { DaoApi } from 'services/daoApi';
@@ -11,7 +12,7 @@ const useNewVotingEvents = (daoApi: DaoApi, votes: IVoting[]) => {
   const connectedAccountVotes = useObserver(() => daoApi.store.voting.connectedAccountVotes);
   const canVoteConnectedAccount = useObserver(() => daoApi.store.voting.canVoteConnectedAccount);
 
-  return votes
+  return useMemo(() => votes
     .filter(vote => vote.intent.type !== 'unknown')
     .filter(vote => {
       const voteResult = getVotingResult(vote);
@@ -21,7 +22,7 @@ const useNewVotingEvents = (daoApi: DaoApi, votes: IVoting[]) => {
       const canVote = canVoteConnectedAccount[vote.id];
 
       return canVote && (isNeedExecute || isNeedVote);
-    });
+    }), [connectedAccountVotes, canVoteConnectedAccount, votes]);
 };
 
 export default useNewVotingEvents;
