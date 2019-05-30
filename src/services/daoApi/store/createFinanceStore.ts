@@ -116,10 +116,7 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
       };
     },
     initialFinanceState,
-    [
-      proxy.events(),
-      vaultProxy.events(),
-    ],
+    [proxy, vaultProxy],
   );
 }
 

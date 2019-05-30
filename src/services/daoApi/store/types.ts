@@ -39,7 +39,7 @@ export interface IEvent<E extends string = string, V = any> extends EventLog {
   returnValues: V;
 }
 
-export type StoreReducer<S, E> = (state: S, events: E[], isCompleteLoading: boolean) => Promise<S> | S;
+export type StoreReducer<S, E> = (state: S, events: E[] | EventLog[], isCompleteLoading: boolean) => Promise<S> | S;
 
 export type DaoOverview = Record<'balance' | 'debit' | 'credit', IDaoOverviewMetric>;
 

@@ -143,7 +143,7 @@ export async function createVotingStore(wrapper: AragonWrapper, proxy: ContractP
       };
     },
     initialWithConfig,
-    [proxy.events()],
+    [proxy],
     [accountEvents$],
   );
 }
