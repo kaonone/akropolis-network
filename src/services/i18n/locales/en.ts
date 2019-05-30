@@ -110,8 +110,8 @@ export default {
     members: {
       address: 'Address',
       balance: 'Balance',
-      debit: 'Debit',
-      credit: 'Credit',
+      deposit: 'Deposit',
+      withdraw: 'Withdraw',
     },
     joinToCooperative: {
       button: 'Join to Coop',
@@ -173,8 +173,7 @@ export default {
       products: 'DeFi Products',
       history: 'History',
       balance: 'Balance',
-      debit: 'Debit',
-      credit: 'Credit',
+      withdraw: 'Withdraw',
       request: 'Request',
       deposit: 'Deposit',
     },

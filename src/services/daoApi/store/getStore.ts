@@ -3,24 +3,29 @@ import {
   mergeScan, bufferTime, skipUntil, distinctUntilChanged, publishReplay, map,
 } from 'rxjs/operators';
 import { StoreReducer } from './types';
+import ContractProxy from '@aragon/wrapper/dist/core/proxy';
+import { EventLog } from 'web3/types';
 
 export function getStore<S, E>(
   reducer: StoreReducer<S, E>,
   initial: S,
-  awaitableEvents: Array<Observable<E>> = [],
+  proxies: ContractProxy[] = [],
   otherEvents: Array<Observable<E>> = [],
 ): Observable<S> {
-  type IAggregatedEvents = { awaitable: E[] } | { other: E[] };
+  interface IPastEvent { past: EventLog[]; }
+  interface IOtherEvent { other: EventLog[]; }
+  type IAggregatedEvents = IPastEvent | IOtherEvent;
 
-  function isAwaitable(events: IAggregatedEvents): events is ({ awaitable: E[] }) {
-    return events && (events as any).awaitable;
+  function isPast(events: IAggregatedEvents): events is IPastEvent {
+    return events && !!(events as IPastEvent).past;
   }
 
-  function getEvents(events: IAggregatedEvents): E[] {
-    return isAwaitable(events) ? events.awaitable : events.other;
+  function getEvents(events: IAggregatedEvents): E[] | EventLog[] {
+    return isPast(events) ? events.past : events.other;
   }
 
   let isCompleteLoading = false;
+  let loadedPastEvents = 0;
 
   // Wrap the reducer in another reducer that
   // allows us to execute code asynchronously
@@ -31,11 +36,12 @@ export function getStore<S, E>(
   // (because of the `Promise.resolve`).
   const wrappedReducer = (state: S, aggregatedEvents: IAggregatedEvents) => {
     const prevIsCompleteLoading = isCompleteLoading;
-    if (isAwaitable(aggregatedEvents)) {
-      isCompleteLoading = isCompleteLoading || !aggregatedEvents.awaitable.length;
+    if (isPast(aggregatedEvents)) {
+      loadedPastEvents += 1;
+      isCompleteLoading = isCompleteLoading || loadedPastEvents === proxies.length;
     }
 
-    const events: E[] = getEvents(aggregatedEvents);
+    const events: E[] | EventLog[] = getEvents(aggregatedEvents);
 
     return from(
       !!events.length || (!prevIsCompleteLoading && isCompleteLoading)
@@ -44,9 +50,20 @@ export function getStore<S, E>(
     );
   };
 
-  const awaitableEvents$ = getEventsStream(merge(...awaitableEvents), 'awaitable');
-  const otherEvents$ = getEventsStream(merge(...otherEvents), 'other');
-  const store$ = merge(awaitableEvents$, otherEvents$).pipe(
+  const pastEvents$ = merge(
+    ...proxies.map(
+      proxy => from(proxy.contract.getPastEvents('allEvents', { fromBlock: proxy.initializationBlock })),
+    ),
+  ).pipe(
+    map(events => ({ past: events })),
+  );
+
+  const otherEvents$ = getEventsStream(merge(
+    ...otherEvents,
+    ...proxies.map(proxy => proxy.events(undefined, {})),
+  ), 'other');
+
+  const store$ = merge(pastEvents$, otherEvents$).pipe(
     mergeScan(wrappedReducer, initial, 1),
     distinctUntilChanged(),
     publishReplay(1),

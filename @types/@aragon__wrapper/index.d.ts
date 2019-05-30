@@ -89,7 +89,7 @@ declare module '@aragon/wrapper' {
 
 declare module '@aragon/wrapper/dist/core/proxy' {
   import Web3 from 'web3';
-  import { EventLog } from 'web3/types';
+  import { EventLog, Contract } from 'web3/types';
   import { IAbi } from '@aragon/types';
   import { Observable } from 'rxjs';
 
@@ -97,9 +97,10 @@ declare module '@aragon/wrapper/dist/core/proxy' {
     public constructor(address: string, jsonInterface: IAbi[], web3: Web3, initializationBlock?: number);
     public address: string;
     public initializationBlock: number;
+    public contract: Contract;
     public call(method: string, ...params: string[]): Promise<any>;
     public updateInitializationBlock(): Promise<void>;
-    public events(eventNames?: string[], options?: { fromBlock: number }): Observable<EventLog>;
+    public events(eventNames?: string[], options?: { fromBlock?: number }): Observable<EventLog>;
   }
 
   export default ContractProxy;

@@ -26,14 +26,15 @@ interface IMetric {
 interface IOwnProps {
   balance: number;
   balanceChange: number;
-  debit: number;
-  debitChange: number;
-  credit: number;
+  deposit: number;
+  depositChange: number;
+  withdraw: number;
+  withdrawChange: number;
 }
 type IProps = IOwnProps & StylesProps;
 
 const DaoMetrics = (props: IProps) => {
-  const { classes, balance, balanceChange, debit, debitChange, credit } = props;
+  const { classes, balance, balanceChange, deposit, depositChange, withdraw, withdrawChange } = props;
 
   const { t } = useTranslate();
   const metrics: IMetric[] = [
@@ -44,14 +45,16 @@ const DaoMetrics = (props: IProps) => {
       percent: formatPercent(Math.abs(balanceChange), 2),
     },
     {
-      title: t(tKeys.debit.getKey()),
-      value: formatUSD(debit),
-      type: getType(debitChange),
-      percent: formatPercent(Math.abs(debitChange), 2),
+      title: t(tKeys.deposit.getKey()),
+      value: formatUSD(deposit),
+      type: getType(depositChange),
+      percent: formatPercent(Math.abs(depositChange), 2),
     },
     {
-      title: t(tKeys.credit.getKey()),
-      value: formatUSD(credit),
+      title: t(tKeys.withdraw.getKey()),
+      value: formatUSD(withdraw),
+      type: getType(withdrawChange),
+      percent: formatPercent(Math.abs(withdrawChange), 2),
     },
   ];
   return (
