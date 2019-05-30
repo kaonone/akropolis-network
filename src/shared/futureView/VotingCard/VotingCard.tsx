@@ -23,10 +23,11 @@ type VotingResult = 'confirmed' | 'rejected';
 interface IOwnProps {
   voting: IVoting;
   votingDecision: VotingDecision;
+  canVote: boolean;
 }
 
 function VotingCard(props: StylesProps & IOwnProps) {
-  const { classes, votingDecision, voting } = props;
+  const { classes, votingDecision, voting, canVote } = props;
   const { id, intent, startDate, minAcceptQuorum, supportRequired, votingPower, yea, nay, executed } = voting;
   const { t } = useTranslate();
 
@@ -109,7 +110,6 @@ function VotingCard(props: StylesProps & IOwnProps) {
   const isOver = executed || endedByTimeout;
 
   const yeaPercent = yea / (yea + nay) * 100;
-  const nayPercent = nay / (yea + nay) * 100;
   const yeaPercentByPower = yea / (votingPower) * 100;
   const nayPercentByPower = nay / (votingPower) * 100;
   const votingResult: VotingResult = yeaPercent >= supportRequired && votedPercent >= minAcceptQuorum
@@ -188,29 +188,31 @@ function VotingCard(props: StylesProps & IOwnProps) {
                 </Grid>);
             }
 
-            if (votingDecision === 'absent') {
+            if (votingDecision === 'absent' && canVote) {
               return (
                 <>
                   <Grid item xs={6}>
                     <VoteButtonAsync
                       fullWidth
                       color="primary"
+                      variant="contained"
                       voteId={id}
-                      decisionType="confirm"
+                      decisionType="reject"
                       onChangeCommunication={setIsRequesting}
                     >
-                      {t(tKeysShared.yes.getKey())}
+                      {t(tKeysShared.no.getKey())}
                     </VoteButtonAsync>
                   </Grid>
                   <Grid item xs={6}>
                     <VoteButtonAsync
                       fullWidth
                       color="primary"
+                      variant="contained"
                       voteId={id}
-                      decisionType="reject"
+                      decisionType="confirm"
                       onChangeCommunication={setIsRequesting}
                     >
-                      {t(tKeysShared.no.getKey())}
+                      {t(tKeysShared.yes.getKey())}
                     </VoteButtonAsync>
                   </Grid>
                 </>);
@@ -252,7 +254,7 @@ function VotingCard(props: StylesProps & IOwnProps) {
                     {t(tKeysShared.yes.getKey())}
                   </Typography>{' '}
                   <Typography component="span" variant="subtitle1" weight="bold" className={classes.votingFor}>
-                    {formatPercent(yeaPercent)}
+                    {formatPercent(yeaPercentByPower)}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -260,7 +262,7 @@ function VotingCard(props: StylesProps & IOwnProps) {
                     {t(tKeysShared.no.getKey())}
                   </Typography>{' '}
                   <Typography component="span" variant="subtitle1" weight="bold" className={classes.votingAgainst}>
-                    {formatPercent(nayPercent)}
+                    {formatPercent(nayPercentByPower)}
                   </Typography>
                 </Grid>
               </Grid>

@@ -10,6 +10,7 @@ export interface IVotingState {
   };
   votings: Record<string, IVoting>;
   connectedAccountVotes: Record<string, VotingDecision>;
+  canVoteConnectedAccount: Record<string, boolean>;
   ready: boolean;
 }
 

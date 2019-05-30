@@ -47,6 +47,7 @@ function MainView(props: IProps) {
   const daoOverview = useObserver(() => daoApi.store.finance.daoOverview);
   const votes = useObserver(() => daoApi.store.voting.votings);
   const connectedAccountVotes = useObserver(() => daoApi.store.voting.connectedAccountVotes);
+  const canVoteConnectedAccount = useObserver(() => daoApi.store.voting.canVoteConnectedAccount);
 
   const preparedVotes = React.useMemo(
     () => Object.values(votes)
@@ -107,7 +108,11 @@ function MainView(props: IProps) {
       <div className={classes.section}>
         {selectedSection === 'overview' && <Cooperative />}
         {selectedSection === 'activities' && (
-          <Activities votings={preparedVotes} connectedAccountVotes={connectedAccountVotes} />
+          <Activities
+            votings={preparedVotes}
+            connectedAccountVotes={connectedAccountVotes}
+            canVoteConnectedAccount={canVoteConnectedAccount}
+          />
         )}
         {selectedSection === 'members' && (
           <Members
