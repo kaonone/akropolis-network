@@ -27,9 +27,9 @@ export class DaoStore {
   }
 
   public async initialize() {
-    const tokenManagerApp = this.base.getAppByName('Token Manager');
-    const financeApp = this.base.getAppByName('Finance');
-    const votingApp = this.base.getAppByName('Voting');
+    const tokenManagerApp = this.base.getAppByName('token-manager');
+    const financeApp = this.base.getAppByName('finance');
+    const votingApp = this.base.getAppByName('voting');
 
     if (!tokenManagerApp || !financeApp || !votingApp) {
       throw new Error('Unable to initialize DaoStore because one of wrapper apps is missing');

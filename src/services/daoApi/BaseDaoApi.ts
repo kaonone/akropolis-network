@@ -31,7 +31,8 @@ export class BaseDaoApi {
   }
 
   public getAppByName(appName: AppType): IExtendedAragonApp | null {
-    return this.apps.find(app => app.name.toLowerCase() === appName.toLowerCase()) || null;
+    // ACL, Kernel and EVM Scripts don't have appName property
+    return this.apps.find(app => !!app.appName && app.appName.startsWith(appName)) || null;
   }
 
   public async getAccount() {

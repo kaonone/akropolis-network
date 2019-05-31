@@ -22,20 +22,20 @@ export type MethodByApp<T extends AppType> = keyof IAppMethodParams[T];
 export type ParamsByAppByMethod<T extends AppType, M extends MethodByApp<T>> = IAppMethodParams[T][M];
 
 interface IAppMethodParams {
-  'Token Manager': {
+  'token-manager': {
     // set
     mint: readonly [string, string]; // [holder, amount]
     // get
     maxAccountTokens: null;
     token: null;
   };
-  Voting: {
+  voting: {
     // set
     vote: readonly [string, boolean, boolean]; // [voteId, isConfirmed, executesIfDecided]
     executeVote: readonly [string]; // [voteId]
 
   };
-  Finance: {
+  finance: {
     // set
     newImmediatePayment: readonly [string, string, string, string]; // [tokenAddress, recipient, amount, reference]
     deposit: readonly [string, string, string, object]; // [tokenAddress, amount, reference, intentParams]
@@ -43,5 +43,8 @@ interface IAppMethodParams {
     getPeriodDuration: null;
     currentPeriodId: null;
     getPeriod: readonly [string]; // [periodId]
+  };
+  vault: {
+    mock: null;
   };
 }

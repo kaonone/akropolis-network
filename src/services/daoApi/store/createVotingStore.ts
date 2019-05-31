@@ -245,7 +245,7 @@ function calculateVotingIntent(intentDetails: IVoting['intentDetails']): VotingI
   const addressRegexStr = '0x[a-fA-F0-9]{40}';
   const details = intentDetails[0];
 
-  if (details.name === 'Token Manager' && details.description.startsWith('Mint')) {
+  if (details.name.startsWith('Token') && details.description.startsWith('Mint')) {
     const [, address] = details.description.match(new RegExp(`^.+?(${addressRegexStr})$`)) || ([] as string[]);
     return {
       type: 'joinToDao',
@@ -253,7 +253,7 @@ function calculateVotingIntent(intentDetails: IVoting['intentDetails']): VotingI
     };
   }
 
-  if (details.name === 'Finance' && details.description.startsWith('Create a new payment')) {
+  if (details.name.startsWith('Finance') && details.description.startsWith('Create a new payment')) {
     const [, amount, to, reason] = details.description.match(
       new RegExp(`^Create a new payment of ([0-9.]+?) .+? to (${addressRegexStr}).+?'(.*)'$`),
     ) || ([] as string[]);

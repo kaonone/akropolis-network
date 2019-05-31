@@ -45,7 +45,7 @@ export class DaoApi {
 
   @bind
   public async getTokenAddress() {
-    return this.base.call('Token Manager', 'token', null);
+    return this.base.call('token-manager', 'token', null);
   }
 
   @bind
@@ -61,7 +61,7 @@ export class DaoApi {
       ONE_ERC20.toString(),
     ] as const;
 
-    await this.base.sendTransaction('Token Manager', 'mint', params);
+    await this.base.sendTransaction('token-manager', 'mint', params);
   }
 
   @bind
@@ -81,7 +81,7 @@ export class DaoApi {
       reason,
     ] as const;
 
-    await this.base.sendTransaction('Finance', 'newImmediatePayment', params);
+    await this.base.sendTransaction('finance', 'newImmediatePayment', params);
   }
 
   @bind
@@ -97,9 +97,9 @@ export class DaoApi {
     const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
     const reference = 'deposit';
 
-    const periodDuration: string = await this.base.call('Finance', 'getPeriodDuration', null);
-    const currentPeriodId: string = await this.base.call('Finance', 'currentPeriodId', null);
-    const currentPeriod: ITransitionPeriod = await this.base.call('Finance', 'getPeriod', [currentPeriodId]);
+    const periodDuration: string = await this.base.call('finance', 'getPeriodDuration', null);
+    const currentPeriodId: string = await this.base.call('finance', 'currentPeriodId', null);
+    const currentPeriod: ITransitionPeriod = await this.base.call('finance', 'getPeriod', [currentPeriodId]);
 
     let intentParams;
 
@@ -135,7 +135,7 @@ export class DaoApi {
       intentParams,
     ] as const;
 
-    await this.base.sendTransaction('Finance', 'deposit', params);
+    await this.base.sendTransaction('finance', 'deposit', params);
   }
 
   @bind
@@ -147,7 +147,7 @@ export class DaoApi {
       true,
     ] as const;
 
-    await this.base.sendTransaction('Voting', 'vote', params);
+    await this.base.sendTransaction('voting', 'vote', params);
   }
 
   @bind
@@ -156,7 +156,7 @@ export class DaoApi {
       voteId,
     ] as const;
 
-    await this.base.sendTransaction('Voting', 'executeVote', params);
+    await this.base.sendTransaction('voting', 'executeVote', params);
   }
 
   private async initialize() {
