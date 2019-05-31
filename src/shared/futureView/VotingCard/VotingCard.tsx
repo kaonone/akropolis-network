@@ -1,24 +1,25 @@
 import * as React from 'react';
 import * as cn from 'classnames';
 import * as moment from 'moment';
+import { useObserver } from 'mobx-react-lite';
 
 import { VotingDecision, IVoting } from 'shared/types/models/Voting';
 import { VoteButtonAsync, ExecuteVoteButtonAsync } from 'features/vote';
 import { Typography, Grid, CircleProgressBar } from 'shared/view/elements';
 import { formatPercent, shortenString } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
-
-import { StylesProps, provideStyles } from './VotingCard.style';
-import VotingProgress from './VotingProgress/VotingProgress';
 import {
   ContainedCircleArrow, OutlinedCircleArrow, Checked, ContainedCross, Receipt, AddPerson, Graphic,
 } from 'shared/view/elements/Icons';
+import { useDaoApi } from 'services/daoApi';
+import { votingTimeout, calculateVotingResult } from 'shared/helpers/voting';
+
+import { StylesProps, provideStyles } from './VotingCard.style';
+import VotingProgress from './VotingProgress/VotingProgress';
 
 const tKeys = tKeysAll.features.voting;
 
 const tKeysShared = tKeysAll.shared;
-
-type VotingResult = 'confirmed' | 'rejected';
 
 interface IOwnProps {
   voting: IVoting;
@@ -28,8 +29,9 @@ interface IOwnProps {
 
 function VotingCard(props: StylesProps & IOwnProps) {
   const { classes, votingDecision, voting, canVote } = props;
-  const { id, intent, startDate, minAcceptQuorum, supportRequired, votingPower, yea, nay, executed } = voting;
+  const { id, intent, startDate, minAcceptQuorum, executed } = voting;
   const { t } = useTranslate();
+  const daoApi = useDaoApi();
 
   const [expanded, setExpanded] = React.useState(false);
   const [isRequesting, setIsRequesting] = React.useState(false);
@@ -101,21 +103,13 @@ function VotingCard(props: StylesProps & IOwnProps) {
     }
   }, [intent]);
 
-  // TODO ds: update timeLeft
-  const timeLeft = moment(startDate).add(24, 'hours').diff(Date.now());
-  const endedByTimeout = timeLeft <= 0;
+  const voteTime = useObserver(() => daoApi.store.voting.config.voteTime);
 
-  const votedPercent = (yea + nay) / votingPower * 100;
+  const { timeLeft, isOutdated } = votingTimeout(startDate, voteTime);
 
-  const isOver = executed || endedByTimeout;
+  const isOver = executed || isOutdated;
 
-  const yeaPercent = yea / (yea + nay) * 100;
-  const yeaPercentByPower = yea / (votingPower) * 100;
-  const nayPercentByPower = nay / (votingPower) * 100;
-  const votingResult: VotingResult = yeaPercent >= supportRequired && votedPercent >= minAcceptQuorum
-    ? 'confirmed'
-    : 'rejected';
-
+  const { votedPercent, nayPercentByPower, yeaPercentByPower, votingResult } = calculateVotingResult(voting);
   return (
     <Grid className={classes.root} container wrap="nowrap">
       <Grid item xs={9} className={classes.mainInformation}>

@@ -3,6 +3,8 @@ import { IPlainAction, IAction } from '../redux';
 
 export type VotingDecision = 'confirm' | 'reject' | 'absent';
 
+export type VotingResult = 'confirmed' | 'rejected';
+
 export type VotingType = VotingIntent['type'];
 
 export type VotingIntent =

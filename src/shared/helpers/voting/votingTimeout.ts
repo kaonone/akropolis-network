@@ -1,11 +1,8 @@
 import * as moment from 'moment';
 
-import { IVoting } from 'shared/types/models';
-
-function isEndedByTimeout(vote: IVoting) {
-
-  const timeLeft = moment(vote.startDate).add(24, 'hours').diff(Date.now());
-  return timeLeft <= 0;
+function votingTimeout(startDate: number, voteTime: number) {
+  const timeLeft = moment(startDate).add(voteTime, 'milliseconds').diff(Date.now());
+  return { isOutdated: timeLeft <= 0, timeLeft };
 }
 
-export default isEndedByTimeout;
+export default votingTimeout;

@@ -1,3 +1,3 @@
-export { default as getVotingResult } from './getVotingResult';
-export { default as isEndedByTimeout } from './isEndedByTimeout';
+export { default as calculateVotingResult } from './calculateVotingResult';
+export { default as votingTimeout } from './votingTimeout';
 export { default as useNewVotingEvents } from './useNewVotingEvents';
