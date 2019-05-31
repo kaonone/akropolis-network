@@ -4,7 +4,7 @@ import { Grid, Typography } from 'shared/view/elements';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { Checked, ContainedCross } from 'shared/view/elements/Icons';
 import { ExecuteVoteButtonAsync } from 'features/vote';
-import { VotingResult } from 'shared/types/models/Voting';
+import { VotingStatus } from 'shared/types/models/Voting';
 import { formatPercent } from 'shared/helpers/format';
 
 import { StylesProps, provideStyles } from './../VotingCard.style';
@@ -14,17 +14,16 @@ const tKeysShared = tKeysAll.shared;
 
 interface IOwnProps {
   voteId: string;
-  votingResult: VotingResult;
+  votingStatus: VotingStatus;
   yeaPercent: number;
   nayPercent: number;
-  executed: boolean;
 }
 
 type IProps = StylesProps & IOwnProps;
 
 export default React.memo(provideStyles((props: IProps) => {
 
-  const { classes, voteId, votingResult, yeaPercent, nayPercent, executed } = props;
+  const { classes, voteId, yeaPercent, nayPercent, votingStatus } = props;
 
   const [isRequesting, setIsRequesting] = React.useState(false);
 
@@ -32,7 +31,7 @@ export default React.memo(provideStyles((props: IProps) => {
   return (
     <>
       <Grid container spacing={16} justify="center" direction="column">
-        {votingResult === 'confirmed' && !executed &&
+        {votingStatus === 'execute-needed' &&
           <Grid item xs={12}>
             <ExecuteVoteButtonAsync
               fullWidth
@@ -46,13 +45,13 @@ export default React.memo(provideStyles((props: IProps) => {
             </ExecuteVoteButtonAsync>
           </Grid>
         }
-        {(votingResult === 'rejected' || executed) &&
+        {(votingStatus === 'confirmed' || votingStatus === 'rejected') &&
           <Grid item>
             <Grid container wrap="nowrap" alignItems="center" justify="center">
-              {votingResult === 'confirmed' && <Checked className={classes.votingForIcon} />}
-              {votingResult === 'rejected' && <ContainedCross className={classes.votingAgainstIcon} />}
+              {votingStatus === 'confirmed' && <Checked className={classes.votingForIcon} />}
+              {votingStatus === 'rejected' && <ContainedCross className={classes.votingAgainstIcon} />}
               <Typography variant="h6" weight="medium">
-                {votingResult === 'confirmed' ? t(tKeys.approved.getKey()) : t(tKeys.declined.getKey())}
+                {votingStatus === 'confirmed' ? t(tKeys.approved.getKey()) : t(tKeys.declined.getKey())}
               </Typography>
             </Grid>
           </Grid>}

@@ -9,7 +9,7 @@ import { formatPercent } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { ContainedCircleArrow, OutlinedCircleArrow } from 'shared/view/elements/Icons';
 import { useDaoApi } from 'services/daoApi';
-import { votingTimeout, calculateVotingResult } from 'shared/helpers/voting';
+import { votingTimeout, calculateVotingStats, useVotingStatus } from 'shared/helpers/voting';
 
 import VotingProgress from './VotingProgress/VotingProgress';
 import VotingResult from './VotingResult/VotingResult';
@@ -68,7 +68,8 @@ function VotingCard(props: StylesProps & IOwnProps) {
 
   const isOver = executed || isOutdated;
 
-  const { votedPercent, nayPercentByPower, yeaPercentByPower, votingResult } = calculateVotingResult(voting);
+  const { votedPercent, nayPercentByPower, yeaPercentByPower } = calculateVotingStats(voting);
+  const votingStatus = useVotingStatus(daoApi, voting);
 
   const timeEnded = isOver ? t(tKeys.timeEnded.getKey()) : moment.duration(timeLeft).humanize();
 
@@ -109,10 +110,9 @@ function VotingCard(props: StylesProps & IOwnProps) {
         <Grid item xs={3} className={classes.votingResult}>
           <VotingResult
             voteId={id}
-            votingResult={votingResult}
+            votingStatus={votingStatus}
             yeaPercent={yeaPercentByPower}
             nayPercent={nayPercentByPower}
-            executed={executed}
           />
         </Grid>
       }

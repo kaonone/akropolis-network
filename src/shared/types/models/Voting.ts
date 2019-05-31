@@ -1,6 +1,8 @@
 import { IDescribedPathSegment } from '@aragon/wrapper';
 import { IPlainAction, IAction } from '../redux';
 
+export type VotingStatus = 'pending' | 'vote-needed' | 'execute-needed' | 'confirmed' | 'rejected';
+
 export type VotingDecision = 'confirm' | 'reject' | 'absent';
 
 export type VotingResult = 'confirmed' | 'rejected';
