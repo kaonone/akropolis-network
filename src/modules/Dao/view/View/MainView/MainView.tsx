@@ -60,10 +60,9 @@ function MainView(props: IProps) {
 
   const links: ISectionLink[] = React.useMemo(() => ([
     { section: 'overview', title: tKeys.overview.getKey() },
-    { section: 'activities', title: tKeys.activities.getKey(), disabled: true, badge: newEvents.length },
-    { section: 'members', title: tKeys.members.getKey(), disabled: true },
-    { section: 'products', title: tKeys.products.getKey(), disabled: true },
-    { section: 'history', title: tKeys.history.getKey(), disabled: true },
+    { section: 'activities', title: tKeys.activities.getKey(), badge: newEvents.length },
+    { section: 'members', title: tKeys.members.getKey()},
+    { section: 'products', title: tKeys.products.getKey() },
   ]), [newEvents]);
 
   const userAccount = tokenHolders[userAccountAddress];
@@ -102,7 +101,6 @@ function MainView(props: IProps) {
       <ToggleButtonGroup value={selectedSection} exclusive nullable={false} >
         {links.map(({ section, title, badge }, index: number) => (
           <NavToggleButton
-            className={classes.sectionLink}
             key={index}
             to={routes.dao.view.id.section.getRedirectPath({ id: daoId, section })}
             value={section}

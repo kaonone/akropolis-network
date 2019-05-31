@@ -1,18 +1,18 @@
 import * as React from 'react';
 import * as cn from 'classnames';
 
-import { StylesProps, provideStyles } from './VotingProgress.style';
+import { StylesProps, provideStyles } from './VotingProgressBar.style';
 
 import { Typography, Grid } from 'shared/view/elements';
 import { formatPercent } from 'shared/helpers/format';
 
-interface IPropgressProps {
+interface IVotingProgressBarProps {
   title: string;
   value: number;
   type: 'for' | 'against';
 }
 
-export default React.memo(provideStyles((props: IPropgressProps & StylesProps) => {
+export default React.memo(provideStyles((props: IVotingProgressBarProps & StylesProps) => {
 
   const { classes, title, value, type } = props;
 
