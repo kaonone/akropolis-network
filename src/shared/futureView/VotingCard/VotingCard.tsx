@@ -3,7 +3,7 @@ import * as cn from 'classnames';
 import * as moment from 'moment';
 import { useObserver } from 'mobx-react-lite';
 
-import { VotingDecision, IVoting } from 'shared/types/models/Voting';
+import { VotingDecision, IVoting, VotingStatus } from 'shared/types/models/Voting';
 import { Typography, Grid } from 'shared/view/elements';
 import { formatPercent } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
@@ -17,6 +17,8 @@ import Intent from './Intent/Intent';
 
 import { StylesProps, provideStyles } from './VotingCard.style';
 
+const endedVotingStatuses: VotingStatus[] = ['execute-needed', 'confirmed', 'rejected'];
+
 const tKeys = tKeysAll.features.voting;
 
 interface IOwnProps {
@@ -27,7 +29,7 @@ interface IOwnProps {
 
 function VotingCard(props: StylesProps & IOwnProps) {
   const { classes, votingDecision, voting, canVote } = props;
-  const { id, intent, startDate, minAcceptQuorum, executed } = voting;
+  const { id, intent, startDate, minAcceptQuorum } = voting;
   const { t } = useTranslate();
   const daoApi = useDaoApi();
 
@@ -64,12 +66,12 @@ function VotingCard(props: StylesProps & IOwnProps) {
 
   const voteTime = useObserver(() => daoApi.store.voting.config.voteTime);
 
-  const { timeLeft, isOutdated } = votingTimeout(startDate, voteTime);
-
-  const isOver = executed || isOutdated;
+  const { timeLeft } = votingTimeout(startDate, voteTime);
 
   const { votedPercent, nayPercentByPower, yeaPercentByPower } = calculateVotingStats(voting);
   const votingStatus = useVotingStatus(daoApi, voting);
+
+  const isOver = endedVotingStatuses.includes(votingStatus);
 
   const timeEnded = isOver ? t(tKeys.timeEnded.getKey()) : moment.duration(timeLeft).humanize();
 
