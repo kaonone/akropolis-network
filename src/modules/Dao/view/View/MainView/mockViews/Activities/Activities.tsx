@@ -7,7 +7,7 @@ import { usePagination } from 'shared/view/hooks';
 import { StylesProps, provideStyles } from './Activities.style';
 
 interface IOwnProps {
-  votings: IVoting[];
+  votes: IVoting[];
   connectedAccountVotes: Record<string, VotingDecision>;
   canVoteConnectedAccount: Record<string, boolean>;
 }
@@ -15,14 +15,14 @@ interface IOwnProps {
 type Props = StylesProps & IOwnProps;
 
 function Activities(props: Props) {
-  const { classes, votings: votes, connectedAccountVotes, canVoteConnectedAccount } = props;
+  const { classes, votes, connectedAccountVotes, canVoteConnectedAccount } = props;
 
-  const { items: paginatedVotings, paginationView } = usePagination(votes);
+  const { items: paginatedVotes, paginationView } = usePagination(votes);
 
   return (
     <div className={classes.root}>
       <div className={classes.activities}>
-        {paginatedVotings.map(voting => (
+        {paginatedVotes.map(voting => (
           <VotingCard
             key={voting.id}
             voting={voting}
