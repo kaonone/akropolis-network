@@ -1,37 +1,91 @@
 import * as React from 'react';
-import * as cn from 'classnames';
+import { Grid, CircleProgressBar, Typography } from 'shared/view/elements';
 
-import { StylesProps, provideStyles } from './VotingProgress.style';
+import VotingProgressBar from './VotingProgressBar/VotingProgressBar';
+import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
+import { Checked, ContainedCross } from 'shared/view/elements/Icons';
+import { VoteButtonAsync } from 'features/vote';
+import { VotingDecision } from 'shared/types/models/Voting';
 
-import { Typography, Grid } from 'shared/view/elements';
-import { formatPercent } from 'shared/helpers/format';
+import { StylesProps, provideStyles } from './../VotingCard.style';
 
-interface IPropgressProps {
-  title: string;
-  value: number;
-  type: 'for' | 'against';
+const tKeysShared = tKeysAll.shared;
+
+interface IOwnProps {
+  voteId: string;
+  votingDecision: VotingDecision;
+  yeaPercent: number;
+  nayPercent: number;
+  showVoteButtons?: boolean;
 }
+type IProps = StylesProps & IOwnProps;
 
-export default React.memo(provideStyles((props: IPropgressProps & StylesProps) => {
+export default React.memo(provideStyles((props: IProps) => {
 
-  const { classes, title, value, type } = props;
+  const { classes, voteId, votingDecision, yeaPercent, nayPercent, showVoteButtons = true } = props;
 
+  const [isRequesting, setIsRequesting] = React.useState(false);
+
+  const { t } = useTranslate();
   return (
-    <div className={classes.root}>
-      <Grid container justify="space-between" wrap="nowrap">
-        <Typography component="span" variant="subtitle1">{title}</Typography>
-        <Typography component="span" variant="subtitle1" weight="medium">{formatPercent(value)}</Typography>
+    <Grid container spacing={16}>
+      <Grid item xs={12}>
+        <VotingProgressBar title={t(tKeysShared.yes.getKey())} value={yeaPercent} type="for" />
       </Grid>
-      <div className={classes.progressBar}>
-        <div
-          className={cn(classes.progressBarValue,
-            {
-              [classes.green]: type === 'for',
-              [classes.red]: type === 'against',
-            })}
-          style={{ width: `${value.toFixed(2)}%` }}
-        />
-      </div>
-    </div>
+      <Grid item xs={12}>
+        <VotingProgressBar title={t(tKeysShared.no.getKey())} value={nayPercent} type="against" />
+      </Grid>
+      {(() => {
+        if (isRequesting) {
+          return (
+            <Grid item xs={12}>
+              <Grid container wrap="nowrap" className={classes.votingDecision} justify="center">
+                <CircleProgressBar size={16} />
+              </Grid>
+            </Grid>);
+        }
+        if (votingDecision !== 'absent') {
+          return (
+            <Grid item xs={12}>
+              <Grid container wrap="nowrap" className={classes.votingDecision} justify="center">
+                {votingDecision === 'confirm' && <Checked className={classes.votingForIcon} />}
+                {votingDecision === 'reject' && <ContainedCross className={classes.votingAgainstIcon} />}
+                <Typography weight="medium">
+                  {votingDecision === 'confirm' ? t(tKeysShared.yes.getKey()) : t(tKeysShared.no.getKey())}
+                </Typography>
+              </Grid>
+            </Grid>);
+        }
+        if (votingDecision === 'absent' && showVoteButtons) {
+          return (
+            <>
+              <Grid item xs={6}>
+                <VoteButtonAsync
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  voteId={voteId}
+                  decisionType="reject"
+                  onChangeCommunication={setIsRequesting}
+                >
+                  {t(tKeysShared.no.getKey())}
+                </VoteButtonAsync>
+              </Grid>
+              <Grid item xs={6}>
+                <VoteButtonAsync
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  voteId={voteId}
+                  decisionType="confirm"
+                  onChangeCommunication={setIsRequesting}
+                >
+                  {t(tKeysShared.yes.getKey())}
+                </VoteButtonAsync>
+              </Grid>
+            </>);
+        }
+      })()}
+    </Grid>
   );
 }));

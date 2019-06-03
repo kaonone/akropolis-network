@@ -14,12 +14,6 @@ const styles = ({ extra: theme }: Theme) => ({
     marginRight: theme.spacing.unit,
   }),
 
-  sectionLink: rule({
-    '&:last-child': {
-      marginLeft: 'auto',
-    },
-  }),
-
   withBadge: rule({
     padding: `0 ${theme.spacing.unit * 2}px`,
   }),
