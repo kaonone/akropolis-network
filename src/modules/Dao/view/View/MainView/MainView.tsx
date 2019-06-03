@@ -13,6 +13,7 @@ import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
 import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
 import { RequestDepositButtonAsync } from 'features/requestDeposit';
 
+import { IVoting } from 'shared/types/models';
 import { ToggleButtonGroup, ToggleButton, Grid, Badge } from 'shared/view/elements';
 import { withComponent } from 'shared/helpers/react';
 import { useNewVotingEvents, sortByStatus, useFieldsForVotingStatus } from 'shared/helpers/voting';
@@ -20,7 +21,6 @@ import { useNewVotingEvents, sortByStatus, useFieldsForVotingStatus } from 'shar
 import { Section } from '../../../types';
 import { Activities, Products, Members, Cooperative } from './mockViews';
 import { StylesProps, provideStyles } from './MainView.style';
-import { IVoting } from 'shared/types/models';
 
 const tKeys = tkeysAll.modules.daos;
 

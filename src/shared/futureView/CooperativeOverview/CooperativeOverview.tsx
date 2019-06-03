@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useObserver } from 'mobx-react-lite';
 
 import { useAccountAddress } from 'services/user';
-import { useDaoApi } from 'services/daoApi';
+import { useDaoApi, DAO_GOAL } from 'services/daoApi';
 import { Grid } from 'shared/view/elements';
 
 import { CooperativeChart, CooperativeGoal, PersonalInformation } from './components';
@@ -42,7 +42,7 @@ const CooperativeOverview = (props: StylesProps) => {
       </Grid>
       <Grid item xs={4} >
         <div className={classes.section}>
-          <CooperativeGoal totalGoal={12000} current={5670} description={mockGoalDescription} />
+          <CooperativeGoal totalGoal={DAO_GOAL} currentBalance={cooperativeBalance} description={mockGoalDescription} />
         </div>
       </Grid>
       {userAccount &&
