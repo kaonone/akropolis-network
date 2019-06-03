@@ -12,15 +12,18 @@ import { provideStyles, StylesProps } from './DaoMetrics.style';
 const tKeys = tkeysAll.modules.daos;
 
 function getType(value: number): ChangeType {
+  if (!Number.isFinite(value)) {
+    return 'infinite';
+  }
   return value < 0 ? 'decrease' : 'increase';
 }
 
-type ChangeType = 'increase' | 'decrease';
+type ChangeType = 'increase' | 'decrease' | 'infinite';
 
 interface IMetric {
   title: string;
   value: string;
-  type?: 'increase' | 'decrease';
+  type?: ChangeType;
   percent?: string;
 }
 interface IOwnProps {
@@ -64,7 +67,7 @@ const DaoMetrics = (props: IProps) => {
           <Typography variant="overline" className={classes.title}>{metric.title}</Typography>
           <Grid container wrap="nowrap" alignItems="baseline">
             <Typography weight="medium" variant="h6" className={classes.value}>{metric.value}</Typography>
-            {metric.type &&
+            {metric.type && metric.type !== 'infinite' &&
               <>
                 {metric.type === 'increase' && <Increase className={cn(classes.arrowIcon, classes.increase)} />}
                 {metric.type === 'decrease' && <Decrease className={cn(classes.arrowIcon, classes.decrease)} />}

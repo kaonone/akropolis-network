@@ -6,5 +6,5 @@ export function toFixed(value: number, digits: number) {
 
 export function difference(currentValue: number, changes: number) {
   const prevValue = currentValue - changes;
-  return prevValue !== 0 ? changes / prevValue * 100 : 0;
+  return changes / prevValue * 100;
 }
