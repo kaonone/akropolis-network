@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as cn from 'classnames';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { formatPercent, formatUSD } from 'shared/helpers/format';
+import { formatPercent, formatDAI } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 
 import Typography from '../Typography/Typography';
@@ -59,7 +59,7 @@ function ProgressBar(props: IProps) {
           {formatPercent(relativeValue, 0)}
         </Typography>
         {variant === 'secondary' && <Typography variant="body2" className={classes.goal}>
-          {`${t(tKeys.dao.goal.getKey())}: ${formatUSD(totalValue, 0)}`}
+          {`${t(tKeys.dao.goal.getKey())}: ${formatDAI(totalValue)}`}
         </Typography>}
       </div>
     </div>

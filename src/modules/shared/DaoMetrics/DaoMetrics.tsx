@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as cn from 'classnames';
 
-import { formatUSD, formatPercent } from 'shared/helpers/format';
+import { formatPercent, formatDAI } from 'shared/helpers/format';
 import { Increase, Decrease } from 'shared/view/elements/Icons';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
 
@@ -40,19 +40,19 @@ const DaoMetrics = (props: IProps) => {
   const metrics: IMetric[] = [
     {
       title: t(tKeys.balance.getKey()),
-      value: formatUSD(balance),
+      value: formatDAI(balance),
       type: getType(balanceChange),
       percent: formatPercent(Math.abs(balanceChange), 2),
     },
     {
       title: t(tKeys.deposit.getKey()),
-      value: formatUSD(deposit),
+      value: formatDAI(deposit),
       type: getType(depositChange),
       percent: formatPercent(Math.abs(depositChange), 2),
     },
     {
       title: t(tKeys.withdraw.getKey()),
-      value: formatUSD(withdraw),
+      value: formatDAI(withdraw),
       type: getType(withdrawChange),
       percent: formatPercent(Math.abs(withdrawChange), 2),
     },

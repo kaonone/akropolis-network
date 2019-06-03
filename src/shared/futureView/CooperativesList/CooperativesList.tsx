@@ -7,7 +7,7 @@ import {
   Avatar, Typography, CircleProgressBar, Grid,
 } from 'shared/view/elements';
 import { ICooperative } from 'shared/types/models/Cooperative';
-import { formatUSD } from 'shared/helpers/format';
+import { formatDAI } from 'shared/helpers/format';
 import { DaoApi, DAO_DESCRIPTION, DAO_GOAL } from 'services/daoApi';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { usePagination } from 'shared/view/hooks';
@@ -105,8 +105,8 @@ const Cooperative = React.memo(provideStyles((props: ICooperativeProps & StylesP
     <Avatar>{cooperative.name.slice(0, 2).toUpperCase()}</Avatar>,
     <Typography variant="body1">{cooperative.name}</Typography>,
     <Typography variant="body1" className={classes.description}>{cooperative.description}</Typography>,
-    <ComplexCell title={t(tKeys.goal.getKey())} value={formatUSD(cooperative.goal, 0)} />,
-    <ComplexCell title={t(tKeys.balance.getKey())} value={formatUSD(cooperative.balance)} />,
+    <ComplexCell title={t(tKeys.goal.getKey())} value={formatDAI(cooperative.goal)} />,
+    <ComplexCell title={t(tKeys.balance.getKey())} value={formatDAI(cooperative.balance)} />,
     <ComplexCell title={t(tKeys.members.getKey())} value={cooperative.membersCount} />,
   ].concat(hasNewEvent ? <EventCell /> : <div />);
 
