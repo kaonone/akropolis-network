@@ -14,7 +14,8 @@ import { RequestDepositButtonAsync } from 'features/requestDeposit';
 
 import { ToggleButtonGroup, ToggleButton, Grid, Badge } from 'shared/view/elements';
 import { withComponent } from 'shared/helpers/react';
-import { useNewVotingEvents } from 'shared/helpers/voting';
+import { useNewVotingEvents, calculateIsRejected } from 'shared/helpers/voting';
+import { addressesEqual } from 'shared/helpers/web3';
 
 import { Section } from '../../../types';
 import { Activities, Products, Members, Cooperative } from './mockViews';
@@ -45,6 +46,7 @@ function MainView(props: IProps) {
   const tokenHolders = useObserver(() => daoApi.store.tokenManager.holders);
   const financeHolders = useObserver(() => daoApi.store.finance.holders);
   const daoOverview = useObserver(() => daoApi.store.finance.daoOverview);
+  const votingConfig = useObserver(() => daoApi.store.voting.config);
   const votes = useObserver(() => daoApi.store.voting.votings);
   const connectedAccountVotes = useObserver(() => daoApi.store.voting.connectedAccountVotes);
   const canVoteConnectedAccount = useObserver(() => daoApi.store.voting.canVoteConnectedAccount);
@@ -61,9 +63,21 @@ function MainView(props: IProps) {
   const links: ISectionLink[] = React.useMemo(() => ([
     { section: 'overview', title: tKeys.overview.getKey() },
     { section: 'activities', title: tKeys.activities.getKey(), badge: newEvents.length },
-    { section: 'members', title: tKeys.members.getKey()},
+    { section: 'members', title: tKeys.members.getKey() },
     { section: 'products', title: tKeys.products.getKey() },
   ]), [newEvents]);
+
+  const hasActiveJoinVoting: boolean = React.useMemo(() => {
+    return !!preparedVotes
+      .filter(
+        vote => (
+          vote.intent.type === 'joinToDao' &&
+          addressesEqual(vote.intent.payload.address, userAccountAddress) &&
+          !calculateIsRejected(vote, votingConfig.voteTime) &&
+          !vote.executed
+        ),
+      ).length;
+  }, [preparedVotes, userAccountAddress, votingConfig]);
 
   const userAccount = tokenHolders[userAccountAddress];
   const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
@@ -72,7 +86,7 @@ function MainView(props: IProps) {
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title={daoId}
-      actions={userAccount ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
+      actions={userAccount || hasActiveJoinVoting ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
       additionalHeaderContent={(
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
