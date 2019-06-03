@@ -30,13 +30,13 @@ export const getVotingStatus = (votingState: VotingStateFields, vote: IVoting): 
 
   const votingDecision = connectedAccountVotes[vote.id];
 
-  const { currentResult, nayPercent } = calculateVotingStats(vote);
+  const { currentResult, nayPercentByPower } = calculateVotingStats(vote);
 
   const { isOutdated } = votingTimeout(vote.startDate, config.voteTime);
 
   const isEndedNotConfirmed = isOutdated && currentResult === 'rejected';
 
-  const isRejectAdvanced = nayPercent > (100 - supportRequired);
+  const isRejectAdvanced = nayPercentByPower > (100 - supportRequired);
 
   if (vote.executed) {
     return 'confirmed';

@@ -48,19 +48,16 @@ function VotingCard(props: StylesProps & IOwnProps) {
       <Typography variant="overline" className={cn(classes.title, classes.purple)}>
         {title}
       </Typography>
-      {!subValue &&
+      <Grid container alignItems="baseline">
         <Typography variant="h6" className={cn(classes.value, classes.purple)}>
           {value}
-        </Typography>}
-      {subValue &&
-        <Grid container alignItems="baseline">
-          <Typography variant="h6" className={cn(classes.value, classes.purple)}>
-            {value}
-          </Typography>
+        </Typography>
+        {subValue &&
           <Typography variant="subtitle1" className={classes.subValue}>
             {subValue}
           </Typography>
-        </Grid>}
+        }
+      </Grid>
     </Grid>
   ), [voting]);
 
@@ -73,14 +70,14 @@ function VotingCard(props: StylesProps & IOwnProps) {
 
   const isOver = endedVotingStatuses.includes(votingStatus);
 
-  const timeEnded = isOver ? t(tKeys.timeEnded.getKey()) : moment.duration(timeLeft).humanize();
+  const timeLeftValue = isOver ? t(tKeys.timeEnded.getKey()) : moment.duration(timeLeft).humanize();
 
   return (
     <Grid className={classes.root} container wrap="nowrap">
       <Grid item xs={9} className={classes.mainInformation}>
         <Grid container spacing={16}>
           <Intent intent={intent} />
-          {renderColumn(t(tKeys.timeLeft.getKey()), timeEnded)}
+          {renderColumn(t(tKeys.timeLeft.getKey()), timeLeftValue)}
           {renderColumn(
             t(tKeys.voted.getKey()),
             formatPercent(votedPercent),
