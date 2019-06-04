@@ -26,7 +26,6 @@ const CooperativeOverview = (props: StylesProps) => {
 
   const holdersCount = Object.values(cooperativeHolders).length;
 
-  const userAccount = cooperativeHolders[userAccountAddress];
   const userBalance = (financeHolders[userAccountAddress] || { balance: 0 }).balance;
 
   return (
@@ -45,12 +44,11 @@ const CooperativeOverview = (props: StylesProps) => {
           <CooperativeGoal totalGoal={DAO_GOAL} currentBalance={cooperativeBalance} description={mockGoalDescription} />
         </div>
       </Grid>
-      {userAccount &&
-        <Grid item xs={4}>
-          <div className={classes.section}>
-            <PersonalInformation earn={0} deposit={userBalance} />
-          </div>
-        </Grid>}
+      <Grid item xs={4}>
+        <div className={classes.section}>
+          <PersonalInformation earn={0} deposit={userBalance} />
+        </div>
+      </Grid>
     </Grid>
   );
 };
