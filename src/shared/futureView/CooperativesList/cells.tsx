@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { StylesProps, provideStyles } from './CooperativesList.style';
+import { useTranslate, tKeys } from 'services/i18n';
+import { Typography, Grid } from 'shared/view/elements';
 import NewEvent from 'shared/view/elements/Icons/NewEvent';
 
-import { Typography, Grid } from 'shared/view/elements';
+import { StylesProps, provideStyles } from './CooperativesList.style';
 
 interface IComplexCellProps {
   title: string;
@@ -45,4 +46,16 @@ const EventCell = React.memo(provideStyles((props: StylesProps) => {
 
 }));
 
-export { ComplexCell, EventCell };
+const JoinCell = React.memo(provideStyles((props: StylesProps) => {
+  const { classes } = props;
+  const { t } = useTranslate();
+
+  return (
+    <Typography variant="caption" className={classes.newEvent}>{
+      t(tKeys.shared.join.getKey())}
+    </Typography>
+  );
+
+}));
+
+export { ComplexCell, EventCell, JoinCell };

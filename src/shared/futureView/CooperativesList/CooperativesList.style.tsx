@@ -66,11 +66,10 @@ const styles = ({ extra: theme }: Theme) => ({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: '0.25rem 0.5rem 0.25rem 0.75rem',
+    padding: '0.25rem 0.75rem',
     borderRadius: '2.125rem',
     background: theme.colors.whiteLilac,
     color: theme.colors.royalPurple,
-
   }),
 
   eventTag: rule({

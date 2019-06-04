@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as cn from 'classnames';
 import { useObserver } from 'mobx-react-lite';
 
+import { useAccountAddress } from 'services/user';
 import {
   Table, TableBody, TableRow, TableCell,
   Avatar, Typography, CircleProgressBar, Grid,
@@ -14,7 +15,7 @@ import { usePagination } from 'shared/view/hooks';
 import { useCommunication } from 'shared/helpers/react';
 import { useNewVotingEvents } from 'shared/helpers/voting';
 
-import { ComplexCell, EventCell } from './cells';
+import { ComplexCell, EventCell, JoinCell } from './cells';
 import { StylesProps, provideStyles } from './CooperativesList.style';
 
 const tKeys = tKeysAll.shared.dao;
@@ -76,21 +77,19 @@ interface ICooperativeProps extends IRowProps {
 }
 
 const Cooperative = React.memo(provideStyles((props: ICooperativeProps & StylesProps) => {
-
   const { daoName, onSelect, classes, daoApi } = props;
   const { t } = useTranslate();
 
   const onClickHandle = React.useCallback(() => onSelect(daoName), [daoName]);
 
+  const account = useAccountAddress();
   const balance = useObserver(() => daoApi.store.finance.daoOverview.balance.value);
-
   const holders = useObserver(() => daoApi.store.tokenManager.holders);
-
   const votes = useObserver(() => daoApi.store.voting.votings);
 
   const newEvents = useNewVotingEvents(daoApi, Object.values(votes));
-
   const hasNewEvent = newEvents.length > 0;
+  const userIsInCoop = !!holders[account];
 
   const cooperative: ICooperative = {
     name: daoName,
@@ -108,7 +107,11 @@ const Cooperative = React.memo(provideStyles((props: ICooperativeProps & StylesP
     <ComplexCell title={t(tKeys.goal.getKey())} value={formatDAI(cooperative.goal)} />,
     <ComplexCell title={t(tKeys.balance.getKey())} value={formatDAI(cooperative.balance)} />,
     <ComplexCell title={t(tKeys.members.getKey())} value={cooperative.membersCount} />,
-  ].concat(hasNewEvent ? <EventCell /> : <div />);
+  ].concat(
+    !userIsInCoop && <JoinCell /> ||
+    hasNewEvent && <EventCell /> ||
+    <div />,
+  );
 
   // tslint:enable:jsx-key
   const lastCellIndex = cells.length - 1;

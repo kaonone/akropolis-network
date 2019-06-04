@@ -31,6 +31,7 @@ export default {
     makeSureUseKovan: 'Please make sure you are using Rinkeby Test Network when connecting your Metamask',
     somethingWentWrong: 'Oh. Something went wrong.',
     new: 'New',
+    join: 'Join',
     to: 'to',
     no: 'No',
     yes: 'Yes',
