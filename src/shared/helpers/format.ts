@@ -6,6 +6,10 @@ export function formatUSD(value: number, precision: number = 2): string {
   return accounting.formatMoney(value, { precision });
 }
 
+export function formatDAI(value: number): string {
+  return `${accounting.formatNumber(value, 0)} DAI`;
+}
+
 export const formatNumber = accounting.formatNumber;
 
 export function formatPercent(value: number, precision?: number): string {

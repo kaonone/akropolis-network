@@ -3,7 +3,7 @@ import * as cn from 'classnames';
 
 import { Grid, Typography } from 'shared/view/elements';
 import { Receipt, AddPerson, Graphic } from 'shared/view/elements/Icons';
-import { shortenString } from 'shared/helpers/format';
+import { shortenString, formatDAI } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { VotingIntent } from 'shared/types/models';
 
@@ -44,7 +44,7 @@ export default React.memo(provideStyles((props: IProps) => {
           {renderColumn(
             t(tKeys.withdraw.getKey()),
             <Receipt className={classes.withdrawIcon} />,
-            `${intent.payload.amount} DAI`,
+            formatDAI(intent.payload.amount),
           )}
           <Grid item xs container direction="column">
             <Typography variant="overline" className={cn(classes.title, classes.grey)}>
@@ -68,7 +68,7 @@ export default React.memo(provideStyles((props: IProps) => {
           {renderColumn(
             t(tKeys.deposit.getKey()),
             <Graphic className={classes.votingTypeIcon} />,
-            `${intent.payload.amount} DAI`,
+            formatDAI(intent.payload.amount),
           )}
           <Grid item xs container direction="column">
             <Typography variant="overline" className={cn(classes.title, classes.grey)}>

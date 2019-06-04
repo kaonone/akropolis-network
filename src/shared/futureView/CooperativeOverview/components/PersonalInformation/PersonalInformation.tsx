@@ -4,7 +4,7 @@ import * as R from 'ramda';
 
 import { Typography } from 'shared/view/elements';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
-import { formatUSD } from 'shared/helpers/format';
+import { formatDAI } from 'shared/helpers/format';
 
 import AccessCard from './AccessCard/AccessCard';
 
@@ -48,7 +48,7 @@ const PersonalInformation = (props: IProps) => {
           {t(tKeys.deposit.getKey())}
         </Typography>
         <Typography component="div" variant="h6">
-          {formatUSD(deposit)}
+          {formatDAI(deposit)}
         </Typography>
       </div>
       <div className={classes.metricRow}>
@@ -57,21 +57,21 @@ const PersonalInformation = (props: IProps) => {
           {t(tKeys.earn.getKey())}
         </Typography>
         <Typography component="div" variant="h6">
-          {formatUSD(earn)}
+          {formatDAI(earn)}
         </Typography>
       </div>
       <div className={classes.accessCards}>
         <AccessCard
           total={TOTAL_WAITING_DAYS_COUNT}
           current={dayPassed}
-          description={t(tKeys.accessToLoan.getKey(), { date: '3 months' })}
+          description={t(tKeys.accessToLoan.getKey())}
           timeLeft={t(tKeysShared.daysAmount.getKey(), dayLeft)}
           hint={t(tKeys.accessToLoanHint.getKey())}
         />
         <AccessCard
           total={TOTAL_WAITING_DAYS_COUNT}
           current={dayPassed}
-          description={t(tKeys.accessToInsurance.getKey(), { date: '3 months' })}
+          description={t(tKeys.accessToInsurance.getKey())}
           timeLeft={t(tKeysShared.daysAmount.getKey(), dayLeft)}
           hint={t(tKeys.accessToInsuranceHint.getKey())}
         />

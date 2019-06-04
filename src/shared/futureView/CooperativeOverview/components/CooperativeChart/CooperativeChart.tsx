@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as cn from 'classnames';
 
 import { Typography, Grid, Avatar } from 'shared/view/elements';
-import { formatPercent, formatUSD } from 'shared/helpers/format';
+import { formatPercent, formatDAI } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import getIdenticonSrc from 'shared/helpers/getIdenticonSrc';
 
@@ -52,7 +52,7 @@ const CooperativeChart = (props: IProps) => {
         </Grid>
       </Grid>
       <Grid container wrap="nowrap" alignItems="flex-start" className={classes.balance}>
-        <Typography className={classes.balanceValue} variant="h5">{formatUSD(balance)}</Typography>
+        <Typography className={classes.balanceValue} variant="h5">{formatDAI(balance)}</Typography>
         <Typography
           variant="body2"
           weight="medium"

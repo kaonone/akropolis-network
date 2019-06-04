@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as cn from 'classnames';
 
-import { formatUSD, formatPercent } from 'shared/helpers/format';
+import { formatPercent, formatDAI } from 'shared/helpers/format';
 import { Increase, Decrease } from 'shared/view/elements/Icons';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
 
@@ -12,15 +12,18 @@ import { provideStyles, StylesProps } from './DaoMetrics.style';
 const tKeys = tkeysAll.modules.daos;
 
 function getType(value: number): ChangeType {
+  if (!Number.isFinite(value)) {
+    return 'infinite';
+  }
   return value < 0 ? 'decrease' : 'increase';
 }
 
-type ChangeType = 'increase' | 'decrease';
+type ChangeType = 'increase' | 'decrease' | 'infinite';
 
 interface IMetric {
   title: string;
   value: string;
-  type?: 'increase' | 'decrease';
+  type?: ChangeType;
   percent?: string;
 }
 interface IOwnProps {
@@ -40,19 +43,19 @@ const DaoMetrics = (props: IProps) => {
   const metrics: IMetric[] = [
     {
       title: t(tKeys.balance.getKey()),
-      value: formatUSD(balance),
+      value: formatDAI(balance),
       type: getType(balanceChange),
       percent: formatPercent(Math.abs(balanceChange), 2),
     },
     {
       title: t(tKeys.deposit.getKey()),
-      value: formatUSD(deposit),
+      value: formatDAI(deposit),
       type: getType(depositChange),
       percent: formatPercent(Math.abs(depositChange), 2),
     },
     {
       title: t(tKeys.withdraw.getKey()),
-      value: formatUSD(withdraw),
+      value: formatDAI(withdraw),
       type: getType(withdrawChange),
       percent: formatPercent(Math.abs(withdrawChange), 2),
     },
@@ -64,7 +67,7 @@ const DaoMetrics = (props: IProps) => {
           <Typography variant="overline" className={classes.title}>{metric.title}</Typography>
           <Grid container wrap="nowrap" alignItems="baseline">
             <Typography weight="medium" variant="h6" className={classes.value}>{metric.value}</Typography>
-            {metric.type &&
+            {metric.type && metric.type !== 'infinite' &&
               <>
                 {metric.type === 'increase' && <Increase className={cn(classes.arrowIcon, classes.increase)} />}
                 {metric.type === 'decrease' && <Decrease className={cn(classes.arrowIcon, classes.decrease)} />}

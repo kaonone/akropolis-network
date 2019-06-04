@@ -51,6 +51,24 @@ export const getVotingStatus = (votingState: VotingStateFields, vote: IVoting): 
   return 'pending';
 };
 
+const isOpened = (status: VotingStatus) => (
+  status === 'vote-needed' || status === 'pending' || status === 'execute-needed');
+
+export const sortByStatus = (votingState: VotingStateFields) => {
+  return (a: IVoting, b: IVoting) => {
+    const aIsOpened = isOpened(getVotingStatus(votingState, a));
+    const bIsOpened = isOpened(getVotingStatus(votingState, b));
+
+    if (aIsOpened && !bIsOpened) {
+      return -1;
+    }
+    if (!aIsOpened && bIsOpened) {
+      return 1;
+    }
+    return 0;
+  };
+};
+
 export function calculateIsRejected(voting: IVoting, voteTime: number) {
   const {supportRequired} = voting;
   const { nayPercentByPower } = calculateVotingStats(voting);
