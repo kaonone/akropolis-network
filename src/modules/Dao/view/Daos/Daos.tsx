@@ -16,8 +16,8 @@ function Daos(props: IProps & RouteComponentProps<any>) {
   }, []);
 
   return (
-    <BaseLayout title="My co-ops" actions={[<CreateDaoButtonAsync key="1" onCreate={handleOpenDao} />]}>
-      <CooperativesList onSelectCooperative={handleOpenDao}/>
+    <BaseLayout title="Co-ops" actions={[<CreateDaoButtonAsync key="1" onCreate={handleOpenDao} />]}>
+      <CooperativesList onSelectCooperative={handleOpenDao} />
     </BaseLayout>
   );
 }
