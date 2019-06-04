@@ -159,6 +159,18 @@ export default {
       accessToLoanHint: 'Access to loan',
       accessToInsuranceHint: 'Access to social insurance',
     },
+    compound: {
+      saving: 'saving',
+      investment: 'investments',
+      credit: 'credit',
+      balance: 'balance',
+      earned: 'earned',
+      waiting: 'Coming soon',
+      enable: 'Enable',
+      withdraw: 'Withdraw',
+      supply: 'Supply',
+      needEnableCompound: 'Before supplying DAI for the first time, Co-op must enable Compound.',
+    },
   },
   documents: {},
   modules: {
