@@ -1,4 +1,5 @@
 import { useObserver } from 'mobx-react-lite';
+import { useMemo } from 'react';
 import * as R from 'ramda';
 
 import { DaoApi } from 'services/daoApi';
@@ -11,11 +12,13 @@ export default function useLastConfirmedJoinVoting(daoApi: DaoApi): IVoting | nu
   const votes = useObserver(() => daoApi.store.voting.votings);
   const userAccountAddress = useAccountAddress();
 
-  return Object.values(votes)
-    .filter(vote => (
-      vote.intent.type === 'joinToDao' &&
-      addressesEqual(vote.intent.payload.address, userAccountAddress) &&
-      vote.executed
-    ))
-    .sort(R.ascend(R.prop('startDate')))[0] || null;
+  return useMemo(() => (
+    Object.values(votes)
+      .filter(vote => (
+        vote.intent.type === 'joinToDao' &&
+        addressesEqual(vote.intent.payload.address, userAccountAddress) &&
+        vote.executed
+      ))
+      .sort(R.ascend(R.prop('startDate')))[0] || null),
+    [votes]);
 }
