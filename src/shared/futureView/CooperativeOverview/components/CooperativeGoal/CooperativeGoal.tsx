@@ -8,15 +8,15 @@ const tKeys = tKeysAll.features.cooperativeOverview;
 
 interface IOwnProps {
   totalGoal: number;
-  current: number;
+  currentBalance: number;
   description: string;
 }
 
 type IProps = StylesProps & IOwnProps;
 
-const CooperativeChart = (props: IProps) => {
+function CooperativeChart(props: IProps) {
   const {
-    classes, description,
+    classes, description, totalGoal, currentBalance,
   } = props;
   const { t } = useTranslate();
 
@@ -29,10 +29,15 @@ const CooperativeChart = (props: IProps) => {
         {description}
       </Typography>
       <Grid container justify="center">
-        <ProgressBar variant="secondary" totalValue={12000} currentValue={5280} className={classes.progress} />
+        <ProgressBar
+          variant="secondary"
+          totalValue={totalGoal}
+          currentValue={Math.min(currentBalance, totalGoal)}
+          className={classes.progress}
+        />
       </Grid>
     </div>
   );
-};
+}
 
 export default React.memo(provideStyles(CooperativeChart));

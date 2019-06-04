@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useObserver } from 'mobx-react-lite';
+import * as R from 'ramda';
 
 import { BaseLayout, DaoMetrics } from 'modules/shared';
 import routes from 'modules/routes';
@@ -12,14 +13,16 @@ import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
 import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
 import { RequestDepositButtonAsync } from 'features/requestDeposit';
 
+import { IVoting } from 'shared/types/models';
 import { ToggleButtonGroup, ToggleButton, Grid, Badge } from 'shared/view/elements';
 import { withComponent } from 'shared/helpers/react';
-import { useNewVotingEvents, calculateIsRejected } from 'shared/helpers/voting';
+import { useNewVotingEvents, sortByStatus, useFieldsForVotingStatus, calculateIsRejected } from 'shared/helpers/voting';
 import { addressesEqual } from 'shared/helpers/web3';
 
 import { Section } from '../../../types';
 import { Activities, Products, Members, Cooperative } from './mockViews';
 import { StylesProps, provideStyles } from './MainView.style';
+
 const tKeys = tkeysAll.modules.daos;
 
 const NavToggleButton = withComponent(Link)(ToggleButton);
@@ -51,10 +54,17 @@ function MainView(props: IProps) {
   const connectedAccountVotes = useObserver(() => daoApi.store.voting.connectedAccountVotes);
   const canVoteConnectedAccount = useObserver(() => daoApi.store.voting.canVoteConnectedAccount);
 
+  const fieldsForVotingStatus = useFieldsForVotingStatus(daoApi);
+
+  const sortVote = R.sortWith<IVoting>(
+    [
+      sortByStatus(fieldsForVotingStatus),
+      R.descend(R.prop('startDate')),
+    ],
+  );
+
   const preparedVotes = React.useMemo(
-    () => Object.values(votes)
-      .filter(vote => vote.intent.type !== 'unknown')
-      .sort((a, b) => b.startDate - a.startDate),
+    () => sortVote(Object.values(votes).filter(vote => vote.intent.type !== 'unknown')),
     [votes],
   );
 
@@ -129,7 +139,7 @@ function MainView(props: IProps) {
         {selectedSection === 'overview' && <Cooperative />}
         {selectedSection === 'activities' && (
           <Activities
-            votings={preparedVotes}
+            votes={preparedVotes}
             connectedAccountVotes={connectedAccountVotes}
             canVoteConnectedAccount={canVoteConnectedAccount}
           />

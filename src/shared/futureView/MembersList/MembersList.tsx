@@ -5,6 +5,7 @@ import { IFinanceHolder } from 'shared/types/models';
 import { Table, TableBody, TableRow, TableCell, TableHead, Typography } from 'shared/view/elements';
 import { UserAvatar } from 'shared/view/components';
 import { usePagination } from 'shared/view/hooks';
+import { formatDAI } from 'shared/helpers/format';
 
 import { StylesProps, provideStyles } from './MembersList.style';
 
@@ -62,9 +63,9 @@ export default React.memo(provideStyles((props: IProps) => {
                 {indexOrYou}
               </Typography>,
               <UserAvatar address={row.address} />,
-              <Typography variant="body2">{`${row.balance} DAI`}</Typography>,
-              <Typography variant="body2">{`${row.deposit} DAI`}</Typography>,
-              <Typography variant="body2">{`${row.withdraw} DAI`}</Typography>,
+              <Typography variant="body2">{formatDAI(row.balance)}</Typography>,
+              <Typography variant="body2">{formatDAI(row.deposit)}</Typography>,
+              <Typography variant="body2">{formatDAI(row.withdraw)}</Typography>,
             ];
             // tslint:enable:jsx-key
 
