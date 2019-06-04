@@ -156,6 +156,7 @@ export default {
       personalInformation: 'Personal Information',
       deposit: 'Deposit',
       earn: 'Earn',
+      forMembers: 'For members',
       accessToLoan: 'Access to loan',
       accessToInsurance: 'Access to social insurance',
       accessToLoanHint: 'Make regular contributions, and you will be able to get access to loans',
