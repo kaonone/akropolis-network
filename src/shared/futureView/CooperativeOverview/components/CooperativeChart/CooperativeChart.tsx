@@ -1,36 +1,28 @@
 import * as React from 'react';
-import * as cn from 'classnames';
 
-import { Typography, Grid, Avatar } from 'shared/view/elements';
-import { formatPercent, formatDAI } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
-import getIdenticonSrc from 'shared/helpers/getIdenticonSrc';
 
-import { Increase, Decrease } from 'shared/view/elements/Icons';
+import { Typography, Grid, Avatar, Growth } from 'shared/view/elements';
+import { formatDAI } from 'shared/helpers/format';
+import getIdenticonSrc from 'shared/helpers/getIdenticonSrc';
 
 import { StylesProps, provideStyles } from './CooperativeChart.style';
 
 import chartMock from './chartMock.svg';
 
-const IDENTICON_SRC = getIdenticonSrc('afa00d2k31erFD43t7C13aa1-023e-ap60qva7632B');
-
 const tKeys = tKeysAll.features.cooperativeOverview;
 
 interface IOwnProps {
-  membersCount: number;
+  members: string[];
   balance: number;
-  balanceChange: number;
+  balanceDayAgo: number;
 }
 
 type IProps = StylesProps & IOwnProps;
 
 const CooperativeChart = (props: IProps) => {
-  const {
-    classes, membersCount, balance, balanceChange,
-  } = props;
+  const { classes, members, balance, balanceDayAgo } = props;
   const { t } = useTranslate();
-
-  const isPositiveBalanceChange = balanceChange >= 0;
 
   return (
     <div className={classes.root}>
@@ -43,28 +35,17 @@ const CooperativeChart = (props: IProps) => {
         <Grid item>
           <Grid container wrap="nowrap" direction="row-reverse">
             <Avatar classes={{ colorDefault: classes.membersCount }}>
-              <Typography weight="medium" variant="subtitle1">{membersCount}</Typography>
+              <Typography weight="medium" variant="subtitle1">{members.length}</Typography>
             </Avatar>
-            <Avatar src={IDENTICON_SRC} className={classes.avatarStub} />
-            <Avatar src={IDENTICON_SRC} className={classes.avatarStub} />
-            <Avatar src={IDENTICON_SRC} className={classes.avatarStub} />
+            {members.slice(0, 3).map(item => (
+              <Avatar key={item} src={getIdenticonSrc(item)} className={classes.avatarStub} />
+            ))}
           </Grid>
         </Grid>
       </Grid>
       <Grid container wrap="nowrap" alignItems="flex-start" className={classes.balance}>
         <Typography className={classes.balanceValue} variant="h5">{formatDAI(balance)}</Typography>
-        <Typography
-          variant="body2"
-          weight="medium"
-          className={cn(classes.balanceChange, {
-            [classes.positive]: isPositiveBalanceChange,
-            [classes.negative]: !isPositiveBalanceChange,
-          })}
-        >
-          {isPositiveBalanceChange && <Increase className={cn(classes.arrowIcon, classes.positive)} />}
-          {!isPositiveBalanceChange && <Decrease className={cn(classes.arrowIcon, classes.negative)} />}
-          {formatPercent(Math.abs(balanceChange))}
-        </Typography>
+        <Growth previous={balanceDayAgo} current={balance} />
       </Grid>
       <img className={classes.graphic} src={chartMock} />
     </div>

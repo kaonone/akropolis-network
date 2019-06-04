@@ -4,7 +4,6 @@ export function toFixed(value: number, digits: number) {
   return _toFixed(value, digits);
 }
 
-export function difference(currentValue: number, changes: number) {
-  const prevValue = currentValue - changes;
-  return changes / prevValue * 100;
+export function calculateGrowth(previous: number, current: number) {
+  return (current - previous) / previous * 100;
 }

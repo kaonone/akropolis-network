@@ -49,5 +49,5 @@ export interface IDaoOverview {
 
 interface IDaoOverviewMetric {
   value: number;
-  change: number; // in percent
+  valueDayAgo: number;
 }

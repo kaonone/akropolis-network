@@ -1,63 +1,53 @@
 import * as React from 'react';
-import * as cn from 'classnames';
 
-import { formatPercent, formatDAI } from 'shared/helpers/format';
-import { Increase, Decrease } from 'shared/view/elements/Icons';
+import { formatDAI } from 'shared/helpers/format';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
 
-import { Grid, Typography } from 'shared/view/elements';
+import { Grid, Typography, Growth } from 'shared/view/elements';
 
 import { provideStyles, StylesProps } from './DaoMetrics.style';
 
 const tKeys = tkeysAll.modules.daos;
 
-function getType(value: number): ChangeType {
-  if (!Number.isFinite(value)) {
-    return 'infinite';
-  }
-  return value < 0 ? 'decrease' : 'increase';
-}
-
-type ChangeType = 'increase' | 'decrease' | 'infinite';
-
 interface IMetric {
   title: string;
-  value: string;
-  type?: ChangeType;
-  percent?: string;
+  formatedValue: string;
+  value: number;
+  valueDayAgo: number;
 }
+
 interface IOwnProps {
   balance: number;
-  balanceChange: number;
+  balanceDayAgo: number;
   deposit: number;
-  depositChange: number;
+  depositDayAgo: number;
   withdraw: number;
-  withdrawChange: number;
+  withdrawDayAgo: number;
 }
 type IProps = IOwnProps & StylesProps;
 
 const DaoMetrics = (props: IProps) => {
-  const { classes, balance, balanceChange, deposit, depositChange, withdraw, withdrawChange } = props;
+  const { classes, balance, balanceDayAgo, deposit, depositDayAgo, withdraw, withdrawDayAgo } = props;
 
   const { t } = useTranslate();
   const metrics: IMetric[] = [
     {
       title: t(tKeys.balance.getKey()),
-      value: formatDAI(balance),
-      type: getType(balanceChange),
-      percent: formatPercent(Math.abs(balanceChange), 2),
+      formatedValue: formatDAI(balance),
+      value: balance,
+      valueDayAgo: balanceDayAgo,
     },
     {
       title: t(tKeys.deposit.getKey()),
-      value: formatDAI(deposit),
-      type: getType(depositChange),
-      percent: formatPercent(Math.abs(depositChange), 2),
+      formatedValue: formatDAI(deposit),
+      value: deposit,
+      valueDayAgo: depositDayAgo,
     },
     {
       title: t(tKeys.withdraw.getKey()),
-      value: formatDAI(withdraw),
-      type: getType(withdrawChange),
-      percent: formatPercent(Math.abs(withdrawChange), 2),
+      formatedValue: formatDAI(withdraw),
+      value: withdraw,
+      valueDayAgo: withdrawDayAgo,
     },
   ];
   return (
@@ -66,22 +56,8 @@ const DaoMetrics = (props: IProps) => {
         <Grid key={i} item className={classes.metric}>
           <Typography variant="overline" className={classes.title}>{metric.title}</Typography>
           <Grid container wrap="nowrap" alignItems="baseline">
-            <Typography weight="medium" variant="h6" className={classes.value}>{metric.value}</Typography>
-            {metric.type && metric.type !== 'infinite' &&
-              <>
-                {metric.type === 'increase' && <Increase className={cn(classes.arrowIcon, classes.increase)} />}
-                {metric.type === 'decrease' && <Decrease className={cn(classes.arrowIcon, classes.decrease)} />}
-                <Typography
-                  weight="medium"
-                  variant="body2"
-                  className={cn({
-                    [classes.increase]: metric.type === 'increase',
-                    [classes.decrease]: metric.type === 'decrease',
-                  })}
-                >
-                  {metric.percent}
-                </Typography>
-              </>}
+            <Typography weight="medium" variant="h6" className={classes.value}>{metric.formatedValue}</Typography>
+            <Growth previous={metric.valueDayAgo} current={metric.value} />
           </Grid>
         </Grid>
       ))}

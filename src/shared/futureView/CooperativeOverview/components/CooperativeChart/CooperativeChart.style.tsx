@@ -30,28 +30,7 @@ const styles = ({ extra: theme }: Theme) => ({
 
   balanceValue: rule({
     marginRight: theme.spacing.unit,
-  }),
-
-  balanceChange: rule({
-    lineHeight: '1.875rem',
-
-    '&$positive': {
-      color: theme.colors.shamrock,
-    },
-
-    '&$negative': {
-      color: theme.colors.geraldine,
-    },
-
-  }),
-
-  positive: {},
-  negative: {},
-
-  arrowIcon: rule({
-    width: '0.875rem',
-    height: '0.875rem',
-    marginBottom: '-0.125rem',
+    lineHeight: 1.15,
   }),
 
   graphic: rule({
