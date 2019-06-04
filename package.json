@@ -1,6 +1,6 @@
 {
   "name": "akropolis-network-frontend",
-  "version": "1.1.2",
+  "version": "0.1.0",
   "description": "Akropolis Network Frontend",
   "scripts": {
     "check-types": "node_modules/.bin/tsc -p . --noEmit -w",
