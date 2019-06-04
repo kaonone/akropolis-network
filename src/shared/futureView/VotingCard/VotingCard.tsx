@@ -75,7 +75,7 @@ function VotingCard(props: StylesProps & IOwnProps) {
     : t(tKeys.timeLeft.getKey());
 
   const timeLeftValue = isOver
-    ? moment(startDate + voteTime).format('DD MMM')
+    ? moment(Math.min(startDate + voteTime, Date.now())).format('DD MMM')
     : moment.duration(timeLeft).humanize();
 
   return (
