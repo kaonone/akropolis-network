@@ -8,7 +8,6 @@ import vaultAbi from 'blockchain/abi/vault.json';
 import { NETWORK_CONFIG } from 'core/constants';
 import { IFinanceTransaction, IFinanceHolder } from 'shared/types/models';
 import { ONE_ERC20 } from 'shared/constants';
-import { difference } from 'shared/helpers/integer';
 import { addressesEqual } from 'shared/helpers/web3';
 
 import { IEvent, IFinanceState } from './types';
@@ -34,9 +33,9 @@ export const initialFinanceState: IFinanceState = {
   transactions: {},
   vaultAddress: '',
   daoOverview: {
-    balance: { value: 0, change: 0 },
-    withdraw: { value: 0, change: 0 },
-    deposit: { value: 0, change: 0 },
+    balance: { value: 0, valueDayAgo: 0 },
+    withdraw: { value: 0, valueDayAgo: 0 },
+    deposit: { value: 0, valueDayAgo: 0 },
   },
   ready: false,
 };
@@ -84,9 +83,9 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
       const holdersForDay: IFinanceHolder[] = Object.values(
         reduceHolders(Object.values(nextTransactions).filter(transaction => transaction.date > dayAgo)),
       );
-      const balanceChangeForDay = R.sum((holdersForDay).map(item => item.balance));
-      const depositChangeForDay = R.sum((holdersForDay).map(item => item.deposit));
-      const withdrawChangeForDay = R.sum((holdersForDay).map(item => item.withdraw));
+      const balanceChangeForDay = R.sum(holdersForDay.map(item => item.balance));
+      const depositChangeForDay = R.sum(holdersForDay.map(item => item.deposit));
+      const withdrawChangeForDay = R.sum(holdersForDay.map(item => item.withdraw));
 
       const daoDeposit = R.sum(Object.values(holders).map(item => item.deposit));
       const daoWithdraw = R.sum(Object.values(holders).map(item => item.withdraw));
@@ -94,15 +93,15 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
       const daoOverview: IFinanceState['daoOverview'] = {
         balance: {
           value: daoBalance,
-          change: difference(daoBalance, balanceChangeForDay),
+          valueDayAgo: daoBalance - balanceChangeForDay,
         },
         deposit: {
           value: daoDeposit,
-          change: difference(daoDeposit, depositChangeForDay),
+          valueDayAgo: daoDeposit - depositChangeForDay,
         },
         withdraw: {
           value: daoWithdraw,
-          change: difference(daoWithdraw, withdrawChangeForDay),
+          valueDayAgo: daoWithdraw - withdrawChangeForDay,
         },
       };
 

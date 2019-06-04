@@ -26,21 +26,6 @@ const styles = ({ extra: theme }: Theme) => ({
     color: theme.colors.white,
   }),
 
-  arrowIcon: rule({
-    width: '1rem',
-    height: '1rem',
-    marginTop: '0.1875rem',
-    alignSelf: 'center',
-  }),
-
-  increase: rule({
-    color: theme.colors.shamrock,
-  }),
-
-  decrease: rule({
-    color: theme.colors.geraldine,
-  }),
-
   actions: rule({
     marginLeft: 'auto',
   }),

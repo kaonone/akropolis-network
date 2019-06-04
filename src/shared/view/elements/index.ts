@@ -33,3 +33,4 @@ export { default as GlobalLoader } from './GlobalLoader/GlobalLoader';
 export { default as StarsRating } from './StarsRating/StarsRating';
 export { default as Avatar } from './Avatar/Avatar';
 export { default as Select } from './Select/Select';
+export { default as Growth } from './Growth/Growth';

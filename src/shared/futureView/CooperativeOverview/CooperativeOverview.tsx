@@ -19,12 +19,12 @@ const CooperativeOverview = (props: StylesProps) => {
   const userAccountAddress = useAccountAddress();
 
   const cooperativeBalance = useObserver(() => daoApi.store.finance.daoOverview.balance.value);
-  const cooperativeBalanceChange = useObserver(() => daoApi.store.finance.daoOverview.balance.change);
+  const cooperativeBalanceChange = useObserver(() => daoApi.store.finance.daoOverview.balance.valueDayAgo);
 
   const cooperativeHolders = useObserver(() => daoApi.store.tokenManager.holders);
   const financeHolders = useObserver(() => daoApi.store.finance.holders);
 
-  const holdersCount = Object.values(cooperativeHolders).length;
+  const members = React.useMemo(() => Object.keys(cooperativeHolders), [cooperativeHolders]);
 
   const userAccount = cooperativeHolders[userAccountAddress];
   const userBalance = (financeHolders[userAccountAddress] || { balance: 0 }).balance;
@@ -34,9 +34,9 @@ const CooperativeOverview = (props: StylesProps) => {
       <Grid item xs={4} >
         <div className={classes.section}>
           <CooperativeChart
-            membersCount={holdersCount}
+            members={members}
             balance={cooperativeBalance}
-            balanceChange={cooperativeBalanceChange}
+            balanceDayAgo={cooperativeBalanceChange}
           />
         </div>
       </Grid>

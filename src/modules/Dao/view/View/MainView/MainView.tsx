@@ -104,9 +104,9 @@ function MainView(props: IProps) {
               balance={daoOverview.balance.value}
               deposit={daoOverview.deposit.value}
               withdraw={daoOverview.withdraw.value}
-              balanceChange={daoOverview.balance.change}
-              depositChange={daoOverview.deposit.change}
-              withdrawChange={daoOverview.withdraw.change}
+              balanceDayAgo={daoOverview.balance.valueDayAgo}
+              depositDayAgo={daoOverview.deposit.valueDayAgo}
+              withdrawDayAgo={daoOverview.withdraw.valueDayAgo}
             />
           </Grid>
           {!!userAccount && (
