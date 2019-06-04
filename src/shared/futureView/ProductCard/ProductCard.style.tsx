@@ -17,6 +17,8 @@ const styles = ({ extra: theme }: Theme) => ({
 
   content: rule({
     padding: theme.spacing.unit * 3,
+    paddingTop: theme.spacing.unit * 1.5,
+    color: theme.colors.mulledWine,
 
     '&$isDisabled': {
       color: theme.colors.topaz,
@@ -26,7 +28,7 @@ const styles = ({ extra: theme }: Theme) => ({
   isDisabled: {},
 
   profit: rule({
-    minHeight: '48px',
+    minHeight: '3rem',
   }),
 
   metrics: rule({
@@ -38,16 +40,16 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   typeBadge: rule({
-    padding: '2px 6px',
-    marginRight: '10px',
+    padding: '0.125rem 0.375rem',
+    marginRight: '0.625rem',
     color: theme.colors.royalPurple,
     backgroundColor: theme.colors.whiteLilac,
-    borderRadius: '20px',
-    lineHeight: '16px',
+    borderRadius: '1.25rem',
+    lineHeight: '1rem',
   }),
 
   icon: rule({
-    width: '48px',
+    width: '3rem',
     marginRight: theme.spacing.unit * 2,
   }),
 
@@ -67,21 +69,24 @@ const styles = ({ extra: theme }: Theme) => ({
     composes: '$metricTypography',
   }),
 
-  waiting: rule({
-    padding: theme.spacing.unit * 1.75,
+  footer: rule({
     backgroundColor: theme.colors.whiteWine,
-    borderRadius: '4px',
+    borderRadius: '0.25rem',
+  }),
+
+  waiting: rule({
+    composes: '$footer',
+    padding: theme.spacing.unit * 1.75,
   }),
 
   needEnable: rule({
+    composes: '$footer',
     padding: theme.spacing.unit * 0.5,
-    backgroundColor: theme.colors.whiteWine,
-    borderRadius: '4px',
   }),
 
   actionIcon: rule({
-    weight: '20px',
-    height: '20px',
+    weight: '1.25rem',
+    height: '1.25rem',
   }),
 
   waitingIcon: rule({
@@ -95,6 +100,7 @@ const styles = ({ extra: theme }: Theme) => ({
 
   enableLabel: rule({
     color: theme.colors.topaz,
+    lineHeight: '1rem',
   }),
 
   waitingLabel: rule({
@@ -103,7 +109,6 @@ const styles = ({ extra: theme }: Theme) => ({
 
   enableButton: rule({
     marginLeft: 'auto',
-    padding: `0 ${theme.spacing.unit * 3}px`,
   }),
 
   actionsButton: rule({

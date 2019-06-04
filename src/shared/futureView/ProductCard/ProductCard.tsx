@@ -3,7 +3,7 @@ import * as cn from 'classnames';
 
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { Grid, Typography, Button } from 'shared/view/elements';
-import { formatPercent } from 'shared/helpers/format';
+import { formatPercent, formatDAI } from 'shared/helpers/format';
 import { Settings, Info } from 'shared/view/elements/Icons';
 import { CompoundStatus, ICompound, CompoundType } from 'shared/types/models/Compound';
 
@@ -52,7 +52,7 @@ export const CompoundCard = React.memo(provideStyles((props: IProps) => {
   } = props;
   const { t } = useTranslate();
 
-  const metric = React.useCallback((title: string, value: number) => (
+  const metric = React.useCallback((title: string, value: string) => (
     <Grid item xs={6}>
       <Typography variant="overline" weight="medium" className={classes.metricTitle}>{title}</Typography>
       <Typography variant="h6" className={classes.metricValue}>{value}</Typography>
@@ -77,8 +77,10 @@ export const CompoundCard = React.memo(provideStyles((props: IProps) => {
             {t(tKeys.needEnableCompound.getKey())}
           </Typography>
         </Grid>
-        <Grid item className={classes.enableButton}>
-          <Button onClick={onEnable} color="primary" variant="contained">{t(tKeys.enable.getKey())}</Button>
+        <Grid item className={classes.enableButton} xs={4}>
+          <Button onClick={onEnable} color="primary" variant="contained" fullWidth>
+            {t(tKeys.enable.getKey())}
+          </Button>
         </Grid>
       </Grid>),
     ['active']: () => (
@@ -115,8 +117,8 @@ export const CompoundCard = React.memo(provideStyles((props: IProps) => {
         </Grid>
 
         <Grid {...gridContainerProps} className={classes.metrics}>
-          {metric(t(tKeys.balance.getKey()), balance)}
-          {metric(t(tKeys.balance.getKey()), earned)}
+          {metric(t(tKeys.balance.getKey()), formatDAI(balance))}
+          {metric(t(tKeys.earned.getKey()), formatDAI(earned))}
         </Grid>
         {footerByStatus[status]()}
       </div>
