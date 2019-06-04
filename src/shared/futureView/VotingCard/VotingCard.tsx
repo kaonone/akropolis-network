@@ -70,14 +70,20 @@ function VotingCard(props: StylesProps & IOwnProps) {
 
   const isOver = endedVotingStatuses.includes(votingStatus);
 
-  const timeLeftValue = isOver ? t(tKeys.timeEnded.getKey()) : moment.duration(timeLeft).humanize();
+  const timeLeftTitle = isOver
+    ? t(tKeys.timeEnded.getKey())
+    : t(tKeys.timeLeft.getKey());
+
+  const timeLeftValue = isOver
+    ? moment(startDate + voteTime).format('DD MMM')
+    : moment.duration(timeLeft).humanize();
 
   return (
     <Grid className={classes.root} container wrap="nowrap">
       <Grid item xs={9} className={classes.mainInformation}>
         <Grid container spacing={16}>
           <Intent intent={intent} />
-          {renderColumn(t(tKeys.timeLeft.getKey()), timeLeftValue)}
+          {renderColumn(timeLeftTitle, timeLeftValue)}
           {renderColumn(
             t(tKeys.voted.getKey()),
             formatPercent(votedPercent),
