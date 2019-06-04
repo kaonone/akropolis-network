@@ -6,7 +6,7 @@ import { Typography } from 'shared/view/elements';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { formatDAI } from 'shared/helpers/format';
 import { useDaoApi } from 'services/daoApi';
-import getLastConfirmedJoinTransaction from 'shared/helpers/getLastConfirmedJoinTransaction';
+import useLastConfirmedJoinVoting from 'shared/helpers/useLastConfirmedJoinVoting';
 
 import AccessCard from './AccessCard/AccessCard';
 
@@ -35,7 +35,7 @@ const PersonalInformation = (props: IProps) => {
   const { classes, deposit, earn } = props;
   const { t } = useTranslate();
   const daoApi = useDaoApi();
-  const lastJoinTransaction = getLastConfirmedJoinTransaction(daoApi);
+  const lastJoinTransaction = useLastConfirmedJoinVoting(daoApi);
   const days = lastJoinTransaction && getDays(lastJoinTransaction.startDate);
 
   const timePassed = days ? days.dayPassed : 0;
