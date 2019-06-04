@@ -20,5 +20,5 @@ export default function useLastConfirmedJoinVoting(daoApi: DaoApi): IVoting | nu
         vote.executed
       ))
       .sort(R.ascend(R.prop('startDate')))[0] || null),
-    [votes]);
+    [votes, userAccountAddress]);
 }
