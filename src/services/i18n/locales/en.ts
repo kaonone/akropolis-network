@@ -18,6 +18,7 @@ export default {
       notDefault: 'Value must be different from initial',
       maxStringLength: 'Text should be less then %{max} letters',
       allowedCharactersForDaoName: 'Name should contain only english letters and numbers',
+      onEnglishPlease: 'Should contain only english letters and numbers',
       isUsedDaoName: 'Co-op with that name already exists',
     },
     pageNotFound: 'We can’t find this page',

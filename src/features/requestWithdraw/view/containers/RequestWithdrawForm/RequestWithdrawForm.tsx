@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
 import { useDaoApi } from 'services/daoApi';
-import { isRequired } from 'shared/validators';
+import { isRequired, onEnglishPlease, composeValidators } from 'shared/validators';
 import { Request } from 'shared/view/elements/Icons';
 import { CircleProgressBar } from 'shared/view/elements';
 import { RequestForm } from 'shared/view/components';
@@ -58,7 +58,7 @@ function RequestWithdrawForm(props: IProps) {
       <TextInputField
         name={fieldNames.reason}
         label={t(tKeys.fields.reason.getKey())}
-        validate={isRequired}
+        validate={composeValidators(isRequired, onEnglishPlease)}
         fullWidth
       />),
   ];
