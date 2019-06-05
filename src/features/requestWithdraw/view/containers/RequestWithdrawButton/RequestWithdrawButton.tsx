@@ -26,6 +26,11 @@ function RequestWithdrawButton(props: IProps) {
 
   const closeModal = handleIsOpenedChanging.bind(null, false);
 
+  const closeErrorModal = React.useCallback(() => {
+    setIsOpened(false);
+    setHasError(false);
+  }, []);
+
   const handleErrorChanging = React.useCallback((withError: boolean) => {
     setHasError(withError);
   }, []);
@@ -53,7 +58,7 @@ function RequestWithdrawButton(props: IProps) {
       {!!hasError && (
         <ErrorModal
           isOpened={isOpened}
-          onClose={closeModal}
+          onClose={closeErrorModal}
           onRetry={handleErrorChanging.bind(null, false)}
         />
       )}

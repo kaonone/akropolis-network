@@ -1,3 +1,4 @@
+import { bind } from 'decko';
 import { observable, action, runInAction, when } from 'mobx';
 import AragonWrapper, { ensResolve } from '@aragon/wrapper';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
@@ -9,6 +10,7 @@ import { notifyDevWarning } from 'shared/helpers/notifyDevWarning';
 import { isEthereumAddress } from 'shared/validators/isEthereumAddress/isEthereumAddress';
 import { NULL_ADDRESS } from 'shared/constants';
 import { IDaoApiConfig, AppType, MethodByApp, ParamsByAppByMethod } from './types';
+import { currentAddress$ } from 'services/user';
 
 interface IExtendedAragonApp extends IAragonApp {
   proxy: ContractProxy;
@@ -76,6 +78,7 @@ export class BaseDaoApi {
 
     const subscriptions = {
       apps: wrapper.apps.subscribe(this.setApps),
+      account: currentAddress$.subscribe(this.updateAccount),
     };
 
     wrapper.cancel = () => {
@@ -176,4 +179,13 @@ export class BaseDaoApi {
       await app.proxy.updateInitializationBlock();
     }
   }
+
+  @bind
+  private updateAccount(account: string) {
+    if (!this.wrapper) {
+      return;
+    }
+    this.wrapper.setAccounts([account]);
+  }
+
 }

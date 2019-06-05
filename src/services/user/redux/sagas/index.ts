@@ -1,8 +1,8 @@
 import { SagaIterator, eventChannel, EventChannel } from 'redux-saga';
 import { put, takeLatest, take, select } from 'redux-saga/effects';
-import { DrizzleState } from 'drizzle';
 import * as sigUtil from 'eth-sig-util';
 
+import { addressesEqual } from 'shared/helpers/web3';
 import { IDependencies } from 'shared/types/app';
 import { storageKeys } from 'services/storage';
 import { getErrorMsg } from 'shared/helpers';
@@ -11,6 +11,7 @@ import { messageForSignature } from 'shared/constants';
 import * as NS from '../../namespace';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
+import { currentAddress$ } from '../../common';
 
 const completeAuthenticationType: NS.ICompleteAuthentication['type'] = 'USER:COMPLETE_AUTHENTICATION';
 const checkIsUserSignedType: NS.ICheckIsUserSigned['type'] = 'USER:CHECK_IS_USER_SIGNED';
@@ -18,7 +19,7 @@ const logoutType: NS.ILogout['type'] = 'USER:LOGOUT';
 
 export function getSaga(deps: IDependencies) {
   return function* saga(): SagaIterator {
-    yield takeLatest(completeAuthenticationType, listenAccountChange, deps);
+    yield takeLatest(completeAuthenticationType, listenAccountChange);
     yield takeLatest(checkIsUserSignedType, checkIsUserSigned, deps);
     yield takeLatest(logoutType, logoutSaga, deps);
   };
@@ -58,21 +59,23 @@ export function logoutSaga({ storage }: IDependencies, _a: NS.ILogout) {
   }
 }
 
-// don't work because drizzle is not listen account changing
-export function* listenAccountChange({ drizzle }: IDependencies, _a: NS.ICompleteAuthentication) {
-  const drizzleStateChannel: EventChannel<DrizzleState> = eventChannel((emitter) => {
-    return drizzle.store.subscribe(() => {
-      emitter(drizzle.store.getState());
+export function* listenAccountChange() {
+  const addressChannel: EventChannel<string | null> = eventChannel((emitter) => {
+    const subscription = currentAddress$.subscribe((address: string | null) => {
+      emitter(address);
     });
+    return () => {
+      subscription.unsubscribe();
+    };
   });
 
   try {
     while (true) {
-      const drizzleState: DrizzleState = yield take(drizzleStateChannel);
+      const currentAddress = yield take(addressChannel);
       const confirmedAddress: ReturnType<typeof selectors.selectConfirmedAddress> =
         yield select(selectors.selectConfirmedAddress);
 
-      if (!confirmedAddress || confirmedAddress !== drizzleState.accounts[0]) {
+      if (!confirmedAddress || !addressesEqual(confirmedAddress, currentAddress)) {
         yield put(actions.logout());
         return;
       }
@@ -80,6 +83,6 @@ export function* listenAccountChange({ drizzle }: IDependencies, _a: NS.IComplet
   } catch (error) {
     //
   } finally {
-    drizzleStateChannel.close();
+    addressChannel.close();
   }
 }
