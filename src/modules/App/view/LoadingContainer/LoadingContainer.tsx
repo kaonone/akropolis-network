@@ -11,7 +11,7 @@ import { actions as signInActions, selectors as signInSelectors } from 'features
 import { IAppReduxState } from 'shared/types/app';
 import { ICommunication } from 'shared/types/redux';
 import { withDrizzle, useOnChangeState } from 'shared/helpers/react';
-import { isFailed } from 'shared/helpers/redux';
+import { isFailedByState } from 'shared/helpers/redux';
 import { GlobalLoader } from 'shared/view/elements';
 import { RetryModal } from 'shared/view/components';
 import { becomeTrue, becomeFalse } from 'shared/helpers/changing';
@@ -80,7 +80,7 @@ const LoadingContainer = (props: IProps) => {
     setAuthStatus('login-needed');
   });
 
-  useOnChangeState(signing, isFailed, () => {
+  useOnChangeState(signing, isFailedByState, () => {
     setAuthStatus('login-needed');
   });
 

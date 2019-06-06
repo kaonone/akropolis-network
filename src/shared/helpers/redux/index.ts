@@ -5,5 +5,4 @@ export { default as makeIdentityReducer } from './makeIdentityReducer';
 export { default as makeResetStateReducer } from './makeResetStateReducer';
 export { default as isSucceededByState } from './isSucceededByState';
 export { default as isFailedByState } from './isFailedByState';
-export { default as isFailed } from './isFailed';
 export { default as makeCommunicationSelector } from './makeCommunicationSelector';
