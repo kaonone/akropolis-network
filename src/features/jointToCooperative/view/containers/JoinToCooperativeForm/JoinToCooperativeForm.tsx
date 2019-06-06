@@ -6,8 +6,10 @@ import { Exit } from 'shared/view/elements/Icons';
 import { CircleProgressBar } from 'shared/view/elements';
 import { RequestForm } from 'shared/view/components';
 import { TextInputField } from 'shared/view/form';
+import { makeAsyncSubmit } from 'shared/helpers/makeAsyncSubmit';
 
 import { IJoinToCooperativeFormData } from '../../../namespace';
+
 import { StylesProps, provideStyles } from './JoinToCooperativeForm.style';
 
 const fieldNames: { [key in keyof IJoinToCooperativeFormData]: key } = {
@@ -34,17 +36,7 @@ function RequestWithdrawForm(props: IProps) {
   const daoApi = useDaoApi();
   const [isRequesting, setIsRequesting] = React.useState(false);
 
-  const asyncSubmit = React.useCallback(async () => {
-    try {
-      setIsRequesting(true);
-      await daoApi.joinToCooperative();
-      setIsRequesting(false);
-      onSuccess();
-    } catch (e) {
-      setIsRequesting(false);
-      onError(String(e));
-    }
-  }, []);
+  const asyncSubmit = makeAsyncSubmit(() => daoApi.joinToCooperative(), setIsRequesting, onSuccess, onError);
 
   // tslint:disable:jsx-key
   const formFields = [

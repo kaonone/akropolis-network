@@ -8,6 +8,7 @@ import { Request } from 'shared/view/elements/Icons';
 
 import RequestWithdrawForm from '../RequestWithdrawForm/RequestWithdrawForm';
 import { StylesProps, provideStyles } from './RequestWithdrawButton.style';
+import { useModalOpenHandlers } from 'shared/helpers/useModalOpenHandlers';
 
 const tKeys = tKeysAll.features.requestWithdraw;
 
@@ -16,52 +17,35 @@ type IProps = StylesProps;
 function RequestWithdrawButton(props: IProps) {
   const { classes } = props;
   const [isOpened, setIsOpened] = React.useState(false);
-  const [hasError, setHasError] = React.useState(false);
+  const [error, setError] = React.useState('');
 
   const { t } = useTranslate();
 
-  const handleIsOpenedChanging = React.useCallback((opened: boolean) => {
-    setIsOpened(opened);
-  }, []);
-
-  const closeModal = handleIsOpenedChanging.bind(null, false);
-
-  const closeErrorModal = React.useCallback(() => {
-    setIsOpened(false);
-    setHasError(false);
-  }, []);
-
-  const handleErrorChanging = React.useCallback((withError: boolean) => {
-    setHasError(withError);
-  }, []);
+  const { closeModal, openModal, closeErrorModal, onRetry, onError } = useModalOpenHandlers(setIsOpened, setError);
 
   return (
     <>
-      <Button variant="contained" color="secondary" onClick={handleIsOpenedChanging.bind(null, true)}>
+      <Button variant="contained" color="secondary" onClick={openModal}>
         <Request className={classes.buttonIcon} />
         {t(tKeys.button.getKey())}
       </Button>
-      {!hasError && (
-        <Modal
-          size="large"
-          isOpen={isOpened}
-          title={t(tKeys.form.title.getKey())}
-          onClose={closeModal}
-        >
-          <RequestWithdrawForm
-            onSuccess={closeModal}
-            onError={handleErrorChanging.bind(null, true)}
-            onCancel={closeModal}
-          />
-        </Modal>
-      )}
-      {!!hasError && (
-        <ErrorModal
-          isOpened={isOpened}
-          onClose={closeErrorModal}
-          onRetry={handleErrorChanging.bind(null, false)}
+      <Modal
+        size="large"
+        isOpen={isOpened && !error}
+        title={t(tKeys.form.title.getKey())}
+        onClose={closeModal}
+      >
+        <RequestWithdrawForm
+          onSuccess={closeModal}
+          onError={onError}
+          onCancel={closeModal}
         />
-      )}
+      </Modal>
+      <ErrorModal
+        isOpened={isOpened && !!error}
+        onClose={closeErrorModal}
+        onRetry={onRetry}
+      />
     </>
   );
 }

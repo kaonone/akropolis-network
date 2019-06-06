@@ -7,6 +7,7 @@ import { Request } from 'shared/view/elements/Icons';
 import { CircleProgressBar } from 'shared/view/elements';
 import { RequestForm } from 'shared/view/components';
 import { TextInputField, NumberInputField } from 'shared/view/form';
+import { makeAsyncSubmit } from 'shared/helpers/makeAsyncSubmit';
 
 import { IRequestFormData } from '../../../namespace';
 import { StylesProps, provideStyles } from './RequestWithdrawForm.style';
@@ -32,17 +33,12 @@ function RequestWithdrawForm(props: IProps) {
   const daoApi = useDaoApi();
   const [isRequesting, setIsRequesting] = React.useState(false);
 
-  const asyncSubmit = React.useCallback(async (values: IRequestFormData) => {
-    try {
-      setIsRequesting(true);
-      await daoApi.requestWithdraw(values.amount, values.reason);
-      setIsRequesting(false);
-      onSuccess();
-    } catch (e) {
-      setIsRequesting(false);
-      onError(String(e));
-    }
-  }, []);
+  const asyncSubmit = makeAsyncSubmit<IRequestFormData>(
+    ({ amount, reason }) => daoApi.requestWithdraw(amount, reason),
+    setIsRequesting,
+    onSuccess,
+    onError,
+  );
 
   // tslint:disable:jsx-key
   const formFields = [

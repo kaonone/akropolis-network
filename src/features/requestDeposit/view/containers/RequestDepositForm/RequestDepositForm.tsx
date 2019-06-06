@@ -7,6 +7,7 @@ import { Typography, CircleProgressBar } from 'shared/view/elements';
 import { RequestForm } from 'shared/view/components';
 import { NumberInputField } from 'shared/view/form';
 import { Deposit } from 'shared/view/elements/Icons';
+import { makeAsyncSubmit } from 'shared/helpers/makeAsyncSubmit';
 
 import { IRequestDepositFormData } from '../../../namespace';
 import { StylesProps, provideStyles } from './RequestDepositForm.style';
@@ -31,17 +32,12 @@ function RequestDepositForm(props: IProps) {
   const daoApi = useDaoApi();
   const [isRequesting, setIsRequesting] = React.useState(false);
 
-  const asyncSubmit = React.useCallback(async (values: IRequestDepositFormData) => {
-    try {
-      setIsRequesting(true);
-      await daoApi.deposit(values.amount);
-      setIsRequesting(false);
-      onSuccess();
-    } catch (e) {
-      setIsRequesting(false);
-      onError(String(e));
-    }
-  }, []);
+  const asyncSubmit = makeAsyncSubmit<IRequestDepositFormData>(
+    ({ amount }) => daoApi.deposit(amount),
+    setIsRequesting,
+    onSuccess,
+    onError,
+  );
 
   // tslint:disable:jsx-key
   const formFields = [
