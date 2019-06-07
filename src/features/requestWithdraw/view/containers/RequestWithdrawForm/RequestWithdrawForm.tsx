@@ -4,7 +4,6 @@ import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
 import { useDaoApi } from 'services/daoApi';
 import { isRequired, onEnglishPlease, composeValidators } from 'shared/validators';
 import { Request } from 'shared/view/elements/Icons';
-import { CircleProgressBar } from 'shared/view/elements';
 import { RequestForm } from 'shared/view/components';
 import { TextInputField, NumberInputField } from 'shared/view/form';
 import { makeAsyncSubmit } from 'shared/helpers/makeAsyncSubmit';
@@ -31,11 +30,9 @@ function RequestWithdrawForm(props: IProps) {
   const { onSuccess, onError, onCancel, classes } = props;
   const { t } = useTranslate();
   const daoApi = useDaoApi();
-  const [isRequesting, setIsRequesting] = React.useState(false);
 
   const asyncSubmit = makeAsyncSubmit<IRequestFormData>(
     ({ amount, reason }) => daoApi.requestWithdraw(amount, reason),
-    setIsRequesting,
     onSuccess,
     onError,
   );
@@ -66,8 +63,7 @@ function RequestWithdrawForm(props: IProps) {
       onSubmit={asyncSubmit}
       cancelButton={t(tKeys.form.cancel.getKey())}
       submitButton={<>
-        {isRequesting && <CircleProgressBar className={classes.buttonIcon} size={16} />}
-        {!isRequesting && <Request className={classes.buttonIcon} />}
+        <Request className={classes.buttonIcon} />
         {t(tKeys.form.submit.getKey())}
       </>}
       fields={formFields}

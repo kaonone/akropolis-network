@@ -1,6 +1,9 @@
 import * as React from 'react';
 
-export function useModalOpenHandlers(setIsOpened: (isOpen: boolean) => void, setError: (error: string) => void) {
+export function useModalOpenHandlers() {
+  const [isOpened, setIsOpened] = React.useState(false);
+  const [error, setError] = React.useState('');
+
   const closeModal = React.useCallback(() => {
     setIsOpened(false);
   }, []);
@@ -15,10 +18,10 @@ export function useModalOpenHandlers(setIsOpened: (isOpen: boolean) => void, set
     setError('');
     setIsOpened(true);
   }, []);
-  const onError = React.useCallback((error: string) => {
-    setError(error);
-    console.error(error);
+  const onError = React.useCallback((_error: string) => {
+    setError(_error);
+    console.error(_error);
   }, []);
 
-  return { openModal, closeModal, closeErrorModal, onError, onRetry };
+  return { isOpened, error, openModal, closeModal, closeErrorModal, onError, onRetry };
 }

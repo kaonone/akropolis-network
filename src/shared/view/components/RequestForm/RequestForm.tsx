@@ -5,7 +5,7 @@ import { GetProps } from '_helpers';
 
 import { selectors as userSelectors } from 'services/user';
 import { IAppReduxState } from 'shared/types/app';
-import { Grid, Button } from 'shared/view/elements';
+import { Grid, Button, CircleProgressBar } from 'shared/view/elements';
 
 import UserAvatar from '../UserAvatar/UserAvatar';
 import { StylesProps, provideStyles } from './RequestForm.style';
@@ -71,7 +71,7 @@ function RequestForm(props: IProps) {
                     fullWidth
                     disabled={submitting || disabled}
                   >
-                    {submitButton}
+                    {!submitting ? submitButton : <CircleProgressBar size={16} />}
                   </Button>
                 </Grid>
               </Grid>

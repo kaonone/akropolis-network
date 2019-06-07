@@ -15,12 +15,9 @@ type IProps = StylesProps;
 
 function RequestDepositButton(props: IProps) {
   const { classes } = props;
-  const [isOpened, setIsOpened] = React.useState(false);
-  const [error, setError] = React.useState('');
-
   const { t } = useTranslate();
 
-  const { closeModal, openModal, closeErrorModal, onRetry, onError } = useModalOpenHandlers(setIsOpened, setError);
+  const { isOpened, error, closeModal, openModal, closeErrorModal, onRetry, onError } = useModalOpenHandlers();
 
   return (
     <>

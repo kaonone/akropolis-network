@@ -3,7 +3,7 @@ import * as React from 'react';
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
 import { useDaoApi } from 'services/daoApi';
 import { isRequired } from 'shared/validators';
-import { Typography, CircleProgressBar } from 'shared/view/elements';
+import { Typography } from 'shared/view/elements';
 import { RequestForm } from 'shared/view/components';
 import { NumberInputField } from 'shared/view/form';
 import { Deposit } from 'shared/view/elements/Icons';
@@ -30,11 +30,9 @@ function RequestDepositForm(props: IProps) {
   const { onSuccess, onError, onCancel, classes } = props;
   const { t } = useTranslate();
   const daoApi = useDaoApi();
-  const [isRequesting, setIsRequesting] = React.useState(false);
 
   const asyncSubmit = makeAsyncSubmit<IRequestDepositFormData>(
     ({ amount }) => daoApi.deposit(amount),
-    setIsRequesting,
     onSuccess,
     onError,
   );
@@ -62,8 +60,7 @@ function RequestDepositForm(props: IProps) {
       onSubmit={asyncSubmit}
       cancelButton={t(tKeys.form.cancel.getKey())}
       submitButton={<>
-        {isRequesting && <CircleProgressBar className={classes.buttonIcon} size={16} />}
-        {!isRequesting && <Deposit className={classes.buttonIcon} />}
+        <Deposit className={classes.buttonIcon} />
         {t(tKeys.form.submit.getKey())}
       </>}
       fields={formFields}

@@ -17,10 +17,8 @@ type IProps = StylesProps;
 function JoinToCooperativeButton(props: IProps) {
   const { classes } = props;
   const { t } = useTranslate();
-  const [isOpened, setIsOpened] = React.useState(false);
-  const [error, setError] = React.useState('');
 
-  const { closeModal, openModal, closeErrorModal, onRetry, onError } = useModalOpenHandlers(setIsOpened, setError);
+  const { isOpened, error, closeModal, openModal, closeErrorModal, onRetry, onError } = useModalOpenHandlers();
 
   return (
     <>
