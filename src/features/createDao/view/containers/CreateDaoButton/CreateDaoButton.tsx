@@ -72,23 +72,19 @@ function CreateDaoButton(props: IProps) {
         }
         {t(intl.createButton.getKey())}
       </Button>
-      {!creating.error && (
-        <Modal
-          size="large"
-          isOpen={isOpened}
-          title={t(intl[showForm ? 'form' : 'progress'].title.getKey())}
-          onClose={handleIsOpenedChanging.bind(null, false)}
-        >
-          {showForm ? <CreateDaoForm onCancel={handleIsOpenedChanging.bind(null, false)} /> : <CreateDaoProgress />}
-        </Modal>
-      )}
-      {!!creating.error && (
-        <ErrorModal
-          isOpened={isOpened}
-          onClose={handleIsOpenedChanging.bind(null, false)}
-          onRetry={handleRetryClick}
-        />
-      )}
+      <Modal
+        size="large"
+        isOpen={isOpened && !creating.error}
+        title={t(intl[showForm ? 'form' : 'progress'].title.getKey())}
+        onClose={handleIsOpenedChanging.bind(null, false)}
+      >
+        {showForm ? <CreateDaoForm onCancel={handleIsOpenedChanging.bind(null, false)} /> : <CreateDaoProgress />}
+      </Modal>
+      <ErrorModal
+        isOpened={isOpened && !!creating.error}
+        onClose={handleIsOpenedChanging.bind(null, false)}
+        onRetry={handleRetryClick}
+      />
     </>
   );
 }
