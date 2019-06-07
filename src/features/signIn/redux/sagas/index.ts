@@ -30,7 +30,7 @@ export function* signInSaga({ drizzle, storage }: IDependencies, action: NS.ISig
       throw new Error('Is not signed');
     }
 
-    storage.set(storageKeys.signedMessage, res.result);
+    storage.add(storageKeys.addressesSignatures, address, res.result);
     yield put(actions.signInSuccess());
     yield put(userAction.completeAuthentication(address));
   } catch (error) {

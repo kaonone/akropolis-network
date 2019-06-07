@@ -43,9 +43,50 @@ class LocalStorage {
     }
   }
 
+  public add(storageKey: string, itemKey: string, item: string) {
+    if (!this.isLocalStorageAvailable) { return null; }
+    try {
+      const storageItems = localStorage.getItem(storageKey);
+      const items: Record<string, string> = storageItems ? JSON.parse(storageItems) : {};
+      items[itemKey] = item;
+      localStorage.setItem(storageKey, JSON.stringify(items));
+    } catch (e) {
+      console.error(
+        `Error while add data to localstorage for key: ${storageKey} and itemKey: ${itemKey}.
+        Error is: ${e.message}, stack is: ${e.stack}`,
+      );
+      return null;
+    }
+  }
+
+  public remove(storageKey: string, itemKey?: string) {
+    if (!this.isLocalStorageAvailable) { return null; }
+    try {
+      if (!itemKey) {
+        localStorage.removeItem(storageKey);
+        return;
+      }
+
+      const storageItems = localStorage.getItem(storageKey);
+      if (!storageItems) {
+        return;
+      }
+      const items: Record<string, string> = JSON.parse(storageItems);
+      delete items[itemKey];
+      localStorage.setItem(storageKey, JSON.stringify(items));
+    } catch (e) {
+      console.error(
+        `Error while remove data from localstorage for storageKey: ${storageKey}
+        ${itemKey ? ' itemKey: ' + itemKey : ''}.
+        Error is: ${e.message}, stack is: ${e.stack}`,
+      );
+      return null;
+    }
+  }
+
   public reset() {
     if (this.isLocalStorageAvailable) {
-      localStorage.removeItem(storageKeys.signedMessage);
+      localStorage.removeItem(storageKeys.addressesSignatures);
     }
   }
 

@@ -22,6 +22,7 @@ class ShowBalance extends React.Component<IProps, IState> {
     const { drizzle, drizzleState, token } = this.props;
     const contract = drizzle.contracts[token];
 
+    // if it will be used - need to rewrite with address hook
     const address = drizzleState.accounts[0];
 
     const balanceKey = contract.methods.balanceOf.cacheCall(address);

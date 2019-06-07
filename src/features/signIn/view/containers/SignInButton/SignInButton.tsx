@@ -47,6 +47,7 @@ class SignInButton extends React.PureComponent<IProps, IState> {
     return (
       <DrizzleContext.Consumer>
         {({ drizzleState }) => {
+          // if it will be used - need to rewrite with address hook
           const address = drizzleState.accounts[0];
           return (<>
             <Button variant="outlined" color="primary" {...restProps} onClick={this.onButtonClick}>
