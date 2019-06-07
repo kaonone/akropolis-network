@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as cn from 'classnames';
 
 import { useTranslate, tKeys } from 'services/i18n';
 import { Typography, Grid } from 'shared/view/elements';
@@ -46,12 +47,16 @@ const EventCell = React.memo(provideStyles((props: StylesProps) => {
 
 }));
 
-const JoinCell = React.memo(provideStyles((props: StylesProps) => {
-  const { classes } = props;
+interface IJoinCellProps {
+  pending?: boolean;
+}
+
+const JoinCell = React.memo(provideStyles((props: IJoinCellProps & StylesProps) => {
+  const { classes, pending } = props;
   const { t } = useTranslate();
 
   return (
-    <Typography variant="caption" className={classes.newEvent}>{
+    <Typography variant="caption" className={cn(classes.joinEvent, { [classes.pending]: pending })}>{
       t(tKeys.shared.join.getKey())}
     </Typography>
   );
