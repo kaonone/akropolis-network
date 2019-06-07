@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export function useModalOpenHandlers() {
+export function useModalHandlers() {
   const [isOpened, setIsOpened] = React.useState(false);
   const [error, setError] = React.useState('');
 

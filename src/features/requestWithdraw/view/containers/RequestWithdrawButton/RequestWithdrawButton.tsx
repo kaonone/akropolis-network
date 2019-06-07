@@ -8,7 +8,7 @@ import { Request } from 'shared/view/elements/Icons';
 
 import RequestWithdrawForm from '../RequestWithdrawForm/RequestWithdrawForm';
 import { StylesProps, provideStyles } from './RequestWithdrawButton.style';
-import { useModalOpenHandlers } from 'shared/helpers/useModalOpenHandlers';
+import { useModalHandlers } from 'shared/helpers/useModalHandlers';
 
 const tKeys = tKeysAll.features.requestWithdraw;
 
@@ -18,7 +18,7 @@ function RequestWithdrawButton(props: IProps) {
   const { classes } = props;
   const { t } = useTranslate();
 
-  const { isOpened, error, closeModal, openModal, closeErrorModal, onRetry, onError } = useModalOpenHandlers();
+  const { isOpened, error, closeModal, openModal, closeErrorModal, onRetry, onError } = useModalHandlers();
 
   return (
     <>

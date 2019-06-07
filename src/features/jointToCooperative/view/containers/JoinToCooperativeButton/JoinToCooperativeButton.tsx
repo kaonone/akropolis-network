@@ -5,7 +5,7 @@ import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
 import { Button } from 'shared/view/elements';
 import { Exit } from 'shared/view/elements/Icons';
 import { ErrorModal, Modal } from 'shared/view/components';
-import { useModalOpenHandlers } from 'shared/helpers/useModalOpenHandlers';
+import { useModalHandlers } from 'shared/helpers/useModalHandlers';
 
 import JoinToCooperativeForm from '../JoinToCooperativeForm/JoinToCooperativeForm';
 import { StylesProps, provideStyles } from './JoinToCooperativeButton.style';
@@ -18,7 +18,7 @@ function JoinToCooperativeButton(props: IProps) {
   const { classes } = props;
   const { t } = useTranslate();
 
-  const { isOpened, error, closeModal, openModal, closeErrorModal, onRetry, onError } = useModalOpenHandlers();
+  const { isOpened, error, closeModal, openModal, closeErrorModal, onRetry, onError } = useModalHandlers();
 
   return (
     <>

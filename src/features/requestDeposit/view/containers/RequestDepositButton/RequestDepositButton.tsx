@@ -4,7 +4,7 @@ import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
 import { Button } from 'shared/view/elements';
 import { Modal, ErrorModal } from 'shared/view/components';
 import { Deposit } from 'shared/view/elements/Icons';
-import { useModalOpenHandlers } from 'shared/helpers/useModalOpenHandlers';
+import { useModalHandlers } from 'shared/helpers/useModalHandlers';
 
 import RequestWithdrawForm from '../RequestDepositForm/RequestDepositForm';
 import { StylesProps, provideStyles } from './RequestDepositButton.style';
@@ -17,7 +17,7 @@ function RequestDepositButton(props: IProps) {
   const { classes } = props;
   const { t } = useTranslate();
 
-  const { isOpened, error, closeModal, openModal, closeErrorModal, onRetry, onError } = useModalOpenHandlers();
+  const { isOpened, error, closeModal, openModal, closeErrorModal, onRetry, onError } = useModalHandlers();
 
   return (
     <>
