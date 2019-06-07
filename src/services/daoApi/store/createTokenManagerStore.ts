@@ -3,18 +3,18 @@ import BN from 'bignumber.js';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 
 import tokenAbi from 'blockchain/abi/minimeToken.json';
-import { IHolder } from 'shared/types/models';
+import { IEthereumEvent, IHolder } from 'shared/types/models';
 import { ONE_ERC20 } from 'shared/constants';
+import { makeStoreFromEvents } from 'shared/helpers/makeStoreFromEvents';
 
-import { IEvent, ITokenManagerState } from './types';
-import { getStore } from './getStore';
+import { ITokenManagerState } from './types';
 
-type ClaimedTokensEvent = IEvent<'ClaimedTokens', {
+type ClaimedTokensEvent = IEthereumEvent<'ClaimedTokens', {
   _token: string;
   _controller: string;
 }>;
 
-type TransferEvent = IEvent<'Transfer', {
+type TransferEvent = IEthereumEvent<'Transfer', {
   _from: string;
   _to: string;
 }>;
@@ -34,7 +34,7 @@ export async function createTokenManagerStore(web3: Web3, proxy: ContractProxy) 
   const tokenAddr: string = await proxy.call('token');
   const tokenProxy = new ContractProxy(tokenAddr, tokenAbi, web3, proxy.initializationBlock);
 
-  return getStore(
+  return makeStoreFromEvents(
     async (state: ITokenManagerState, events: Event[], isCompleteLoading: boolean) => {
       // The transfer may have increased the token's total supply, so let's refresh it
       const isNeedUpdateTokenSupply = events.some(({ event }) => event === 'Transfer');

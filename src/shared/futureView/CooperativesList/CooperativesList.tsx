@@ -20,17 +20,16 @@ import { StylesProps, provideStyles } from './CooperativesList.style';
 
 const tKeys = tKeysAll.shared.dao;
 
-const DAO_IDS = ['Cooperative1', 'Cooperative2', 'Cooperative3'];
-
 interface IOwnProps {
+  daoIds: string[];
   onSelectCooperative(daoName: string): void;
 }
 
 type IProps = StylesProps & IOwnProps;
 
 export default React.memo(provideStyles((props: IProps) => {
-  const { classes, onSelectCooperative } = props;
-  const { items: daoNames, paginationView } = usePagination(DAO_IDS);
+  const { classes, onSelectCooperative, daoIds } = props;
+  const { items: daoNames, paginationView } = usePagination(daoIds);
 
   return (
     <div>

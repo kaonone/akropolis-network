@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import { EventLog } from 'web3/types';
 import { IHolder, IFinanceHolder, IFinanceTransaction, IVoting, VotingDecision } from 'shared/types/models';
 
 export interface IVotingState {
@@ -33,13 +32,6 @@ export interface ISimpleEvent<E extends string | symbol = string, V = any> {
   event: E;
   returnValues: V;
 }
-
-export interface IEvent<E extends string = string, V = any> extends EventLog {
-  event: E;
-  returnValues: V;
-}
-
-export type StoreReducer<S, E> = (state: S, events: E[] | EventLog[], isCompleteLoading: boolean) => Promise<S> | S;
 
 export interface IDaoOverview {
   balance: IDaoOverviewMetric;

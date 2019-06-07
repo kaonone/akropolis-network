@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { EventLog } from 'web3/types';
 
 export type Provider = typeof Web3.givenProvider;
 export type ProviderType =
@@ -6,6 +7,11 @@ export type ProviderType =
 
 export type ID = number;
 export type UUID = string;
+
+export interface IEthereumEvent<E extends string = string, V = any> extends EventLog {
+  event: E;
+  returnValues: V;
+}
 
 export interface IHolder {
   balance: number;
