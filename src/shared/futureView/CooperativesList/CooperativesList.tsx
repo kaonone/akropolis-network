@@ -13,7 +13,7 @@ import { DaoApi, DAO_DESCRIPTION, DAO_GOAL } from 'services/daoApi';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { usePagination } from 'shared/view/hooks';
 import { useCommunication } from 'shared/helpers/react';
-import { useNewVotingEvents } from 'shared/helpers/voting';
+import { useNewVotingEvents, useHasActiveJoinVoting } from 'shared/helpers/voting';
 
 import { ComplexCell, EventCell, JoinCell } from './cells';
 import { StylesProps, provideStyles } from './CooperativesList.style';
@@ -88,8 +88,10 @@ const Cooperative = React.memo(provideStyles((props: ICooperativeProps & StylesP
   const votes = useObserver(() => daoApi.store.voting.votings);
 
   const newEvents = useNewVotingEvents(daoApi, Object.values(votes));
+
   const hasNewEvent = newEvents.length > 0;
   const userIsInCoop = !!holders[account];
+  const hasActiveJoinVoting: boolean = useHasActiveJoinVoting(daoApi, Object.values(votes));
 
   const cooperative: ICooperative = {
     name: daoName,
@@ -108,7 +110,7 @@ const Cooperative = React.memo(provideStyles((props: ICooperativeProps & StylesP
     <ComplexCell title={t(tKeys.balance.getKey())} value={formatDAI(cooperative.balance)} />,
     <ComplexCell title={t(tKeys.members.getKey())} value={cooperative.membersCount} />,
   ].concat(
-    !userIsInCoop && <JoinCell /> ||
+    !userIsInCoop && <JoinCell pending={hasActiveJoinVoting} /> ||
     hasNewEvent && <EventCell /> ||
     <div />,
   );

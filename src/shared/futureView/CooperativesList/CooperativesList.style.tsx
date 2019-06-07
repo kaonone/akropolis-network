@@ -62,15 +62,22 @@ const styles = ({ extra: theme }: Theme) => ({
     color: theme.colors.topaz,
   }),
 
-  newEvent: rule({
+  joinEvent: rule({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: '0.25rem 0.75rem',
     borderRadius: '2.125rem',
-    background: theme.colors.whiteLilac,
-    color: theme.colors.royalPurple,
+    background: theme.colors.royalPurple,
+    color: theme.colors.white,
+
+    '&$pending': {
+      background: theme.colors.whiteLilac,
+      color: theme.colors.royalPurple,
+    },
   }),
+
+  pending: {},
 
   eventTag: rule({
     color: theme.colors.royalPurple,

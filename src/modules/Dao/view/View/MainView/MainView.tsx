@@ -16,8 +16,9 @@ import { RequestDepositButtonAsync } from 'features/requestDeposit';
 import { IVoting } from 'shared/types/models';
 import { ToggleButtonGroup, ToggleButton, Grid, Badge } from 'shared/view/elements';
 import { withComponent } from 'shared/helpers/react';
-import { useNewVotingEvents, sortByStatus, useFieldsForVotingStatus, calculateIsRejected } from 'shared/helpers/voting';
-import { addressesEqual } from 'shared/helpers/web3';
+import {
+  useNewVotingEvents, sortByStatus, useFieldsForVotingStatus, useHasActiveJoinVoting,
+} from 'shared/helpers/voting';
 
 import { Section } from '../../../types';
 import { Activities, Products, Members, Cooperative } from './mockViews';
@@ -49,7 +50,6 @@ function MainView(props: IProps) {
   const tokenHolders = useObserver(() => daoApi.store.tokenManager.holders);
   const financeHolders = useObserver(() => daoApi.store.finance.holders);
   const daoOverview = useObserver(() => daoApi.store.finance.daoOverview);
-  const votingConfig = useObserver(() => daoApi.store.voting.config);
   const votes = useObserver(() => daoApi.store.voting.votings);
   const connectedAccountVotes = useObserver(() => daoApi.store.voting.connectedAccountVotes);
   const canVoteConnectedAccount = useObserver(() => daoApi.store.voting.canVoteConnectedAccount);
@@ -77,17 +77,7 @@ function MainView(props: IProps) {
     { section: 'products', title: tKeys.products.getKey() },
   ]), [newEvents]);
 
-  const hasActiveJoinVoting: boolean = React.useMemo(() => {
-    return !!preparedVotes
-      .filter(
-        vote => (
-          vote.intent.type === 'joinToDao' &&
-          addressesEqual(vote.intent.payload.address, userAccountAddress) &&
-          !calculateIsRejected(vote, votingConfig.voteTime) &&
-          !vote.executed
-        ),
-      ).length;
-  }, [preparedVotes, userAccountAddress, votingConfig]);
+  const hasActiveJoinVoting: boolean = useHasActiveJoinVoting(daoApi, preparedVotes);
 
   const userAccount = tokenHolders[userAccountAddress];
   const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
