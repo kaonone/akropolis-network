@@ -33,7 +33,7 @@ function configureApp(data?: IAppData): IAppData {
   ];
 
   const connectedSagas: RootSaga[] = [];
-  const connectedReducers: ReducersMap<Partial<IAppReduxState>> = {};
+  let connectedReducers: NonNullable<IReduxEntry['reducers']> = {};
 
   const { runSaga, store } = configureStore();
   try {
@@ -62,14 +62,8 @@ function configureApp(data?: IAppData): IAppData {
 
     if (reducers) {
       const keys = Object.keys(reducers) as Array<keyof typeof reducers>;
-      const isNeedReplace: boolean = keys.reduce<boolean>((acc, key: keyof typeof reducers) => {
-        const featureReducer = reducers[key];
-        if (!connectedReducers[key] && featureReducer) {
-          connectedReducers[key] = featureReducer;
-          return true;
-        }
-        return acc || false;
-      }, false);
+      const isNeedReplace = keys.some(key => !connectedReducers[key]);
+      connectedReducers = { ...connectedReducers, ...reducers };
 
       if (isNeedReplace) {
         store.replaceReducer(createReducer(connectedReducers as ReducersMap<IAppReduxState>));

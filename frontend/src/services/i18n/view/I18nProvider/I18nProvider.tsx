@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
 import * as Polyglot from 'node-polyglot';
 
 import { IAppReduxState } from 'shared/types/app';
@@ -19,7 +19,7 @@ interface IStateProps {
   locale: Lang;
 }
 
-type IProps = IStateProps & IOwnProps;
+type IProps = IStateProps & IOwnProps & RouteComponentProps;
 
 class I18nProvider extends React.Component<IProps> {
   public polyglot: Polyglot = new Polyglot({

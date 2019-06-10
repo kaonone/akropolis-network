@@ -57,7 +57,7 @@ export function makeStoreFromEvents<S, E>(
     map(events => ({ past: events })),
   );
 
-  const otherEvents$ = getEventsStream(merge(
+  const otherEvents$ = getEventsStream(merge<E | EventLog>(
     ...otherEvents,
     ...proxies.map(proxy => proxy.events(undefined, {})),
   ), 'other');
@@ -77,6 +77,6 @@ function getEventsStream<T, K extends string>(flatEvents$: Observable<T>, key: K
   return flatEvents$.pipe(
     bufferTime(300),
     skipUntil(flatEvents$),
-    map(bufferedEvents => ({ [key]: bufferedEvents })),
+    map(bufferedEvents => ({ [key]: bufferedEvents } as { [k in K]: T[]; })),
   );
 }
