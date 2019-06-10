@@ -1,6 +1,6 @@
 # Akropolis Network Testnet (active development)
 
-## For frontend (in root folder)
+## For frontend (in frontend folder)
 ### Install all dependencies
 - ```npm i``` install frontend and contracts dependencies
 
