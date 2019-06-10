@@ -12,3 +12,9 @@ export function logout(): NS.ILogout {
     type: 'USER:LOGOUT',
   };
 }
+
+export function changeUser(): NS.IChangeUser {
+  return {
+    type: 'USER:CHANGE_USER',
+  };
+}

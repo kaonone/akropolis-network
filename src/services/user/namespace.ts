@@ -18,7 +18,8 @@ export type ICheckIsUserSignedSuccess = IPlainAction<'USER:CHECK_IS_USER_SIGNED_
 export type ICheckIsUserSignedFail = IPlainFailAction<'USER:CHECK_IS_USER_SIGNED_FAIL'>;
 
 export type ILogout = IPlainAction<'USER:LOGOUT'>;
+export type IChangeUser = IPlainAction<'USER:CHANGE_USER'>;
 
 export type Action =
   ICompleteAuthentication |
-  ICheckIsUserSigned | ICheckIsUserSignedSuccess | ICheckIsUserSignedFail | ILogout;
+  ICheckIsUserSigned | ICheckIsUserSignedSuccess | ICheckIsUserSignedFail | ILogout | IChangeUser;
