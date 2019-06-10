@@ -2,9 +2,7 @@ import { withStyles, WithStyles } from 'shared/styles';
 import { rule } from 'shared/helpers/style';
 
 const styles = () => ({
-  root: rule({
-    padding: '1rem',
-  }),
+  root: rule({}),
 });
 
 export const provideStyles = withStyles(styles);
