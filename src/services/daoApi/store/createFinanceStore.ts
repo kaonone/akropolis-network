@@ -6,18 +6,18 @@ import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 
 import vaultAbi from 'blockchain/abi/vault.json';
 import { NETWORK_CONFIG } from 'core/constants';
-import { IFinanceTransaction, IFinanceHolder } from 'shared/types/models';
+import { IEthereumEvent, IFinanceTransaction, IFinanceHolder } from 'shared/types/models';
 import { ONE_ERC20 } from 'shared/constants';
 import { addressesEqual } from 'shared/helpers/web3';
+import { makeStoreFromEvents } from 'shared/helpers/makeStoreFromEvents';
 
-import { IEvent, IFinanceState } from './types';
-import { getStore } from './getStore';
+import { IFinanceState } from './types';
 
-type VaultEvent = IEvent<'MockEventName', {
+type VaultEvent = IEthereumEvent<'MockEventName', {
   token: string;
 }>;
 
-type NewTransactionEvent = IEvent<'NewTransaction', {
+type NewTransactionEvent = IEthereumEvent<'NewTransaction', {
   reference: string;
   transactionId: string;
 }>;
@@ -45,7 +45,7 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
   const vaultProxy = new ContractProxy(vaultAddress, vaultAbi, web3);
   await vaultProxy.updateInitializationBlock();
 
-  return getStore(
+  return makeStoreFromEvents(
     async (state: IFinanceState, events: Event[], isCompleteLoading: boolean): Promise<IFinanceState> => {
       const vaultMainCoinEvents = events
         .filter((event): event is VaultEvent => event.address === vaultAddress)

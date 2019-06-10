@@ -1,12 +1,11 @@
 import { from, merge, Observable, ConnectableObservable } from 'rxjs';
-import {
-  mergeScan, bufferTime, skipUntil, distinctUntilChanged, publishReplay, map,
-} from 'rxjs/operators';
-import { StoreReducer } from './types';
+import { mergeScan, bufferTime, skipUntil, distinctUntilChanged, publishReplay, map } from 'rxjs/operators';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 import { EventLog } from 'web3/types';
 
-export function getStore<S, E>(
+export type StoreReducer<S, E> = (state: S, events: E[] | EventLog[], isCompleteLoading: boolean) => Promise<S> | S;
+
+export function makeStoreFromEvents<S, E>(
   reducer: StoreReducer<S, E>,
   initial: S,
   proxies: ContractProxy[] = [],

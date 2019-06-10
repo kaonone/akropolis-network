@@ -5,12 +5,12 @@ import AragonWrapper from '@aragon/wrapper';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 
 import { currentAddress$, getCurrentAccount } from 'services/user';
-import { IVoting, VotingIntent, VotingDecision } from 'shared/types/models';
+import { IEthereumEvent, IVoting, VotingIntent, VotingDecision } from 'shared/types/models';
 import { ONE_ERC20 } from 'shared/constants';
 import { addressesEqual } from 'shared/helpers/web3';
+import { makeStoreFromEvents } from 'shared/helpers/makeStoreFromEvents';
 
-import { IEvent, IVotingState, ISimpleEvent } from './types';
-import { getStore } from './getStore';
+import { IVotingState, ISimpleEvent } from './types';
 
 const ACCOUNTS_TRIGGER = Symbol('ACCOUNTS_TRIGGER');
 export const EMPTY_CALLSCRIPT = '0x00000001';
@@ -34,16 +34,16 @@ interface IVoteFromContract {
   yea: string;
 }
 
-type CastVote = IEvent<'CastVote', {
+type CastVote = IEthereumEvent<'CastVote', {
   voteId: string;
   voter: string;
 }>;
 
-type ExecuteVote = IEvent<'ExecuteVote', {
+type ExecuteVote = IEthereumEvent<'ExecuteVote', {
   voteId: string;
 }>;
 
-type StartVote = IEvent<'StartVote', {
+type StartVote = IEthereumEvent<'StartVote', {
   voteId: string;
   creator: string;
   metadata: string;
@@ -90,7 +90,7 @@ export async function createVotingStore(wrapper: AragonWrapper, proxy: ContractP
     })),
   );
 
-  return getStore(
+  return makeStoreFromEvents(
     async (state: IVotingState, events: Event[], isCompleteLoading: boolean): Promise<IVotingState> => {
       const eventsForReloadVotings: Array<Event['event']> = ['CastVote', 'ExecuteVote', 'StartVote'];
       const votingIdsForReload = events
