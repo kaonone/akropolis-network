@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import getApm, { ApmOptions } from '@aragon/apm';
 import { getRecommendedGasLimit } from '@aragon/wrapper/dist/utils';
 import { Contract, TransactionObject } from 'web3/types';
+import { LAST_STABLE_TEMPLATE_VERSION } from 'core/constants';
 
 export interface IBuilderOptions {
   apmOptions: ApmOptions;
@@ -65,7 +66,7 @@ export const getBuilder = (from: string, { apmOptions, defaultGasPriceFn, web3 }
     tokenParams: IParamsWithGasOptions<TokenParams>,
     instanceParams: IParamsWithGasOptions<InstanceParams>,
   ): Promise<[Promise<string>, Promise<string>]> => {
-    const { contractAddress, abi } = await apm.getLatestVersion(templateEnsId);
+    const { contractAddress, abi } = await apm.getVersion(templateEnsId, LAST_STABLE_TEMPLATE_VERSION);
     if (!contractAddress) {
       throw new Error(`No contract found on APM for template '${templateEnsId}'`);
     }

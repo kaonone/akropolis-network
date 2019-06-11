@@ -6,7 +6,7 @@ import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 import { Observable, Subscription } from 'rxjs';
 import { observable, runInAction } from 'mobx';
 
-import { web3Providers, NETWORK_CONFIG, TEMPLATE_ENS_ID } from 'core/constants';
+import { web3Providers, NETWORK_CONFIG, TEMPLATE_ENS_ID, LAST_STABLE_TEMPLATE_VERSION } from 'core/constants';
 
 import { Provider, IEthereumEvent } from 'shared/types/models';
 import { makeStoreFromEvents } from 'shared/helpers/makeStoreFromEvents';
@@ -69,7 +69,7 @@ export class DaosStore {
       const web3 = getWeb3(provider);
       const apm = getApm(web3, apmOptions);
 
-      const { contractAddress, abi } = await apm.getLatestVersion(TEMPLATE_ENS_ID);
+      const { contractAddress, abi } = await apm.getVersion(TEMPLATE_ENS_ID, LAST_STABLE_TEMPLATE_VERSION);
 
       if (!abi || !contractAddress) {
         throw new Error(`ABI or address for template ${TEMPLATE_ENS_ID} is not fount`);

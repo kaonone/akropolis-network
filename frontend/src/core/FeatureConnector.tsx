@@ -18,7 +18,7 @@ const bundles = new Map<FeatureLoader, IFeatureEntry<any, any, any>>();
 
 // tslint:disable:max-line-length
 function featureConnect<L extends Record<string, FeatureLoader>>(loaders: L, preloader?: React.ReactChild):
-  <Props extends { [K in keyof L]: any }>(WrappedComponent: React.ComponentType<Props>) => React.ComponentType<Omit<Props, keyof L>> {
+  <Props extends { [K in keyof L]: any }>(WrappedComponent: React.ComponentType<Props>) => React.ComponentClass<Omit<Props, keyof L>> {
 
   return <Props extends { [K in keyof L]: any }>(
     WrappedComponent: React.ComponentType<Props>,

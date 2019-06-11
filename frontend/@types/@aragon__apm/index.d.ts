@@ -18,6 +18,10 @@ declare module '@aragon/apm' {
       contractAddress?: string;
       abi?: any[];
     }>;
+    getVersion(ensId: string, version: readonly [number, number, number]): Promise<{
+      contractAddress?: string;
+      abi?: any[];
+    }>;
   }
 
   function getApm(web3: Web3, options: ApmOptions): Apm;
