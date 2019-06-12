@@ -9,6 +9,11 @@ const styles = ({ extra: theme }: Theme) => {
   const horizontalCellPadding = theme.spacing.unit * 1.5;
 
   return {
+
+    table: rule({
+      marginTop: '-1rem',
+    }),
+
     row: rule({
       boxShadow: bottomBorder,
       borderRadius,

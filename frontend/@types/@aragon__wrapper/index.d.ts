@@ -44,9 +44,9 @@ declare module '@aragon/wrapper' {
   export interface IDescribedPathSegment extends IDecodedPathSegment {
     data: string;
     to: string;
-    description: string,
+    description?: string;
     annotatedDescription: IAnnotatedDescription[],
-    name: string;
+    name?: string;
     identifier: string;
   }
 

@@ -9,7 +9,7 @@ export default (vote: IVoting) => {
 
   const yeaPercentByPower = yea / (votingPower) * 100;
   const nayPercentByPower = nay / (votingPower) * 100;
-  const currentResult: VotingResult = yeaPercent >= supportRequired && votedPercent >= minAcceptQuorum
+  const currentResult: VotingResult = yeaPercent > supportRequired && votedPercent >= minAcceptQuorum
     ? 'confirmed'
     : 'rejected';
 

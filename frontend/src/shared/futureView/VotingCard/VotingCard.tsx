@@ -10,6 +10,7 @@ import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { ContainedCircleArrow, OutlinedCircleArrow } from 'shared/view/elements/Icons';
 import { useDaoApi } from 'services/daoApi';
 import { votingTimeout, calculateVotingStats, useVotingStatus } from 'shared/helpers/voting';
+import { useIsMember } from 'services/user';
 
 import VotingProgress from './VotingProgress/VotingProgress';
 import VotingResult from './VotingResult/VotingResult';
@@ -32,6 +33,7 @@ function VotingCard(props: StylesProps & IOwnProps) {
   const { id, intent, startDate, minAcceptQuorum } = voting;
   const { t } = useTranslate();
   const daoApi = useDaoApi();
+  const isMember = useIsMember(daoApi);
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -118,6 +120,7 @@ function VotingCard(props: StylesProps & IOwnProps) {
             votingStatus={votingStatus}
             yeaPercent={yeaPercentByPower}
             nayPercent={nayPercentByPower}
+            canExecute={isMember}
           />
         </Grid>
       }

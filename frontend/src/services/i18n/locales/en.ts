@@ -108,6 +108,7 @@ export default {
       approved: 'Approved',
       declined: 'Declined',
       executeVote: 'Execute voting',
+      waitingForExecution: 'Waiting for execution',
     },
     members: {
       address: 'Address',
@@ -154,7 +155,7 @@ export default {
       cooperativeBalance: 'Co-op Balance',
       cooperativeGoal: 'Co-op Goal',
       personalInformation: 'Personal Information',
-      deposit: 'Deposit',
+      deposit: 'Balance',
       earn: 'Earn',
       forMembers: 'For members',
       accessToLoan: 'Access to loan',

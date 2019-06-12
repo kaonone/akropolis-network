@@ -17,13 +17,14 @@ interface IOwnProps {
   votingStatus: VotingStatus;
   yeaPercent: number;
   nayPercent: number;
+  canExecute: boolean;
 }
 
 type IProps = StylesProps & IOwnProps;
 
 export default React.memo(provideStyles((props: IProps) => {
 
-  const { classes, voteId, yeaPercent, nayPercent, votingStatus } = props;
+  const { classes, voteId, yeaPercent, nayPercent, votingStatus, canExecute } = props;
 
   const [isRequesting, setIsRequesting] = React.useState(false);
 
@@ -31,7 +32,7 @@ export default React.memo(provideStyles((props: IProps) => {
   return (
     <>
       <Grid container spacing={16} justify="center" direction="column">
-        {votingStatus === 'execute-needed' &&
+        {votingStatus === 'execute-needed' && canExecute &&
           <Grid item xs={12}>
             <ExecuteVoteButtonAsync
               fullWidth
@@ -43,8 +44,11 @@ export default React.memo(provideStyles((props: IProps) => {
             >
               {t(tKeys.executeVote.getKey())}
             </ExecuteVoteButtonAsync>
-          </Grid>
-        }
+          </Grid>}
+        {votingStatus === 'execute-needed' && !canExecute &&
+          <Grid item xs={12}>
+            <Typography variant="h6" weight="medium">{t(tKeys.waitingForExecution.getKey())}</Typography>
+          </Grid>}
         {(votingStatus === 'confirmed' || votingStatus === 'rejected') &&
           <Grid item>
             <Grid container wrap="nowrap" alignItems="center" justify="center">
