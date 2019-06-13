@@ -66,7 +66,7 @@ export default React.memo(provideStyles((props: IProps) => {
                 {t(tKeysShared.yes.getKey())}
               </Typography>{' '}
               <Typography component="span" variant="subtitle1" weight="bold" className={classes.votingFor}>
-                {formatPercent(yeaPercent)}
+                {formatPercent(yeaPercent, 2)}
               </Typography>
             </Grid>
             <Grid item>
@@ -74,7 +74,7 @@ export default React.memo(provideStyles((props: IProps) => {
                 {t(tKeysShared.no.getKey())}
               </Typography>{' '}
               <Typography component="span" variant="subtitle1" weight="bold" className={classes.votingAgainst}>
-                {formatPercent(nayPercent)}
+                {formatPercent(nayPercent, 2)}
               </Typography>
             </Grid>
           </Grid>

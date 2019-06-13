@@ -33,6 +33,7 @@ function CooperativeChart(props: IProps) {
           variant="secondary"
           totalValue={totalGoal}
           currentValue={Math.min(currentBalance, totalGoal)}
+          progressPrecision={2}
           className={classes.progress}
         />
       </Grid>

@@ -89,7 +89,7 @@ function VotingCard(props: StylesProps & IOwnProps) {
           {renderColumn(timeLeftTitle, timeLeftValue)}
           {renderColumn(
             t(tKeys.voted.getKey()),
-            formatPercent(votedPercent),
+            formatPercent(votedPercent, 2),
             `${formatPercent(minAcceptQuorum)} ${t(tKeys.needed.getKey())}`,
           )}
           {(intent.type === 'withdrawRequest' || intent.type === 'invest') && (

@@ -14,12 +14,13 @@ interface IOwnProps {
   totalValue: number;
   currentValue: number;
   className?: string;
+  progressPrecision?: number;
 }
 
 type IProps = IOwnProps & StylesProps;
 
 function ProgressBar(props: IProps) {
-  const { classes, totalValue, currentValue, className, variant } = props;
+  const { classes, totalValue, currentValue, className, variant, progressPrecision } = props;
   const relativeValue = currentValue / totalValue * 100;
   const { t } = useTranslate();
   return (
@@ -56,7 +57,7 @@ function ProgressBar(props: IProps) {
           weight="medium"
           className={classes.percent}
         >
-          {formatPercent(relativeValue, 0)}
+          {formatPercent(relativeValue, progressPrecision)}
         </Typography>
         {variant === 'secondary' && <Typography variant="body2" className={classes.goal}>
           {`${t(tKeys.dao.goal.getKey())}: ${formatDAI(totalValue)}`}
