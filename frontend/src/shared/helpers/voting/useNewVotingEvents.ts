@@ -8,11 +8,11 @@ const useNewVotingEvents = (daoApi: DaoApi, votes: IVoting[]) => {
   const votingStateFields = useFieldsForVotingStatus(daoApi);
   const isMember = useIsMember(daoApi);
 
-  return votes
+  return !isMember ? [] : votes
     .filter(vote => vote.intent.type !== 'unknown')
     .filter(vote => {
       const votingStatus = getVotingStatus(votingStateFields, vote);
-      return isMember && (votingStatus === 'vote-needed' || votingStatus === 'execute-needed');
+      return votingStatus === 'vote-needed' || votingStatus === 'execute-needed';
     });
 };
 

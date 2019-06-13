@@ -3,14 +3,15 @@ import * as cn from 'classnames';
 import * as moment from 'moment';
 import { useObserver } from 'mobx-react-lite';
 
-import { VotingDecision, IVoting, VotingStatus } from 'shared/types/models/Voting';
-import { Typography, Grid } from 'shared/view/elements';
-import { formatPercent } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
-import { ContainedCircleArrow, OutlinedCircleArrow } from 'shared/view/elements/Icons';
-import { useDaoApi } from 'services/daoApi';
-import { votingTimeout, calculateVotingStats, useVotingStatus } from 'shared/helpers/voting';
 import { useIsMember } from 'services/user';
+import { useDaoApi } from 'services/daoApi';
+
+import { VotingDecision, IVoting, VotingStatus } from 'shared/types/models/Voting';
+import { formatPercent } from 'shared/helpers/format';
+import { votingTimeout, calculateVotingStats, useVotingStatus } from 'shared/helpers/voting';
+import { Typography, Grid } from 'shared/view/elements';
+import { ContainedCircleArrow, OutlinedCircleArrow } from 'shared/view/elements/Icons';
 
 import VotingProgress from './VotingProgress/VotingProgress';
 import VotingResult from './VotingResult/VotingResult';

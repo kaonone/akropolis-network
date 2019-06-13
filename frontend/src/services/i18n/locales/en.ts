@@ -155,7 +155,7 @@ export default {
       cooperativeBalance: 'Co-op Balance',
       cooperativeGoal: 'Co-op Goal',
       personalInformation: 'Personal Information',
-      deposit: 'Balance',
+      balance: 'Balance',
       earn: 'Earn',
       forMembers: 'For members',
       accessToLoan: 'Access to loan',

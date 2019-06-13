@@ -112,7 +112,7 @@ export async function createVotingStore(wrapper: AragonWrapper, proxy: ContractP
 
       const currentAddress = await getCurrentAccount();
       const isChangedAccount = !!events.find(item => item.event === ACCOUNTS_TRIGGER);
-      const getIdsForLoading = getIdsForLoadingMaker(votings, events, isChangedAccount);
+      const getIdsForLoading = makeIdsForLoadingGetter(votings, events, isChangedAccount);
 
       const votingIdsForReloadAccountVote = getIdsForLoading(
         (item): item is StartVote | CastVote => (
@@ -147,7 +147,7 @@ export async function createVotingStore(wrapper: AragonWrapper, proxy: ContractP
  *                     *
  ***********************/
 
-function getIdsForLoadingMaker(
+function makeIdsForLoadingGetter(
   votings: Record<string, IVoting>,
   events: Event[],
   isChangedAccount: boolean) {

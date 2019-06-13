@@ -25,14 +25,14 @@ const getDays = (startDate: number) => {
 };
 
 interface IOwnProps {
-  deposit: number;
+  balance: number;
   earn: number;
 }
 
 type IProps = IOwnProps & StylesProps;
 
 const PersonalInformation = (props: IProps) => {
-  const { classes, deposit, earn } = props;
+  const { classes, balance, earn } = props;
   const { t } = useTranslate();
   const daoApi = useDaoApi();
   const lastJoinTransaction = useLastConfirmedJoinVoting(daoApi);
@@ -48,10 +48,10 @@ const PersonalInformation = (props: IProps) => {
       </Typography>
       <div className={classes.metricRow}>
         <Typography component="div" variant="overline" className={classes.subTitle}>
-          {t(tKeys.deposit.getKey())}
+          {t(tKeys.balance.getKey())}
         </Typography>
         <Typography component="div" variant="h6">
-          {formatDAI(deposit)}
+          {formatDAI(balance)}
         </Typography>
       </div>
       <div className={classes.metricRow}>
