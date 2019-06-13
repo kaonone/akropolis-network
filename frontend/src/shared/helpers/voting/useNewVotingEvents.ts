@@ -1,11 +1,14 @@
 import { DaoApi } from 'services/daoApi';
 import { IVoting } from 'shared/types/models';
+import { useIsMember } from 'services/user';
 
 import { useFieldsForVotingStatus, getVotingStatus } from './votingStatus';
 
 const useNewVotingEvents = (daoApi: DaoApi, votes: IVoting[]) => {
   const votingStateFields = useFieldsForVotingStatus(daoApi);
-  return votes
+  const isMember = useIsMember(daoApi);
+
+  return !isMember ? [] : votes
     .filter(vote => vote.intent.type !== 'unknown')
     .filter(vote => {
       const votingStatus = getVotingStatus(votingStateFields, vote);

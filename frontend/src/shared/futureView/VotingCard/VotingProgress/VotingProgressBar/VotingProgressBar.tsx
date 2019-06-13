@@ -20,7 +20,7 @@ export default React.memo(provideStyles((props: IVotingProgressBarProps & Styles
     <div className={classes.root}>
       <Grid container justify="space-between" wrap="nowrap">
         <Typography component="span" variant="subtitle1">{title}</Typography>
-        <Typography component="span" variant="subtitle1" weight="medium">{formatPercent(value)}</Typography>
+        <Typography component="span" variant="subtitle1" weight="medium">{formatPercent(value, 2)}</Typography>
       </Grid>
       <div className={classes.progressBar}>
         <div

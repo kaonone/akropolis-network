@@ -112,25 +112,18 @@ export async function createVotingStore(wrapper: AragonWrapper, proxy: ContractP
 
       const currentAddress = await getCurrentAccount();
       const isChangedAccount = !!events.find(item => item.event === ACCOUNTS_TRIGGER);
+      const getIdsForLoading = makeIdsForLoadingGetter(votings, events, isChangedAccount);
 
-      const votingIdsForReloadAccountVote = isChangedAccount
-        ? Object.values(votings).map(item => item.id)
-        : events
-          .filter((item): item is StartVote | CastVote => (
-            item.event === 'StartVote' ||
-            item.event === 'CastVote' && addressesEqual(item.returnValues.voter, currentAddress)
-          ))
-          .map(item => item.returnValues.voteId);
-
+      const votingIdsForReloadAccountVote = getIdsForLoading(
+        (item): item is StartVote | CastVote => (
+          item.event === 'StartVote' ||
+          item.event === 'CastVote' && addressesEqual(item.returnValues.voter, currentAddress)
+        ),
+      );
       const loadedConnectedAccountVotes = await loadAccountVotes(proxy, votingIdsForReloadAccountVote, currentAddress);
       const connectedAccountVotes = R.mergeDeepRight(state.connectedAccountVotes, loadedConnectedAccountVotes);
 
-      const votingIdsForReloadCanVote = isChangedAccount
-        ? Object.values(votings).map(item => item.id)
-        : events
-          .filter((item): item is StartVote => item.event === 'StartVote')
-          .map(item => item.returnValues.voteId);
-
+      const votingIdsForReloadCanVote = getIdsForLoading((item: StartVote) => item.event === 'StartVote');
       const loadedCanVoteConnectedAccount = await loadCanVotes(proxy, votingIdsForReloadCanVote, currentAddress);
       const canVoteConnectedAccount = R.mergeDeepRight(state.canVoteConnectedAccount, loadedCanVoteConnectedAccount);
 
@@ -153,6 +146,18 @@ export async function createVotingStore(wrapper: AragonWrapper, proxy: ContractP
  *       Helpers       *
  *                     *
  ***********************/
+
+function makeIdsForLoadingGetter(
+  votings: Record<string, IVoting>,
+  events: Event[],
+  isChangedAccount: boolean) {
+
+  return (predicate: (event: Event) => boolean) => (
+    isChangedAccount
+      ? Object.values(votings).map(item => item.id)
+      : events.filter(predicate).map((item: StartVote | CastVote | ExecuteVote) => item.returnValues.voteId));
+}
+
 async function loadCanVotes(
   proxy: ContractProxy, voteIds: string[], connectedAccount: string,
 ): Promise<Record<string, boolean>> {
@@ -245,29 +250,37 @@ function calculateVotingIntent(intentDetails: IVoting['intentDetails']): VotingI
   const addressRegexStr = '0x[a-fA-F0-9]{40}';
   const details = intentDetails[0];
 
-  if (details.name.startsWith('Token') && details.description.startsWith('Mint')) {
-    const [, address] = details.description.match(new RegExp(`^.+?(${addressRegexStr})$`)) || ([] as string[]);
-    return {
-      type: 'joinToDao',
-      payload: { address },
-    };
-  }
+  try {
+    if (!details.name || !details.description) {
+      return { type: 'unknown' };
+    }
 
-  if (details.name.startsWith('Finance') && details.description.startsWith('Create a new payment')) {
-    const [, amount, to, reason] = details.description.match(
-      new RegExp(`^Create a new payment of ([0-9.]+?) .+? to (${addressRegexStr}).+?'(.*)'$`),
-    ) || ([] as string[]);
-    return {
-      type: 'withdrawRequest',
-      payload: {
-        to,
-        reason,
-        amount: parseFloat(amount),
-      },
-    };
-  }
+    if (details.name.startsWith('Token') && details.description.startsWith('Mint')) {
+      const [, address] = details.description.match(new RegExp(`^.+?(${addressRegexStr})$`)) || ([] as string[]);
+      return {
+        type: 'joinToDao',
+        payload: { address },
+      };
+    }
 
-  return { type: 'unknown' };
+    if (details.name.startsWith('Finance') && details.description.startsWith('Create a new payment')) {
+      const [, amount, to, reason] = details.description.match(
+        new RegExp(`^Create a new payment of ([0-9.]+?) .+? to (${addressRegexStr}).+?'(.*)'$`),
+      ) || ([] as string[]);
+      return {
+        type: 'withdrawRequest',
+        payload: {
+          to,
+          reason,
+          amount: parseFloat(amount),
+        },
+      };
+    }
+    return { type: 'unknown' };
+  } catch (e) {
+    console.error(e);
+    return { type: 'unknown' };
+  }
 }
 
 async function loadVotingDescription(

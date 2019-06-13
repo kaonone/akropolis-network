@@ -3,13 +3,15 @@ import * as cn from 'classnames';
 import * as moment from 'moment';
 import { useObserver } from 'mobx-react-lite';
 
-import { VotingDecision, IVoting, VotingStatus } from 'shared/types/models/Voting';
-import { Typography, Grid } from 'shared/view/elements';
-import { formatPercent } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
-import { ContainedCircleArrow, OutlinedCircleArrow } from 'shared/view/elements/Icons';
+import { useIsMember } from 'services/user';
 import { useDaoApi } from 'services/daoApi';
+
+import { VotingDecision, IVoting, VotingStatus } from 'shared/types/models/Voting';
+import { formatPercent } from 'shared/helpers/format';
 import { votingTimeout, calculateVotingStats, useVotingStatus } from 'shared/helpers/voting';
+import { Typography, Grid } from 'shared/view/elements';
+import { ContainedCircleArrow, OutlinedCircleArrow } from 'shared/view/elements/Icons';
 
 import VotingProgress from './VotingProgress/VotingProgress';
 import VotingResult from './VotingResult/VotingResult';
@@ -32,6 +34,7 @@ function VotingCard(props: StylesProps & IOwnProps) {
   const { id, intent, startDate, minAcceptQuorum } = voting;
   const { t } = useTranslate();
   const daoApi = useDaoApi();
+  const isMember = useIsMember(daoApi);
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -86,7 +89,7 @@ function VotingCard(props: StylesProps & IOwnProps) {
           {renderColumn(timeLeftTitle, timeLeftValue)}
           {renderColumn(
             t(tKeys.voted.getKey()),
-            formatPercent(votedPercent),
+            formatPercent(votedPercent, 2),
             `${formatPercent(minAcceptQuorum)} ${t(tKeys.needed.getKey())}`,
           )}
           {(intent.type === 'withdrawRequest' || intent.type === 'invest') && (
@@ -118,6 +121,7 @@ function VotingCard(props: StylesProps & IOwnProps) {
             votingStatus={votingStatus}
             yeaPercent={yeaPercentByPower}
             nayPercent={nayPercentByPower}
+            canExecute={isMember}
           />
         </Grid>
       }
