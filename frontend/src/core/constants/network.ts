@@ -20,7 +20,7 @@ const networkConfigs: Record<string, INetworkConfig> = {
     id: 4,
     type: 'rinkeby',
     rpcUrl: 'https://rinkeby.infura.io/',
-    daiContract: '0x2d1420F4ceE004C348d58E7B28869AF8C5372323',
+    daiContract: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
     aktContract: NULL_ADDRESS,
     c2fcContract: '0xb272fA8bD66fbD310165d322Febd5e275081f886',
     aragonEnsRegistry: '0x98df287b6c145399aaa709692c8d308357bc085d',
