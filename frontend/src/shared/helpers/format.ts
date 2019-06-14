@@ -6,8 +6,8 @@ export function formatUSD(value: number, precision: number = 2): string {
   return accounting.formatMoney(value, { precision });
 }
 
-export function formatDAI(value: number): string {
-  return `${accounting.formatNumber(value, 0)} DAI`;
+export function formatDAI(value: number, precision: number = 0): string {
+  return `${accounting.formatNumber(value, precision)} DAI`;
 }
 
 export const formatNumber = accounting.formatNumber;

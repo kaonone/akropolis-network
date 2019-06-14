@@ -51,6 +51,10 @@ declare module '_helpers' {
     [key in K]?: T[key];
   }
 
+  export type MarkAsRequired<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> & {
+    [key in K]-?: Exclude<T[key], void>;
+  }
+
   export type MarkNotIdentityProps<T, R> = {
     [K in keyof T & keyof R]: CheckIdentity<T[K], R[K]>;
   }

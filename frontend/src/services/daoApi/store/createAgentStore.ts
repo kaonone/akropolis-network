@@ -50,7 +50,7 @@ export const initialAgentState: IAgentState = {
     compound: {
       balance: new BigNumber(0),
       currentRate: new BigNumber(0),
-      earn: new BigNumber(0),
+      earned: new BigNumber(0),
       isEnabled: false,
     },
   },
@@ -102,7 +102,7 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
       const compound: IInvestmentState = needToUpdateCompoundState ? {
         balance: await investments.compound.getBalance(agentProxy.address),
         currentRate: await investments.compound.getCurrentRate(),
-        earn: await investments.compound.getEarn(agentProxy.address),
+        earned: await investments.compound.getEarn(agentProxy.address),
         isEnabled: await investments.compound.isEnabled(agentProxy.address),
       } : state.investments.compound;
 

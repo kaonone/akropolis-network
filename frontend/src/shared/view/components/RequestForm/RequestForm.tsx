@@ -38,7 +38,7 @@ function RequestForm(props: IProps) {
   } = props;
 
   return (
-    <Form subscription={{ submitting: true }} {...formRest} >
+    <Form {...formRest} subscription={{ ...formRest.subscription, submitting: true }} >
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <Grid container spacing={40}>

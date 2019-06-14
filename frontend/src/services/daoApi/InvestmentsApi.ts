@@ -56,12 +56,14 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
     },
 
     getCurrentRate: async () => {
-      const rate = await this.base.callExternal<string>(
+      const secondsInYear = 360 * 24 * 60 * 60;
+      const secondsPerBlock = 15;
+      const ratePerBlock = await this.base.callExternal<string>(
         NETWORK_CONFIG.daiCompound,
         CompoundABI,
         'supplyRatePerBlock',
       );
-      return new BigNumber(rate).div(ONE_ERC20);
+      return new BigNumber(ratePerBlock).div(ONE_ERC20).times(secondsInYear).div(secondsPerBlock).times(100);
     },
   };
 

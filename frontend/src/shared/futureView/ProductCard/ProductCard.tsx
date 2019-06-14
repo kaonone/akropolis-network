@@ -2,55 +2,74 @@ import * as React from 'react';
 import * as cn from 'classnames';
 
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
-import { Grid, Typography, Button } from 'shared/view/elements';
-import { formatPercent, formatDAI } from 'shared/helpers/format';
+
+import {
+  IInvestmentState, InvestmentStatus, InvestmentType, InvestmentCategory, FutureInvestmentType, IInvestmentApi,
+} from 'shared/types/models';
+import { AsyncActionButton } from 'shared/view/components';
+import { NumberInputField } from 'shared/view/form';
+import { Grid, Typography } from 'shared/view/elements';
 import { Settings, Info } from 'shared/view/elements/Icons';
-import { CompoundStatus, ICompound, CompoundType } from 'shared/types/models/Compound';
+import { formatPercent, formatDAI } from 'shared/helpers/format';
+import { isRequired } from 'shared/validators';
 
 import { StylesProps, provideStyles } from './ProductCard.style';
 
-import AIcon from './icons/A.svg';
-import BIcon from './icons/B.svg';
-import CIcon from './icons/C.svg';
-import DIcon from './icons/D.svg';
-import EIcon from './icons/E.svg';
+import CompoundIcon from './icons/CompoundIcon.svg';
+import DharmaIcon from './icons/DharmaIcon.svg';
+import SetIcon from './icons/SetIcon.svg';
+import UmaIcon from './icons/UmaIcon.svg';
+import MelonportIcon from './icons/MelonportIcon.svg';
 
-const compound = { balance: 0, earned: 0, status: 'waiting' as CompoundStatus, coin: 'APR', annualPercent: 0 };
-
-// tslint:disable:max-line-length
-const compoundA: ICompound = { ...compound, icon: AIcon, type: 'saving', status: 'need-enable', annualPercent: 7.47, description: 'Supply money to compound and earn interest' };
-const compoundB: ICompound = { ...compound, icon: BIcon, type: 'investment', description: 'Invest in set-and-forget auto-rebalancing strategies' };
-const compoundC: ICompound = { ...compound, icon: CIcon, type: 'credit', description: 'Lend money to Dharma Protocol and earn 14% APR' };
-const compoundD: ICompound = { ...compound, icon: DIcon, type: 'saving', status: 'active', description: 'Buy S&500 index supported by UMA Protocol' };
-const compoundE: ICompound = { ...compound, icon: EIcon, type: 'saving', coin: 'YTD', description: 'Delegate investment management to a professional' };
-
-export const mockCompounds = [compoundA, compoundB, compoundC, compoundD, compoundE];
-
-const tKeys = tKeysAll.features.compound;
+const tKeys = tKeysAll.features.investments;
 
 const gridContainerProps = { container: true, wrap: 'nowrap', alignItems: 'center' } as any;
 
-const translateKeyByType: Record<CompoundType, string> = {
-  saving: tKeys.saving.getKey(),
-  credit: tKeys.credit.getKey(),
-  investment: tKeys.investment.getKey(),
+const categoryByType: Record<InvestmentType | FutureInvestmentType, InvestmentCategory> = {
+  compound: 'saving',
+  dharma: 'credit',
+  set: 'investment',
+  uma: 'investment',
+  melonport: 'investment',
+};
+
+const iconByType: Record<InvestmentType | FutureInvestmentType, string> = {
+  compound: CompoundIcon,
+  dharma: DharmaIcon,
+  set: SetIcon,
+  uma: UmaIcon,
+  melonport: MelonportIcon,
 };
 
 interface IOwnProps {
-  compound: ICompound;
-  onWithdraw?(): void;
-  onSupply?(): void;
-  onEnable?(): void;
+  state: IInvestmentState;
+  api: IInvestmentApi;
+  type: InvestmentType | FutureInvestmentType;
+  disabled?: boolean;
 }
 
 type IProps = StylesProps & IOwnProps;
 
-export const CompoundCard = React.memo(provideStyles((props: IProps) => {
-  const {
-    classes, onEnable, onWithdraw, onSupply,
-    compound: { type, description, icon, annualPercent, coin, balance, earned, status },
-  } = props;
+interface IFormData {
+  amount: number;
+}
+
+const fieldNames: { [key in keyof IFormData]: key } = {
+  amount: 'amount',
+};
+
+export const ProductCard = React.memo(provideStyles((props: IProps) => {
+  const { classes, api, state, type, disabled } = props;
+  const { balance, currentRate, earned, isEnabled } = state;
   const { t } = useTranslate();
+
+  const withdraw = React.useCallback(({ amount }: IFormData) => api.withdraw(amount), []);
+  const deposit = React.useCallback(({ amount }: IFormData) => api.deposit(amount), []);
+
+  const status: InvestmentStatus =
+    disabled && 'waiting' ||
+    isEnabled && 'active' ||
+    'need-enable';
 
   const metric = React.useCallback((title: string, value: string) => (
     <Grid item xs={6}>
@@ -59,7 +78,17 @@ export const CompoundCard = React.memo(provideStyles((props: IProps) => {
     </Grid>
   ), []);
 
-  const footerByStatus: Record<CompoundStatus, () => React.ReactNode> = {
+  const formFields = [(
+    <NumberInputField
+      suffix=" DAI"
+      name={fieldNames.amount}
+      label={t(tKeys.fields.amount.getKey())}
+      validate={isRequired}
+      fullWidth
+    />
+  )];
+
+  const footerByStatus: Record<InvestmentStatus, () => React.ReactNode> = {
     ['waiting']: () => (
       <Grid {...gridContainerProps} justify="center" className={classes.waiting} >
         <Settings className={classes.waitingIcon} />
@@ -74,22 +103,49 @@ export const CompoundCard = React.memo(provideStyles((props: IProps) => {
         </Grid>
         <Grid item xs={7}>
           <Typography variant="subtitle1" className={classes.enableLabel}>
-            {t(tKeys.needEnableCompound.getKey())}
+            {t(tKeys.needEnableDescription[type].getKey())}
           </Typography>
         </Grid>
         <Grid item className={classes.enableButton} xs={4}>
-          <Button onClick={onEnable} color="primary" variant="contained" fullWidth>
-            {t(tKeys.enable.getKey())}
-          </Button>
+          <AsyncActionButton
+            buttonProps={{
+              fullWidth: true,
+              color: 'primary',
+            }}
+            buttonText={t(tKeys.enable.getKey())}
+            executeAction={api.enable}
+          />
         </Grid>
       </Grid>),
     ['active']: () => (
       <Grid {...gridContainerProps} justify="space-between" spacing={24} className={classes.actionsButton}>
         <Grid item xs={6}>
-          <Button onClick={onWithdraw} color="primary" variant="contained" fullWidth>{t(tKeys.withdraw.getKey())}</Button>
+          <AsyncActionButton
+            buttonProps={{
+              fullWidth: true,
+              color: 'primary',
+            }}
+            buttonText={t(tKeys.withdraw.getKey())}
+            executeAction={withdraw}
+            form={{
+              title: t(tKeys.withdrawModalTitle[type].getKey()),
+              fields: formFields,
+            }}
+          />
         </Grid>
         <Grid item xs={6}>
-          <Button onClick={onSupply} color="primary" variant="contained" fullWidth>{t(tKeys.supply.getKey())}</Button>
+          <AsyncActionButton
+            buttonProps={{
+              fullWidth: true,
+              color: 'primary',
+            }}
+            buttonText={t(tKeys.supply.getKey())}
+            executeAction={deposit}
+            form={{
+              title: t(tKeys.supplyModalTitle[type].getKey()),
+              fields: formFields,
+            }}
+          />
         </Grid>
       </Grid>),
   };
@@ -103,22 +159,21 @@ export const CompoundCard = React.memo(provideStyles((props: IProps) => {
           component="div"
           className={classes.typeBadge}
         >
-          {t(translateKeyByType[type])}
+          {t(tKeys.categories[categoryByType[type]].getKey())}
         </Typography>
-        <Typography className={classes.title} variant="body2">{description}</Typography>
+        <Typography className={classes.title} variant="body2">{t(tKeys.descriptions[type].getKey())}</Typography>
       </Grid>
       <div className={cn(classes.content, { [classes.isDisabled]: status === 'waiting' })}>
         <Grid {...gridContainerProps} className={classes.profit}>
-          <img src={icon} className={classes.icon} />
+          <img src={iconByType[type]} className={classes.icon} />
           <Typography variant="h6" className={classes.annualProfit}>
-            {formatPercent(annualPercent, 2)}{' '}
-            {coin}
+            {formatPercent(currentRate.toNumber(), 2)}{' APR'}
           </Typography>
         </Grid>
 
         <Grid {...gridContainerProps} className={classes.metrics}>
-          {metric(t(tKeys.balance.getKey()), formatDAI(balance))}
-          {metric(t(tKeys.earned.getKey()), formatDAI(earned))}
+          {metric(t(tKeys.balance.getKey()), formatDAI(balance.toNumber(), 2))}
+          {metric(t(tKeys.earned.getKey()), formatDAI(earned.toNumber(), 2))}
         </Grid>
         {footerByStatus[status]()}
       </div>
