@@ -2,10 +2,12 @@ import { Observable, empty } from 'rxjs';
 import { observable, when } from 'mobx';
 
 import { BaseDaoApi } from '../BaseDaoApi';
+import { InvestmentsApi } from '../InvestmentsApi';
 import { createTokenManagerStore, initialTokenManagerState } from './createTokenManagerStore';
 import { createFinanceStore, initialFinanceState } from './createFinanceStore';
 import { createVotingStore, initialVotingState } from './createVotingStore';
-import { ITokenManagerState, IFinanceState, IVotingState } from './types';
+import { createAgentStore, initialAgentState } from './createAgentStore';
+import { ITokenManagerState, IFinanceState, IVotingState, IAgentState } from './types';
 
 export class DaoStore {
   @observable
@@ -20,18 +22,25 @@ export class DaoStore {
   public voting: IVotingState = initialVotingState;
   public voting$: Observable<IVotingState> = empty();
 
-  private base: BaseDaoApi;
+  @observable
+  public agent: IAgentState = initialAgentState;
+  public agent$: Observable<IAgentState> = empty();
 
-  public constructor(base: BaseDaoApi) {
+  private base: BaseDaoApi;
+  private investments: InvestmentsApi;
+
+  public constructor(base: BaseDaoApi, investments: InvestmentsApi) {
     this.base = base;
+    this.investments = investments;
   }
 
   public async initialize() {
     const tokenManagerApp = this.base.getAppByName('token-manager');
     const financeApp = this.base.getAppByName('finance');
     const votingApp = this.base.getAppByName('voting');
+    const agentApp = this.base.getAppByName('agent');
 
-    if (!tokenManagerApp || !financeApp || !votingApp) {
+    if (!tokenManagerApp || !financeApp || !votingApp || !agentApp) {
       throw new Error('Unable to initialize DaoStore because one of wrapper apps is missing');
     }
 
@@ -48,10 +57,17 @@ export class DaoStore {
     this.voting$ = await createVotingStore(this.base.wrapper, votingApp.proxy);
     this.voting$.subscribe(state => this.voting = state);
 
+    this.agent$ = await createAgentStore(this.base.wrapper, this.investments, {
+      agentProxy: agentApp.proxy,
+      financeProxy: financeApp.proxy,
+    });
+    this.agent$.subscribe(state => this.agent = state);
+
     await when(() => (
       !!this.tokenManager && this.tokenManager.ready &&
       !!this.finance && this.finance.ready &&
-      !!this.voting && this.voting.ready
+      !!this.voting && this.voting.ready &&
+      !!this.agent && this.agent.ready
     ));
   }
 }

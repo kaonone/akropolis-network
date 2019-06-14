@@ -8,6 +8,7 @@ interface INetworkConfig {
   type: string; // 'main' | 'kovan' | ...
   rpcUrl: string;
   daiContract: string;
+  daiCompound: string;
   aktContract: string;
   c2fcContract: string;
   aragonEnsRegistry: string;
@@ -21,6 +22,7 @@ const networkConfigs: Record<string, INetworkConfig> = {
     type: 'rinkeby',
     rpcUrl: 'https://rinkeby.infura.io/',
     daiContract: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
+    daiCompound: '0x6d7f0754ffeb405d23c51ce938289d4835be3b14',
     aktContract: NULL_ADDRESS,
     c2fcContract: '0xb272fA8bD66fbD310165d322Febd5e275081f886',
     aragonEnsRegistry: '0x98df287b6c145399aaa709692c8d308357bc085d',
@@ -34,6 +36,7 @@ const networkConfigs: Record<string, INetworkConfig> = {
     type: 'kovan',
     rpcUrl: 'https://kovan.infura.io/',
     daiContract: '0xC4375B7De8af5a38a93548eb8453a498222C4fF2',
+    daiCompound: NULL_ADDRESS,
     aktContract: '0xcfd6e4044dd6e6ce64aed0711f849c7b9134d7db',
     c2fcContract: '0xb272fA8bD66fbD310165d322Febd5e275081f886',
     aragonEnsRegistry: NULL_ADDRESS,
@@ -47,6 +50,7 @@ const networkConfigs: Record<string, INetworkConfig> = {
     type: 'main',
     rpcUrl: 'https://mainnet.infura.io/',
     daiContract: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
+    daiCompound: NULL_ADDRESS,
     aktContract: NULL_ADDRESS,
     c2fcContract: NULL_ADDRESS,
     aragonEnsRegistry: '0x314159265dd8dbb310642f98f50c066173c1259b',

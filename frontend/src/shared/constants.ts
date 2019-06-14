@@ -10,3 +10,5 @@ export const DEFAULT_ORDER_EXPIRATION_DURATION = new BigNumber(moment.duration(7
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const ZERO = new BigNumber(0);
 export const ONE_ERC20 = new BigNumber('1e18');
+export const ONE_С_ERC20 = new BigNumber('1e8');
+export const UINT256_MAX = new BigNumber(2).pow(256).minus(1).toFixed();
