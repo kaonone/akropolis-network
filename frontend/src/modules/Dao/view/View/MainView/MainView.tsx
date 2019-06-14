@@ -8,7 +8,7 @@ import routes from 'modules/routes';
 
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
 import { useDaoApi } from 'services/daoApi';
-import { useAccountAddress } from 'services/user';
+import { useAccountAddress, useIsMember } from 'services/user';
 import { JointToCooperativeButtonAsync } from 'features/jointToCooperative';
 import { RequestWithdrawButtonAsync } from 'features/requestWithdraw';
 import { RequestDepositButtonAsync } from 'features/requestDeposit';
@@ -79,14 +79,14 @@ function MainView(props: IProps) {
 
   const hasActiveJoinVoting: boolean = useHasActiveJoinVoting(daoApi, preparedVotes);
 
-  const userAccount = tokenHolders[userAccountAddress];
+  const isMember = useIsMember(daoApi);
   const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
 
   return (
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title={daoId}
-      actions={userAccount || hasActiveJoinVoting ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
+      actions={isMember || hasActiveJoinVoting ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
       additionalHeaderContent={(
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
@@ -99,7 +99,7 @@ function MainView(props: IProps) {
               withdrawDayAgo={daoOverview.withdraw.valueDayAgo}
             />
           </Grid>
-          {!!userAccount && (
+          {!!isMember && (
             <>
               <Grid item>
                 <RequestWithdrawButtonAsync />

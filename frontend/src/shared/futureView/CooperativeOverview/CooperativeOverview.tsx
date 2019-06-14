@@ -46,7 +46,7 @@ const CooperativeOverview = (props: StylesProps) => {
       </Grid>
       <Grid item xs={4}>
         <div className={classes.section}>
-          <PersonalInformation earn={0} deposit={userBalance} />
+          <PersonalInformation earn={0} balance={userBalance} />
         </div>
       </Grid>
     </Grid>

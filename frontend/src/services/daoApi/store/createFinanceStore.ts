@@ -20,6 +20,9 @@ type VaultEvent = IEthereumEvent<'MockEventName', {
 type NewTransactionEvent = IEthereumEvent<'NewTransaction', {
   reference: string;
   transactionId: string;
+  entity: string;
+  incoming: boolean;
+  amount: string;
 }>;
 
 type FinanceEvent = NewTransactionEvent;

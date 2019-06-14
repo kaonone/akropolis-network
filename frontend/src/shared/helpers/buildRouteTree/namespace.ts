@@ -31,7 +31,7 @@ export interface IRawRouteTree {
   [routeKey: string]: IRawRouteBranch;
 }
 
-type IRawRouteBranch = IRawRouteTree | IParam | (IRawRouteTree & IParam) | null;
+export type IRawRouteBranch = IRawRouteTree | IParam | (IRawRouteTree & IParam) | null;
 
 export function isRawRouteTree(value: IRawRouteBranch): value is IRawRouteTree {
   const isOnlyParam: boolean = isParamGuard(value) && !Object.keys(value).length;
@@ -39,12 +39,13 @@ export function isRawRouteTree(value: IRawRouteBranch): value is IRawRouteTree {
   return !isNull && !isOnlyParam;
 }
 
-export type RouteTree<T, Acc extends string = never, WithParam extends true | null = null> = {
-  [P in Extract<keyof T, string>]:
-  & RouteTree<T[P], AccumulateParamKey<T[P], Acc, P>, CheckWithParams<T[P], WithParam>>
-  & IGetPath<AccumulateParamKey<T[P], Acc, P>, CheckWithParams<T[P], WithParam>>
-  & IRoutableBase;
-};
+export type RouteTree<T extends IRawRouteTree, Acc extends string = never, WithParam extends true | null = null> = {
+  [P in Extract<keyof T, string>]: T[P] extends IRawRouteTree
+    ? RouteTree<T[P], AccumulateParamKey<T[P], Acc, P>, CheckWithParams<T[P], WithParam>>
+    : (
+      IRoutableBase & IGetPath<AccumulateParamKey<T[P], Acc, P>, CheckWithParams<T[P], WithParam>>
+    );
+} & IRoutableBase & IGetPath<AccumulateParamKey<T, Acc, never>, CheckWithParams<T, WithParam>>;
 
 type AccumulateParamKey<T, Acc extends string, Cur extends string> =
   T extends IParam ? Acc | Cur : Acc;

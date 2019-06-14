@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { IHolder, IFinanceHolder, IFinanceTransaction, IVoting, VotingDecision } from 'shared/types/models';
+import { InvestmentType, IInvestmentState } from 'shared/types/models/Investment';
 
 export interface IVotingState {
   config: {
@@ -28,7 +29,13 @@ export interface IFinanceState {
   ready: boolean;
 }
 
-export interface ISimpleEvent<E extends string | symbol = string, V = any> {
+export interface IAgentState {
+  availableBalance: BigNumber;
+  investments: Record<InvestmentType, IInvestmentState>;
+  ready: boolean;
+}
+
+export interface ISimpleEvent<E extends string | symbol = string, V = {}> {
   event: E;
   returnValues: V;
 }

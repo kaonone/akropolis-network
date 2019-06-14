@@ -40,7 +40,7 @@ export default React.memo(provideStyles((props: IProps) => {
 
   return (
     <div>
-      <Table separated>
+      <Table separated className={classes.table}>
         <TableHead>
           <TableRow className={classes.header}>
             {headerCells.map((title, i) => (

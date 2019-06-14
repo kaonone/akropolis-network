@@ -1,3 +1,4 @@
 export const RELAYER_URL = 'https://api.cashflowrelay.com/v2';
 export const ROUTES_PREFIX = '';
 export const TEMPLATE_ENS_ID = 'democracy-akropolis.open.aragonpm.eth';
+export const LAST_STABLE_TEMPLATE_VERSION = [11, 0, 0] as const;

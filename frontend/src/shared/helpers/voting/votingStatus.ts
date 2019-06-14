@@ -70,13 +70,12 @@ export const sortByStatus = (votingState: VotingStateFields) => {
 };
 
 export function calculateIsRejected(voting: IVoting, voteTime: number) {
-  const {supportRequired} = voting;
-  const { nayPercentByPower } = calculateVotingStats(voting);
+  const { supportRequired } = voting;
+  const { nayPercentByPower, currentResult } = calculateVotingStats(voting);
   const { isOutdated } = votingTimeout(voting.startDate, voteTime);
-  const { currentResult } = calculateVotingStats(voting);
 
   const isEndedNotConfirmed = isOutdated && currentResult === 'rejected';
-  const isRejectAdvanced = nayPercentByPower > (100 - supportRequired);
+  const isRejectAdvanced = nayPercentByPower >= (100 - supportRequired);
 
   return isEndedNotConfirmed || isRejectAdvanced;
 }

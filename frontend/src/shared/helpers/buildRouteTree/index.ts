@@ -1,4 +1,6 @@
-import { isRawRouteTree, isParamGuard, IRawRouteTree, RouteTree, IPathItem, IRoutable } from './namespace';
+import {
+  isRawRouteTree, isParamGuard, IRawRouteTree, RouteTree, IPathItem, IRoutable, IRawRouteBranch,
+} from './namespace';
 import makeGetPath from './makeGetPath';
 import makeGetRoutePath from './makeGetRoutePath';
 import { ROUTES_PREFIX } from 'core/constants';
@@ -9,15 +11,15 @@ type Tree<T extends IRawRouteTree> = RouteTree<T> & { root(): string };
 
 // TODO watch for https://github.com/Microsoft/TypeScript/issues/10727 to fix any types
 export default function buildRouteTree<T extends IRawRouteTree>(rawTree: T): Tree<T> {
-  const resultTree = (function loop(tree: IRawRouteTree, path: IPathItem[] = []): RouteTree<T> {
+  const resultTree = (function loop(branch: NonNullable<IRawRouteBranch>, path: IPathItem[] = []): RouteTree<T> {
     const prefix: IPathItem[] = ROUTES_PREFIX ? [{
       isParam: false,
       value: ROUTES_PREFIX!.replace('/', ''),
     }] : [];
 
     return Object
-      .entries(tree)
-      .reduce<RouteTree<any>>((acc: RouteTree<T>, [key, value]) => {
+      .entries(branch)
+      .reduce<RouteTree<T>>((acc: RouteTree<T>, [key, value]) => {
         const xPath: IPathItem[] = [...path, { value: key, isParam: isParamGuard(value) }];
 
         const routeData: IRoutable = {

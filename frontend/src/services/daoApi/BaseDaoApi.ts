@@ -1,9 +1,10 @@
 import { bind } from 'decko';
+import { AbiCoder } from 'web3-eth-abi';
 import { observable, action, runInAction, when } from 'mobx';
 import AragonWrapper, { ensResolve } from '@aragon/wrapper';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 import { makeProxyFromABI } from '@aragon/wrapper/dist/utils';
-import { IAragonApp, ITransaction } from '@aragon/types';
+import { IAragonApp, ITransaction, IAbi } from '@aragon/types';
 
 import { getWeb3, getMainAccount } from 'shared/helpers/web3';
 import { notifyDevWarning } from 'shared/helpers/notifyDevWarning';
@@ -11,6 +12,8 @@ import { isEthereumAddress } from 'shared/validators/isEthereumAddress/isEthereu
 import { NULL_ADDRESS } from 'shared/constants';
 import { IDaoApiConfig, AppType, MethodByApp, ParamsByAppByMethod } from './types';
 import { currentAddress$ } from 'services/user';
+
+const ABI = new AbiCoder();
 
 interface IExtendedAragonApp extends IAragonApp {
   proxy: ContractProxy;
@@ -114,6 +117,30 @@ export class BaseDaoApi {
     return app.proxy.call(method as any, ...(params as any || []));
   }
 
+  public async callExternal<R>(address: string, abi: IAbi[], method: string, params: string[] = []): Promise<R> {
+    if (!this.wrapper) {
+      throw new Error('AragonWrapper is not initialized');
+    }
+
+    const proxy = new ContractProxy(address, abi, this.wrapper.web3);
+
+    return proxy.call(method, ...params);
+  }
+
+  @bind
+  public async executeOnAgent(targetAddress: string, method: string, args: string[]) {
+    const params = [
+      targetAddress,
+      0,
+      encodeCalldata(
+        method,
+        args,
+      ),
+    ] as const;
+
+    return this.sendTransaction('agent', 'execute', params);
+  }
+
   public async sendTransaction<T extends AppType, M extends MethodByApp<T>, P extends ParamsByAppByMethod<T, M>>(
     appType: T, method: M, params: P,
   ) {
@@ -187,5 +214,19 @@ export class BaseDaoApi {
     }
     this.wrapper.setAccounts([account]);
   }
-
 }
+
+const encodeCalldata = (signature: string, params?: string[]): string => {
+  const sigBytes = ABI.encodeFunctionSignature(signature);
+
+  const types = signature.replace(')', '').split('(')[1];
+
+  // No params, return signature directly
+  if (types === '') {
+    return sigBytes;
+  }
+
+  const paramBytes = ABI.encodeParameters(types.split(','), params || []);
+
+  return `${sigBytes}${paramBytes.slice(2)}`;
+};
