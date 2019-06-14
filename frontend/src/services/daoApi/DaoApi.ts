@@ -1,10 +1,13 @@
 import { bind } from 'decko';
+
 import { NETWORK_CONFIG } from 'core/constants/network';
 import { VotingDecision } from 'shared/types/models/Voting';
 import { ONE_ERC20 } from 'shared/constants';
+
 import { IDaoApiConfig, ITransitionPeriod } from './types';
 import { BaseDaoApi } from './BaseDaoApi';
 import { DaoStore } from './store';
+import { InvestmentsApi } from './InvestmentsApi';
 
 const ETHER_TOKEN_FAKE_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -34,12 +37,14 @@ export class DaoApi {
   }
 
   public store: DaoStore;
+  public investments: InvestmentsApi;
   private base: BaseDaoApi;
   private daoEnsName: string;
 
   private constructor(config: IDaoApiConfig, daoEnsName: string) {
     this.base = new BaseDaoApi(config);
-    this.store = new DaoStore(this.base);
+    this.investments = new InvestmentsApi(this.base);
+    this.store = new DaoStore(this.base, this.investments);
     this.daoEnsName = daoEnsName;
   }
 
@@ -72,11 +77,16 @@ export class DaoApi {
       throw new Error('Ethereum account is not found');
     }
 
+    await this.requestWithdrawTo(account, amount, reason);
+  }
+
+  @bind
+  public async requestWithdrawTo(address: string, amount: number, reason: string) {
     const tokenAddress = NETWORK_CONFIG.daiContract;
     const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
     const params = [
       tokenAddress,
-      account,
+      address,
       resultAmount,
       reason,
     ] as const;
@@ -85,13 +95,30 @@ export class DaoApi {
   }
 
   @bind
-  public async deposit(amount: number) {
-    const account = await this.base.getAccount();
+  public async depositFromAgent(amount: number) {
+    const financeApp = this.base.getAppByName('finance');
 
-    if (!account) {
-      throw new Error('Ethereum account is not found');
+    if (!financeApp) {
+      throw new Error('Finance app is not found');
     }
 
+    const tokenAddress = NETWORK_CONFIG.daiContract;
+    const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
+    const reference = 'deposit';
+
+    return this.base.executeOnAgent(
+      financeApp.proxyAddress,
+      'deposit(address,uint256,string)',
+      [
+        tokenAddress,
+        resultAmount,
+        reference,
+      ],
+    );
+  }
+
+  @bind
+  public async deposit(amount: number) {
     const tokenAddress = NETWORK_CONFIG.daiContract;
 
     const resultAmount = ONE_ERC20.multipliedBy(amount).toString();

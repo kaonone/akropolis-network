@@ -47,4 +47,7 @@ interface IAppMethodParams {
   vault: {
     mock: null;
   };
+  agent: {
+    execute: readonly [string, number, string]; // [address, ethAmount, encodedCalldata]
+  };
 }
