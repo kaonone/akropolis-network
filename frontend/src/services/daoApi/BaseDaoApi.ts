@@ -153,13 +153,13 @@ export class BaseDaoApi {
 
     const path = await this.wrapper.getTransactionPath(proxyAddress, method as string, params as any);
 
-    notifyDevWarning(
-      path.length > 1,
-      'Transactions path have more than one transaction',
-      { path },
-    );
-
     const transaction = path[0];
+
+    notifyDevWarning(
+      !transaction,
+      'Detected empty transaction path',
+      { path, proxy, method, params },
+    );
 
     if (transaction) {
       transaction.pretransaction && await this._sendTransaction(transaction.pretransaction);

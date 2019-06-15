@@ -87,7 +87,7 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
         .filter((item): item is AgentExecute => item.event === 'Execute')
         .filter(item => addressesEqual(NETWORK_CONFIG.daiCompound, item.returnValues.target));
 
-      const needToUpdateAgentBalance = !!financeAndAgentTransactionEvents.length;
+      const needToUpdateAgentBalance = !!financeAndAgentTransactionEvents.length || !!agentToCompoundExecutions.length;
       const needToUpdateCompoundState = !!agentToCompoundExecutions.length || !!compoundTriggers.length;
       const needToUpdateReady = !state.ready && isCompleteLoading;
 

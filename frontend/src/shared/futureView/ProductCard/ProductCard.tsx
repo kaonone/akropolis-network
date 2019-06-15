@@ -172,8 +172,8 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
         </Grid>
 
         <Grid {...gridContainerProps} className={classes.metrics}>
-          {metric(t(tKeys.balance.getKey()), formatDAI(balance.toNumber(), 2))}
-          {metric(t(tKeys.earned.getKey()), formatDAI(earned.toNumber(), 2))}
+          {metric(t(tKeys.balance.getKey()), formatDAI(balance.toNumber(), 4))}
+          {metric(t(tKeys.earned.getKey()), formatDAI(earned.toNumber(), 4))}
         </Grid>
         {footerByStatus[status]()}
       </div>

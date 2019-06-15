@@ -56,7 +56,7 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
     },
 
     getCurrentRate: async () => {
-      const secondsInYear = 360 * 24 * 60 * 60;
+      const secondsInYear = 365 * 24 * 60 * 60;
       const secondsPerBlock = 15;
       const ratePerBlock = await this.base.callExternal<string>(
         NETWORK_CONFIG.daiCompound,

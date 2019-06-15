@@ -51,9 +51,10 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
   return makeStoreFromEvents(
     async (state: IFinanceState, events: Event[], isCompleteLoading: boolean): Promise<IFinanceState> => {
       const vaultMainCoinEvents = events
-        .filter((event): event is VaultEvent => event.address === vaultAddress)
-        .filter(event => event.returnValues.token === NETWORK_CONFIG.daiContract);
-      const financeEvents = events.filter((event): event is FinanceEvent => event.address !== vaultAddress);
+        .filter((event): event is VaultEvent => addressesEqual(event.address, vaultAddress))
+        .filter(event => addressesEqual(event.returnValues.token, NETWORK_CONFIG.daiContract));
+      const financeEvents = events
+        .filter((event): event is FinanceEvent => !addressesEqual(event.address, vaultAddress));
 
       const isNeedLoadBalance = !!vaultMainCoinEvents.length;
       const transactionsForLoad = R.uniq(financeEvents
