@@ -8,3 +8,4 @@ export { default as UserAvatar } from './UserAvatar/UserAvatar';
 export { default as RequestForm } from './RequestForm/RequestForm';
 export { default as Pagination } from './Pagination/Pagination';
 export { default as AsyncActionButton } from './AsyncActionButton/AsyncActionButton';
+export { default as Metric } from './Metric/Metric';

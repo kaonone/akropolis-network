@@ -35,18 +35,14 @@ export class DaoStore {
   }
 
   public async initialize() {
+    if (!this.base.wrapper) {
+      throw new Error('Unable to initialize DaoStore because aragon wrapper is not initialized');
+    }
+
     const tokenManagerApp = this.base.getAppByName('token-manager');
     const financeApp = this.base.getAppByName('finance');
     const votingApp = this.base.getAppByName('voting');
     const agentApp = this.base.getAppByName('agent');
-
-    if (!tokenManagerApp || !financeApp || !votingApp || !agentApp) {
-      throw new Error('Unable to initialize DaoStore because one of wrapper apps is missing');
-    }
-
-    if (!this.base.wrapper) {
-      throw new Error('Unable to initialize DaoStore because aragon wrapper is not initialized');
-    }
 
     this.tokenManager$ = await createTokenManagerStore(this.base.web3, tokenManagerApp.proxy);
     this.tokenManager$.subscribe(state => this.tokenManager = state);

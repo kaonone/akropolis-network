@@ -9,6 +9,7 @@ import { ProductCard } from 'shared/futureView/ProductCard/ProductCard';
 import { Grid } from 'shared/view/elements';
 
 import { StylesProps, provideStyles } from './Products.style';
+import DeFiAccount from './DeFiAccount/DeFiAccount';
 
 const types: InvestmentType[] = ['compound'];
 const futureTypes: FutureInvestmentType[] = ['set', 'dharma', 'uma', 'melonport'];
@@ -37,8 +38,6 @@ function Products(props: IProps) {
 
   const daoApi = useDaoApi();
 
-  const deFiBalance = useObserver(() => daoApi.store.agent.availableBalance);
-
   const products = types.map(type => ({
     type,
     state: useObserver(() => daoApi.store.agent.investments[type]),
@@ -49,7 +48,7 @@ function Products(props: IProps) {
     <div className={classes.root}>
       <Grid container spacing={32} alignItems="stretch">
         <Grid item xs={12}>
-          DeFi products state. Balance: {deFiBalance.toFixed(2)} DAI
+          <DeFiAccount />
         </Grid>
         {products.map((product, i) => (
           <Grid key={i} item xs={6}>

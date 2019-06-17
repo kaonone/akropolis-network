@@ -6,7 +6,7 @@ import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import {
   IInvestmentState, InvestmentStatus, InvestmentType, InvestmentCategory, FutureInvestmentType, IInvestmentApi,
 } from 'shared/types/models';
-import { AsyncActionButton } from 'shared/view/components';
+import { AsyncActionButton, Metric } from 'shared/view/components';
 import { NumberInputField } from 'shared/view/form';
 import { Grid, Typography } from 'shared/view/elements';
 import { Settings, Info } from 'shared/view/elements/Icons';
@@ -73,8 +73,7 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
 
   const metric = React.useCallback((title: string, value: string) => (
     <Grid item xs={6}>
-      <Typography variant="overline" weight="medium" className={classes.metricTitle}>{title}</Typography>
-      <Typography variant="h6" className={classes.metricValue}>{value}</Typography>
+      <Metric title={title} value={value} />
     </Grid>
   ), []);
 

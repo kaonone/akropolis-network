@@ -31,6 +31,7 @@ export interface IFinanceState {
 
 export interface IAgentState {
   availableBalance: BigNumber;
+  isEnabled: boolean;
   investments: Record<InvestmentType, IInvestmentState>;
   ready: boolean;
 }

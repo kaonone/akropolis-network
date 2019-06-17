@@ -163,6 +163,29 @@ export default {
       accessToLoanHint: 'Make regular contributions, and you will be able to get access to loans',
       accessToInsuranceHint: 'Make regular contributions, and you will be able to get access to insurance',
     },
+    deFiAccount: {
+      actionsDescription: {
+        enabled: 'DeFi products integrations are available only from special DeFi account',
+        disabled: 'DeFi products integrations are available only from special DeFi account. Please Open DeFi account to enable DeFi integrations',
+      },
+      actions: {
+        enable: 'Open',
+        deposit: 'Deposit',
+        withdraw: 'Withdraw',
+      },
+      fields: {
+        amount: 'Amount',
+        reason: 'Reason',
+      },
+      formTitles: {
+        deposit: 'Deposit to DeFi account',
+        withdraw: 'Withdraw from DeFi account',
+      },
+      metrics: {
+        balance: 'DeFi account',
+        supplied: 'Supplied',
+      },
+    },
     investments: {
       balance: 'balance',
       earned: 'earned',

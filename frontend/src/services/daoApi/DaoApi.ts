@@ -63,7 +63,7 @@ export class DaoApi {
 
     const params = [
       account,
-      ONE_ERC20.toString(),
+      ONE_ERC20.toFixed(),
     ] as const;
 
     await this.base.sendTransaction('token-manager', 'mint', params);
@@ -83,7 +83,7 @@ export class DaoApi {
   @bind
   public async requestWithdrawTo(address: string, amount: number, reason: string) {
     const tokenAddress = NETWORK_CONFIG.daiContract;
-    const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
+    const resultAmount = ONE_ERC20.multipliedBy(amount).toFixed();
     const params = [
       tokenAddress,
       address,
@@ -95,33 +95,10 @@ export class DaoApi {
   }
 
   @bind
-  public async depositFromAgent(amount: number) {
-    const financeApp = this.base.getAppByName('finance');
-
-    if (!financeApp) {
-      throw new Error('Finance app is not found');
-    }
-
-    const tokenAddress = NETWORK_CONFIG.daiContract;
-    const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
-    const reference = 'deposit';
-
-    return this.base.executeOnAgent(
-      financeApp.proxyAddress,
-      'deposit(address,uint256,string)',
-      [
-        tokenAddress,
-        resultAmount,
-        reference,
-      ],
-    );
-  }
-
-  @bind
   public async deposit(amount: number) {
     const tokenAddress = NETWORK_CONFIG.daiContract;
 
-    const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
+    const resultAmount = ONE_ERC20.multipliedBy(amount).toFixed();
     const reference = 'deposit';
 
     const periodDuration: string = await this.base.call('finance', 'getPeriodDuration', null);

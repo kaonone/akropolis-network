@@ -57,18 +57,6 @@ const styles = ({ extra: theme }: Theme) => ({
     color: 'inherit',
   }),
 
-  metricTypography: rule({
-    color: 'inherit',
-  }),
-
-  metricTitle: rule({
-    composes: '$metricTypography',
-  }),
-
-  metricValue: rule({
-    composes: '$metricTypography',
-  }),
-
   footer: rule({
     backgroundColor: theme.colors.whiteWine,
     borderRadius: '0.25rem',

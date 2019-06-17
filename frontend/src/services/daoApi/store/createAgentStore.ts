@@ -45,6 +45,7 @@ type LocalEvent =
 type Event = EthereumEvent | LocalEvent;
 
 export const initialAgentState: IAgentState = {
+  isEnabled: false,
   availableBalance: new BigNumber(0),
   investments: {
     compound: {
@@ -90,6 +91,7 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
       const needToUpdateAgentBalance = !!financeAndAgentTransactionEvents.length || !!agentToCompoundExecutions.length;
       const needToUpdateCompoundState = !!agentToCompoundExecutions.length || !!compoundTriggers.length;
       const needToUpdateReady = !state.ready && isCompleteLoading;
+      const needToUpdateIsEnabled = !!agentEvents.length;
 
       if (!(needToUpdateAgentBalance || needToUpdateCompoundState || needToUpdateReady)) {
         return state;
@@ -99,6 +101,10 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
         ? await getErc20Balance(wrapper.web3, NETWORK_CONFIG.daiContract, agentProxy.address)
         : state.availableBalance;
 
+      const isEnabled = needToUpdateIsEnabled
+        ? await investments.deFiAccount.isEnabled()
+        : state.isEnabled; // TODO ds: check this
+
       const compound: IInvestmentState = needToUpdateCompoundState ? {
         balance: await investments.compound.getBalance(agentProxy.address),
         currentRate: await investments.compound.getCurrentRate(),
@@ -107,6 +113,7 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
       } : state.investments.compound;
 
       return {
+        isEnabled,
         availableBalance,
         investments: {
           compound,

@@ -26,6 +26,7 @@ export { default as ExpansionPanelDetails } from './ExpansionPanelDetails/Expans
 export { default as ExpansionPanelSummary } from '@material-ui/core/ExpansionPanelSummary';
 export { default as Grid } from '@material-ui/core/Grid';
 export { default as Badge } from '@material-ui/core/Badge';
+export { default as Card } from '@material-ui/core/Card';
 export { default as DonutChart } from './DonutChart/DonutChart';
 export { default as Drawer } from './Drawer/Drawer';
 export { default as Switch } from './Switch/Switch';

@@ -9,6 +9,51 @@ import { InvestmentType, IInvestmentApi } from 'shared/types/models/Investment';
 import { BaseDaoApi } from './BaseDaoApi';
 
 export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
+  public deFiAccount = {
+    enable: () => this.base.executeOnAgent(
+      NETWORK_CONFIG.daiContract,
+      'approve(address,uint256)',
+      [
+        this.base.getAppByName('finance').proxyAddress,
+        UINT256_MAX,
+      ],
+    ),
+
+    deposit: ({ amount, reason }: { amount: number, reason: string }) => this.base.sendTransaction(
+      'finance',
+      'newImmediatePayment',
+      [
+        NETWORK_CONFIG.daiContract,
+        this.base.getAppByName('agent').proxyAddress,
+        ONE_ERC20.multipliedBy(amount).toFixed(),
+        reason,
+      ],
+    ),
+
+    withdraw: ({ amount }: { amount: number }) => this.base.executeOnAgent(
+      this.base.getAppByName('finance').proxyAddress,
+      'deposit(address,uint256,string)',
+      [
+        NETWORK_CONFIG.daiContract,
+        ONE_ERC20.multipliedBy(amount).toFixed(),
+        'deposit',
+      ],
+    ),
+
+    isEnabled: async () => {
+      const approvedAmount = await this.base.callExternal<string>(
+        NETWORK_CONFIG.daiContract,
+        Erc20ABI,
+        'allowance',
+        [
+          this.base.getAppByName('agent').proxyAddress,
+          this.base.getAppByName('finance').proxyAddress,
+        ],
+      );
+      return !!Number(approvedAmount);
+    },
+  };
+
   public compound: IInvestmentApi = {
     enable: () => this.base.executeOnAgent(
       NETWORK_CONFIG.daiContract,
@@ -22,35 +67,38 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
     deposit: (amount: number) => this.base.executeOnAgent(
       NETWORK_CONFIG.daiCompound,
       'mint(uint256)',
-      [ONE_ERC20.times(amount).toString()],
+      [ONE_ERC20.times(amount).toFixed()],
     ),
 
     withdraw: (amount: number) => this.base.executeOnAgent(
       NETWORK_CONFIG.daiCompound,
       'redeemUnderlying(uint256)',
-      [ONE_ERC20.times(amount).toString()],
+      [ONE_ERC20.times(amount).toFixed()],
     ),
 
-    getBalance: async (agentAddress: string) => {
+    getBalance: async () => {
       const balance = await this.base.callExternal<string>(
         NETWORK_CONFIG.daiCompound,
         CompoundABI,
         'balanceOfUnderlying',
-        [agentAddress],
+        [this.base.getAppByName('agent').proxyAddress],
       );
       return new BigNumber(balance).div(ONE_ERC20);
     },
 
-    getEarn: async (_agentAddress: string) => {
+    getEarn: async () => {
       return new BigNumber(0); // TODO ds: calculate this
     },
 
-    isEnabled: async (agentAddress: string) => {
+    isEnabled: async () => {
       const approvedAmount = await this.base.callExternal<string>(
         NETWORK_CONFIG.daiContract,
         Erc20ABI,
         'allowance',
-        [agentAddress, NETWORK_CONFIG.daiCompound],
+        [
+          this.base.getAppByName('agent').proxyAddress,
+          NETWORK_CONFIG.daiCompound,
+        ],
       );
       return !!Number(approvedAmount);
     },
