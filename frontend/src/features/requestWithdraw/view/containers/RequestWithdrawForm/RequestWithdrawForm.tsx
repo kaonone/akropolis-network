@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
 import { useDaoApi } from 'services/daoApi';
-import { isRequired, onEnglishPlease, composeValidators } from 'shared/validators';
+import { isRequired, onEnglishPlease, composeValidators, useValidateRequestAmount } from 'shared/validators';
 import { Request } from 'shared/view/elements/Icons';
 import { RequestForm } from 'shared/view/components';
 import { TextInputField, NumberInputField } from 'shared/view/form';
@@ -37,6 +37,12 @@ function RequestWithdrawForm(props: IProps) {
     onError,
   );
 
+  const validateRequestAmount = useValidateRequestAmount(daoApi);
+
+  const validateWithdraw = React.useCallback((value: number) => {
+    return isRequired(value) || validateRequestAmount(value);
+  }, []);
+
   // tslint:disable:jsx-key
   const formFields = [
     (
@@ -44,7 +50,7 @@ function RequestWithdrawForm(props: IProps) {
         suffix=" DAI"
         name={fieldNames.amount}
         label={t(tKeys.fields.amount.getKey())}
-        validate={isRequired}
+        validate={validateWithdraw}
         fullWidth
       />),
     (
