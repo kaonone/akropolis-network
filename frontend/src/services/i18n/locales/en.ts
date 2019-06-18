@@ -20,6 +20,7 @@ export default {
       allowedCharactersForDaoName: 'Name should contain only english letters and numbers',
       onEnglishPlease: 'Should contain only english letters and numbers',
       isUsedDaoName: 'Co-op with that name already exists',
+      notEnoughDai: 'Not enough dai',
     },
     pageNotFound: 'We can’t find this page',
     copiedAtClipboard: 'Copied at clipboard',
