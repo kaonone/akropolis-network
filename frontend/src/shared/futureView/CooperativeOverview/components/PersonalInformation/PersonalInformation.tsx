@@ -1,12 +1,11 @@
 import * as React from 'react';
-import * as moment from 'moment';
-import * as R from 'ramda';
 
+import { TOTAL_WAITING_DAYS_FOR_ACCESS } from 'core/constants';
 import { Typography } from 'shared/view/elements';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
+import { useDaysForAccess } from 'shared/helpers/user';
 import { formatDAI } from 'shared/helpers/format';
 import { useDaoApi } from 'services/daoApi';
-import useLastConfirmedJoinVoting from 'shared/helpers/useLastConfirmedJoinVoting';
 
 import AccessCard from './AccessCard/AccessCard';
 
@@ -15,14 +14,6 @@ import { StylesProps, provideStyles } from './PersonalInformation.style';
 const tKeys = tKeysAll.features.cooperativeOverview;
 
 const tKeysShared = tKeysAll.shared;
-
-const TOTAL_WAITING_DAYS_COUNT = 90;
-
-const getDays = (startDate: number) => {
-  const dayPassed = R.clamp(0, TOTAL_WAITING_DAYS_COUNT, Math.ceil(moment().diff(moment(startDate), 'days', true)));
-  const dayLeft = TOTAL_WAITING_DAYS_COUNT - dayPassed;
-  return { dayLeft, dayPassed };
-};
 
 interface IOwnProps {
   balance: number;
@@ -35,9 +26,8 @@ const PersonalInformation = (props: IProps) => {
   const { classes, balance, earn } = props;
   const { t } = useTranslate();
   const daoApi = useDaoApi();
-  const lastJoinTransaction = useLastConfirmedJoinVoting(daoApi);
-  const days = lastJoinTransaction && getDays(lastJoinTransaction.startDate);
 
+  const days = useDaysForAccess(daoApi);
   const timePassed = days ? days.dayPassed : 0;
   const timeLeft = days ? t(tKeysShared.daysAmount.getKey(), days.dayLeft) : t(tKeys.forMembers.getKey());
 
@@ -64,14 +54,14 @@ const PersonalInformation = (props: IProps) => {
       </div>
       <div className={classes.accessCards}>
         <AccessCard
-          total={TOTAL_WAITING_DAYS_COUNT}
+          total={TOTAL_WAITING_DAYS_FOR_ACCESS}
           current={timePassed}
           description={t(tKeys.accessToLoan.getKey())}
           timeLeft={timeLeft}
           hint={t(tKeys.accessToLoanHint.getKey())}
         />
         <AccessCard
-          total={TOTAL_WAITING_DAYS_COUNT}
+          total={TOTAL_WAITING_DAYS_FOR_ACCESS}
           current={timePassed}
           description={t(tKeys.accessToInsurance.getKey())}
           timeLeft={timeLeft}

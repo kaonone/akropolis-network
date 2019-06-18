@@ -5,5 +5,5 @@ export function toFixed(value: number, digits: number) {
 }
 
 export function calculateGrowth(previous: number, current: number) {
-  return (current - previous) / previous * 100;
+  return (current - previous) / Math.abs(previous) * 100;
 }
