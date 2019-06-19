@@ -1,5 +1,4 @@
 import * as React from 'react';
-import BigNumber from 'bignumber.js';
 import { useObserver } from 'mobx-react-lite';
 
 import { useDaoApi } from 'services/daoApi';
@@ -34,12 +33,7 @@ function DeFiAccount(props: StylesProps) {
 
   const deFiBalance = useObserver(() => daoApi.store.agent.availableBalance);
   const isEnabled = useObserver(() => daoApi.store.agent.isEnabled);
-  const investments = useObserver(() => daoApi.store.agent.investments);
-
-  const supplied = React.useMemo(
-    () => BigNumber.sum(...Object.values(investments).map(item => item.balance)),
-    [investments],
-  );
+  const supplied = useObserver(() => daoApi.store.suppliedToDeFi);
 
   const amountInput = (
     <NumberInputField

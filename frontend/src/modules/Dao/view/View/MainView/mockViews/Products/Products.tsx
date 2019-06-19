@@ -37,12 +37,8 @@ function Products(props: IProps) {
   const { classes } = props;
 
   const daoApi = useDaoApi();
-
-  const products = types.map(type => ({
-    type,
-    state: useObserver(() => daoApi.store.agent.investments[type]),
-    api: daoApi.investments[type],
-  }));
+  const isEnabledDeFi = useObserver(() => daoApi.store.agent.isEnabled);
+  const investments = useObserver(() => daoApi.store.agent.investments);
 
   return (
     <div className={classes.root}>
@@ -50,17 +46,20 @@ function Products(props: IProps) {
         <Grid item xs={12}>
           <DeFiAccount />
         </Grid>
-        {products.map((product, i) => (
+        {types.map((type, i) => (
           <Grid key={i} item xs={6}>
             <ProductCard
-              {...product}
+              disabled={!isEnabledDeFi}
+              type={type}
+              state={investments[type]}
+              api={daoApi.investments[type]}
             />
           </Grid>
         ))}
         {futureTypes.map((type, i) => (
           <Grid key={i} item xs={6}>
             <ProductCard
-              disabled
+              isComingSoon
               type={type}
               state={emptyState}
               api={emptyApi}

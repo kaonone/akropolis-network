@@ -33,13 +33,10 @@ type Event =
 
 export const initialFinanceState: IFinanceState = {
   holders: {},
+  holdersForDay: [],
   transactions: {},
   vaultAddress: '',
-  daoOverview: {
-    balance: { value: new BN(0), valueDayAgo: new BN(0) },
-    withdraw: { value: new BN(0), valueDayAgo: new BN(0) },
-    deposit: { value: new BN(0), valueDayAgo: new BN(0) },
-  },
+  vaultBalance: new BN(0),
   ready: false,
 };
 
@@ -61,9 +58,9 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
         .filter((event): event is NewTransactionEvent => event.event === 'NewTransaction')
         .map(event => event.returnValues.transactionId));
 
-      const daoBalance = isNeedLoadBalance
+      const vaultBalance = isNeedLoadBalance
         ? new BN(await vaultProxy.call('balance', NETWORK_CONFIG.daiContract)).div(ONE_ERC20)
-        : state.daoOverview.balance.value;
+        : state.vaultBalance;
 
       const mainCoinNewTransactions: IFinanceTransaction[] = (await Promise.all(
         transactionsForLoad.map(async id => ({ id, ...await proxy.call('getTransaction', id) })),
@@ -84,35 +81,15 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
         : state.holders;
 
       const dayAgo = moment().subtract(1, 'days').valueOf();
-      const holdersForDay: IFinanceHolder[] = Object.values(
-        reduceHolders(Object.values(nextTransactions).filter(transaction => transaction.date > dayAgo)),
-      );
-      const balanceChangeForDay = BN.sum(...holdersForDay.map(item => item.balance));
-      const depositChangeForDay = BN.sum(...holdersForDay.map(item => item.deposit));
-      const withdrawChangeForDay = BN.sum(...holdersForDay.map(item => item.withdraw));
-
-      const daoDeposit = BN.sum(...Object.values(holders).map(item => item.deposit));
-      const daoWithdraw = BN.sum(...Object.values(holders).map(item => item.withdraw));
-
-      const daoOverview: IFinanceState['daoOverview'] = {
-        balance: {
-          value: daoBalance,
-          valueDayAgo: daoBalance.minus(balanceChangeForDay),
-        },
-        deposit: {
-          value: daoDeposit,
-          valueDayAgo: daoDeposit.minus(depositChangeForDay),
-        },
-        withdraw: {
-          value: daoWithdraw,
-          valueDayAgo: daoWithdraw.minus(withdrawChangeForDay),
-        },
-      };
+      const holdersForDay: IFinanceHolder[] = mainCoinNewTransactions.length
+        ? Object.values(
+          reduceHolders(Object.values(nextTransactions).filter(transaction => transaction.date > dayAgo)),
+        ) : state.holdersForDay;
 
       return {
-        ...state,
         holders,
-        daoOverview,
+        holdersForDay,
+        vaultBalance,
         vaultAddress,
         transactions: nextTransactions,
         ready: isCompleteLoading,

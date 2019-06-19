@@ -46,6 +46,7 @@ interface IOwnProps {
   api: IInvestmentApi;
   type: InvestmentType | FutureInvestmentType;
   disabled?: boolean;
+  isComingSoon?: boolean;
 }
 
 type IProps = StylesProps & IOwnProps;
@@ -59,7 +60,7 @@ const fieldNames: { [key in keyof IFormData]: key } = {
 };
 
 export const ProductCard = React.memo(provideStyles((props: IProps) => {
-  const { classes, api, state, type, disabled } = props;
+  const { classes, api, state, type, disabled, isComingSoon } = props;
   const { balance, currentRate, earned, isEnabled } = state;
   const { t } = useTranslate();
 
@@ -67,7 +68,7 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
   const deposit = React.useCallback(({ amount }: IFormData) => api.deposit(amount), []);
 
   const status: InvestmentStatus =
-    disabled && 'waiting' ||
+    isComingSoon && 'waiting' ||
     isEnabled && 'active' ||
     'need-enable';
 
@@ -108,6 +109,7 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
         <Grid item className={classes.enableButton} xs={4}>
           <AsyncActionButton
             buttonProps={{
+              disabled,
               fullWidth: true,
               color: 'primary',
             }}

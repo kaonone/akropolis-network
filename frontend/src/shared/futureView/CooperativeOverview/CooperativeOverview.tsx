@@ -18,8 +18,8 @@ const CooperativeOverview = (props: StylesProps) => {
 
   const userAccountAddress = useAccountAddress();
 
-  const cooperativeBalance = useObserver(() => daoApi.store.finance.daoOverview.balance.value);
-  const cooperativeBalanceChange = useObserver(() => daoApi.store.finance.daoOverview.balance.valueDayAgo);
+  const cooperativeBalance = useObserver(() => daoApi.store.coopBalanceOverview.balance.value);
+  const cooperativeBalanceChange = useObserver(() => daoApi.store.coopBalanceOverview.balance.valueDayAgo);
 
   const cooperativeHolders = useObserver(() => daoApi.store.tokenManager.holders);
   const financeHolders = useObserver(() => daoApi.store.finance.holders);

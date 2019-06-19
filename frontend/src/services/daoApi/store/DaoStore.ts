@@ -1,7 +1,9 @@
+import BigNumber from 'bignumber.js';
 import { Observable, empty } from 'rxjs';
-import { observable, when, action } from 'mobx';
+import { observable, when, action, computed } from 'mobx';
 import { IAragonApp } from '@aragon/types';
 
+import { addressesEqual } from 'shared/helpers/web3';
 import { AppType } from '../types';
 import { BaseDaoApi } from '../BaseDaoApi';
 import { InvestmentsApi } from '../InvestmentsApi';
@@ -9,7 +11,7 @@ import { createTokenManagerStore, initialTokenManagerState } from './createToken
 import { createFinanceStore, initialFinanceState } from './createFinanceStore';
 import { createVotingStore, initialVotingState } from './createVotingStore';
 import { createAgentStore, initialAgentState } from './createAgentStore';
-import { ITokenManagerState, IFinanceState, IVotingState, IAgentState } from './types';
+import { ITokenManagerState, IFinanceState, IVotingState, IAgentState, IDaoOverview } from './types';
 
 export class DaoStore {
   @observable
@@ -73,6 +75,55 @@ export class DaoStore {
       !!this.voting && this.voting.ready &&
       !!this.agent && this.agent.ready
     ));
+  }
+
+  @computed
+  public get coopBalanceOverview(): IDaoOverview {
+    const agentApp = this.base.getAppByName('agent');
+    const agentAddress = agentApp.proxyAddress;
+
+    const allHolders = Object.values(this.finance.holders);
+    const { holdersForDay: allHoldersForDay, vaultBalance: daoBalance } = this.finance;
+    const { availableBalance: agentBalance } = this.agent;
+    const suppliedToDeFi = this.suppliedToDeFi;
+
+    const holdersWithoutAgent = allHolders.filter(item => !addressesEqual(item.address, agentAddress));
+    const holdersForDayWithoutAgent = allHoldersForDay.filter(item => !addressesEqual(item.address, agentAddress));
+
+    const balanceChangeForDay = BigNumber.sum(...holdersForDayWithoutAgent.map(item => item.balance));
+    const depositChangeForDay = BigNumber.sum(...holdersForDayWithoutAgent.map(item => item.deposit));
+    const withdrawChangeForDay = BigNumber.sum(...holdersForDayWithoutAgent.map(item => item.withdraw));
+
+    const daoDeposit = BigNumber.sum(...Object.values(holdersWithoutAgent).map(item => item.deposit));
+    const daoWithdraw = BigNumber.sum(...Object.values(holdersWithoutAgent).map(item => item.withdraw));
+    const daoDeFi = agentBalance.plus(suppliedToDeFi);
+
+    const daoOverview: IDaoOverview = {
+      balance: {
+        value: daoBalance,
+        valueDayAgo: daoBalance.minus(balanceChangeForDay),
+      },
+      deposit: {
+        value: daoDeposit,
+        valueDayAgo: daoDeposit.minus(depositChangeForDay),
+      },
+      withdraw: {
+        value: daoWithdraw,
+        valueDayAgo: daoWithdraw.minus(withdrawChangeForDay),
+      },
+      deFi: {
+        value: daoDeFi,
+        valueDayAgo: new BigNumber(0),
+      },
+    };
+
+    return daoOverview;
+  }
+
+  @computed
+  public get suppliedToDeFi() {
+    const { investments } = this.agent;
+    return BigNumber.sum(...Object.values(investments).map(item => item.balance));
   }
 
   @action

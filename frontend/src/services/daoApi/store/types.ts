@@ -22,10 +22,11 @@ export interface ITokenManagerState {
 }
 
 export interface IFinanceState {
+  vaultBalance: BigNumber;
   transactions: Record<string, IFinanceTransaction>;
   holders: Record<string, IFinanceHolder>;
+  holdersForDay: IFinanceHolder[];
   vaultAddress: string;
-  daoOverview: IDaoOverview;
   ready: boolean;
 }
 
@@ -45,6 +46,7 @@ export interface IDaoOverview {
   balance: IDaoOverviewMetric;
   deposit: IDaoOverviewMetric;
   withdraw: IDaoOverviewMetric;
+  deFi: IDaoOverviewMetric;
 }
 
 interface IDaoOverviewMetric {

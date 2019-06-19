@@ -23,31 +23,39 @@ interface IOwnProps {
   depositDayAgo: BigNumber;
   withdraw: BigNumber;
   withdrawDayAgo: BigNumber;
+  deFi: BigNumber;
+  deFiDayAgo: BigNumber;
 }
 type IProps = IOwnProps & StylesProps;
 
 const DaoMetrics = (props: IProps) => {
-  const { classes, balance, balanceDayAgo, deposit, depositDayAgo, withdraw, withdrawDayAgo } = props;
+  const { classes, balance, balanceDayAgo, deposit, depositDayAgo, withdraw, withdrawDayAgo, deFi, deFiDayAgo } = props;
 
   const { t } = useTranslate();
   const metrics: IMetric[] = [
     {
       title: t(tKeys.balance.getKey()),
-      formatedValue: formatDAI(balance),
+      formatedValue: formatDAI(balance, 2),
       value: balance,
       valueDayAgo: balanceDayAgo,
     },
     {
       title: t(tKeys.deposit.getKey()),
-      formatedValue: formatDAI(deposit),
+      formatedValue: formatDAI(deposit, 2),
       value: deposit,
       valueDayAgo: depositDayAgo,
     },
     {
       title: t(tKeys.withdraw.getKey()),
-      formatedValue: formatDAI(withdraw),
+      formatedValue: formatDAI(withdraw, 2),
       value: withdraw,
       valueDayAgo: withdrawDayAgo,
+    },
+    {
+      title: t(tKeys.deFi.getKey()),
+      formatedValue: formatDAI(deFi, 2),
+      value: deFi,
+      valueDayAgo: deFiDayAgo,
     },
   ];
   return (

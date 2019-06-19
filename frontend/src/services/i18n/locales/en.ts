@@ -251,6 +251,7 @@ export default {
       history: 'History',
       balance: 'Balance',
       withdraw: 'Withdraw',
+      deFi: 'DeFi',
       request: 'Request',
       deposit: 'Deposit',
     },
