@@ -38,7 +38,7 @@ function RequestWithdrawForm(props: IProps) {
     return isRequired(value) || validateRequestAmount(value);
   }, [validateRequestAmount]);
 
-  const validateReason = composeValidators(isRequired, onEnglishPlease);
+  const validateReason = React.useMemo(() => composeValidators(isRequired, onEnglishPlease), []);
 
   const validateForm = React.useCallback(({ amount, reason }: IRequestFormData):
     Partial<MarkAs<ITranslateKey, IRequestFormData>> => {
