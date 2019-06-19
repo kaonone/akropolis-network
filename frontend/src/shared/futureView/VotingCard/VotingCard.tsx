@@ -18,6 +18,7 @@ import VotingResult from './VotingResult/VotingResult';
 import Intent from './Intent/Intent';
 
 import { StylesProps, provideStyles } from './VotingCard.style';
+import Column from './Column/Column';
 
 const endedVotingStatuses: VotingStatus[] = ['execute-needed', 'confirmed', 'rejected'];
 
@@ -46,24 +47,6 @@ function VotingCard(props: StylesProps & IOwnProps) {
     setExpanded(false);
   }, []);
 
-  const renderColumn = React.useCallback((title: string, value: string, subValue?: string) => (
-    <Grid item xs={3} container direction="column">
-      <Typography variant="overline" className={cn(classes.title, classes.purple)}>
-        {title}
-      </Typography>
-      <Grid container alignItems="baseline">
-        <Typography variant="h6" className={cn(classes.value, classes.purple)}>
-          {value}
-        </Typography>
-        {subValue &&
-          <Typography variant="subtitle1" className={classes.subValue}>
-            {subValue}
-          </Typography>
-        }
-      </Grid>
-    </Grid>
-  ), [voting]);
-
   const voteTime = useObserver(() => daoApi.store.voting.config.voteTime);
 
   const { timeLeft } = votingTimeout(startDate, voteTime);
@@ -86,13 +69,20 @@ function VotingCard(props: StylesProps & IOwnProps) {
       <Grid item xs={9} className={classes.mainInformation}>
         <Grid container spacing={16}>
           <Intent intent={intent} />
-          {renderColumn(timeLeftTitle, timeLeftValue)}
-          {renderColumn(
-            t(tKeys.voted.getKey()),
-            formatPercent(votedPercent, 2),
-            `${formatPercent(minAcceptQuorum)} ${t(tKeys.needed.getKey())}`,
-          )}
-          {(intent.type === 'withdrawRequest' || intent.type === 'invest') && (
+          <Column
+            xs={2}
+            title={timeLeftTitle}
+            value={timeLeftValue}
+            isHighlighted
+          />
+          <Column
+            xs={3}
+            title={t(tKeys.voted.getKey())}
+            value={formatPercent(votedPercent, 2)}
+            subValue={`${formatPercent(minAcceptQuorum)} ${t(tKeys.needed.getKey())}`}
+            isHighlighted
+          />
+          {intent.type === 'transfer' && !!intent.payload.reason && (
             <Grid item xs={12} zeroMinWidth container wrap="nowrap">
               {expanded && <ContainedCircleArrow className={classes.toggleExpandIcon} onClick={hideReason} />}
               {!expanded && <OutlinedCircleArrow className={classes.toggleExpandIcon} onClick={expandReason} />}

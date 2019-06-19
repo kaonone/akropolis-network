@@ -1,6 +1,8 @@
 import { Observable, empty } from 'rxjs';
-import { observable, when } from 'mobx';
+import { observable, when, action } from 'mobx';
+import { IAragonApp } from '@aragon/types';
 
+import { AppType } from '../types';
 import { BaseDaoApi } from '../BaseDaoApi';
 import { InvestmentsApi } from '../InvestmentsApi';
 import { createTokenManagerStore, initialTokenManagerState } from './createTokenManagerStore';
@@ -26,6 +28,9 @@ export class DaoStore {
   public agent: IAgentState = initialAgentState;
   public agent$: Observable<IAgentState> = empty();
 
+  @observable
+  public appTypeByAddress: Record<string, AppType> = {};
+
   private base: BaseDaoApi;
   private investments: InvestmentsApi;
 
@@ -43,6 +48,9 @@ export class DaoStore {
     const financeApp = this.base.getAppByName('finance');
     const votingApp = this.base.getAppByName('voting');
     const agentApp = this.base.getAppByName('agent');
+    const vaultApp = this.base.getAppByName('vault');
+
+    this.setAppTypeByAddress([tokenManagerApp, financeApp, votingApp, agentApp, vaultApp]);
 
     this.tokenManager$ = await createTokenManagerStore(this.base.web3, tokenManagerApp.proxy);
     this.tokenManager$.subscribe(state => this.tokenManager = state);
@@ -65,5 +73,16 @@ export class DaoStore {
       !!this.voting && this.voting.ready &&
       !!this.agent && this.agent.ready
     ));
+  }
+
+  @action
+  private setAppTypeByAddress(apps: IAragonApp[]) {
+    this.appTypeByAddress = apps.reduce<Record<string, AppType>>(
+      (acc, cur) => ({
+        ...acc,
+        [cur.proxyAddress]: (cur.appName && cur.appName.split('.')[0]) as AppType,
+      }),
+      {},
+    );
   }
 }

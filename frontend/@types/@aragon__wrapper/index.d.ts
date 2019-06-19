@@ -36,7 +36,7 @@ declare module '@aragon/wrapper' {
     defaultGasPriceFn(): string | undefined;
   }
 
-  interface IDecodedPathSegment {
+  export interface IDecodedPathSegment {
     data: string;
     to: string;
   }
@@ -74,6 +74,8 @@ declare module '@aragon/wrapper' {
         providedAccounts: string[];
       };
     }): Promise<void>;
+
+    public getApp(proxyAddress: string): Promise<IAragonApp | null>;
 
     public getTransactionPath(
       destination: string, methodName: string, params: string[], finalForwarder?: string,
