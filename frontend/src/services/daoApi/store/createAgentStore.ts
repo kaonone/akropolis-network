@@ -93,7 +93,7 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
       const needToUpdateReady = !state.ready && isCompleteLoading;
       const needToUpdateIsEnabled = !!agentEvents.length;
 
-      if (!(needToUpdateAgentBalance || needToUpdateCompoundState || needToUpdateReady)) {
+      if (!(needToUpdateAgentBalance || needToUpdateCompoundState || needToUpdateReady || needToUpdateIsEnabled)) {
         return state;
       }
 
