@@ -1,15 +1,16 @@
 import * as React from 'react';
+import { MarkAs } from '_helpers';
 import { useObserver } from 'mobx-react-lite';
 
 import { useDaoApi } from 'services/daoApi';
-import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
+import { useTranslate, tKeys as tKeysAll, ITranslateKey } from 'services/i18n';
 
 import { NumberInputField, TextInputField } from 'shared/view/form';
 import { Metric, AsyncActionButton } from 'shared/view/components';
 import { Grid, Typography } from 'shared/view/elements';
 import { Info } from 'shared/view/elements/Icons';
 import { formatDAI } from 'shared/helpers/format';
-import { isRequired } from 'shared/validators';
+import { isRequired, composeValidators, lessThenOrEqual, onEnglishPlease, moreThen } from 'shared/validators';
 
 import { StylesProps, provideStyles } from './DeFiAccount.style';
 
@@ -32,6 +33,7 @@ function DeFiAccount(props: StylesProps) {
   const { t } = useTranslate();
 
   const deFiBalance = useObserver(() => daoApi.store.agent.availableBalance);
+  const coopBalance = useObserver(() => daoApi.store.finance.vaultBalance);
   const isEnabled = useObserver(() => daoApi.store.agent.isEnabled);
   const supplied = useObserver(() => daoApi.store.suppliedToDeFi);
 
@@ -40,7 +42,6 @@ function DeFiAccount(props: StylesProps) {
       suffix=" DAI"
       name={fieldNames.amount}
       label={t(tKeys.fields.amount.getKey())}
-      validate={isRequired}
       fullWidth
     />
   );
@@ -52,6 +53,29 @@ function DeFiAccount(props: StylesProps) {
       fullWidth
     />
   );
+
+  const validateWithdraw = React.useCallback(({ amount }: IFormData):
+    Partial<MarkAs<ITranslateKey, IFormData>> => {
+    return {
+      amount: composeValidators<number>(
+        isRequired,
+        moreThen.bind(null, 0),
+        lessThenOrEqual.bind(null, deFiBalance),
+      )(amount),
+    };
+  }, [deFiBalance]);
+
+  const validateDeposit = React.useCallback(({ amount, reason }: IFormData):
+    Partial<MarkAs<ITranslateKey, IFormData>> => {
+    return {
+      amount: composeValidators<number>(
+        isRequired,
+        moreThen.bind(null, 0),
+        lessThenOrEqual.bind(null, coopBalance),
+      )(amount),
+      reason: composeValidators<string>(isRequired, onEnglishPlease)(reason),
+    };
+  }, [coopBalance]);
 
   return (
     <div className={classes.root}>
@@ -89,6 +113,9 @@ function DeFiAccount(props: StylesProps) {
                     form={{
                       fields: [amountInput, reasonInput],
                       title: t(tKeys.formTitles.deposit.getKey()),
+                      formProps: {
+                        validate: validateDeposit,
+                      },
                     }}
                   />
                 </Grid>
@@ -100,6 +127,9 @@ function DeFiAccount(props: StylesProps) {
                     form={{
                       fields: [amountInput],
                       title: t(tKeys.formTitles.withdraw.getKey()),
+                      formProps: {
+                        validate: validateWithdraw,
+                      },
                     }}
                   />
                 </Grid>

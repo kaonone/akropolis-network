@@ -38,6 +38,7 @@ function Products(props: IProps) {
 
   const daoApi = useDaoApi();
   const isEnabledDeFi = useObserver(() => daoApi.store.agent.isEnabled);
+  const deFiBalance = useObserver(() => daoApi.store.agent.availableBalance);
   const investments = useObserver(() => daoApi.store.agent.investments);
 
   return (
@@ -51,6 +52,7 @@ function Products(props: IProps) {
             <ProductCard
               disabled={!isEnabledDeFi}
               type={type}
+              depositLimit={deFiBalance}
               state={investments[type]}
               api={daoApi.investments[type]}
             />
@@ -61,6 +63,7 @@ function Products(props: IProps) {
             <ProductCard
               isComingSoon
               type={type}
+              depositLimit={deFiBalance}
               state={emptyState}
               api={emptyApi}
             />

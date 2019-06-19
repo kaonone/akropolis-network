@@ -1,7 +1,9 @@
 import * as React from 'react';
 import * as cn from 'classnames';
+import { MarkAs } from '_helpers';
+import BigNumber from 'bignumber.js';
 
-import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
+import { useTranslate, tKeys as tKeysAll, ITranslateKey } from 'services/i18n';
 
 import {
   IInvestmentState, InvestmentStatus, InvestmentType, InvestmentCategory, FutureInvestmentType, IInvestmentApi,
@@ -11,7 +13,7 @@ import { NumberInputField } from 'shared/view/form';
 import { Grid, Typography } from 'shared/view/elements';
 import { Settings, Info } from 'shared/view/elements/Icons';
 import { formatPercent, formatDAI } from 'shared/helpers/format';
-import { isRequired } from 'shared/validators';
+import { isRequired, composeValidators, moreThen, lessThenOrEqual } from 'shared/validators';
 
 import { StylesProps, provideStyles } from './ProductCard.style';
 
@@ -42,6 +44,7 @@ const iconByType: Record<InvestmentType | FutureInvestmentType, string> = {
 };
 
 interface IOwnProps {
+  depositLimit: BigNumber;
   state: IInvestmentState;
   api: IInvestmentApi;
   type: InvestmentType | FutureInvestmentType;
@@ -60,7 +63,7 @@ const fieldNames: { [key in keyof IFormData]: key } = {
 };
 
 export const ProductCard = React.memo(provideStyles((props: IProps) => {
-  const { classes, api, state, type, disabled, isComingSoon } = props;
+  const { classes, api, state, type, depositLimit, disabled, isComingSoon } = props;
   const { balance, currentRate, earned, isEnabled } = state;
   const { t } = useTranslate();
 
@@ -83,10 +86,31 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
       suffix=" DAI"
       name={fieldNames.amount}
       label={t(tKeys.fields.amount.getKey())}
-      validate={isRequired}
       fullWidth
     />
   )];
+
+  const validateWithdraw = React.useCallback(({ amount }: IFormData):
+    Partial<MarkAs<ITranslateKey, IFormData>> => {
+    return {
+      amount: composeValidators<number>(
+        isRequired,
+        moreThen.bind(null, 0),
+        lessThenOrEqual.bind(null, balance),
+      )(amount),
+    };
+  }, [balance]);
+
+  const validateDeposit = React.useCallback(({ amount }: IFormData):
+    Partial<MarkAs<ITranslateKey, IFormData>> => {
+    return {
+      amount: composeValidators<number>(
+        isRequired,
+        moreThen.bind(null, 0),
+        lessThenOrEqual.bind(null, depositLimit),
+      )(amount),
+    };
+  }, [depositLimit]);
 
   const footerByStatus: Record<InvestmentStatus, () => React.ReactNode> = {
     ['waiting']: () => (
@@ -131,6 +155,9 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
             form={{
               title: t(tKeys.withdrawModalTitle[type].getKey()),
               fields: formFields,
+              formProps: {
+                validate: validateWithdraw,
+              },
             }}
           />
         </Grid>
@@ -145,6 +172,9 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
             form={{
               title: t(tKeys.supplyModalTitle[type].getKey()),
               fields: formFields,
+              formProps: {
+                validate: validateDeposit,
+              },
             }}
           />
         </Grid>
