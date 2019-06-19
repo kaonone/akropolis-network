@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
+import { MarkAs } from '_helpers';
+import { tKeys as tKeysAll, useTranslate, ITranslateKey } from 'services/i18n';
 import { useDaoApi } from 'services/daoApi';
 import { isRequired, onEnglishPlease, composeValidators, useValidateRequestAmount } from 'shared/validators';
 import { Request } from 'shared/view/elements/Icons';
@@ -31,17 +32,27 @@ function RequestWithdrawForm(props: IProps) {
   const { t } = useTranslate();
   const daoApi = useDaoApi();
 
+  const validateRequestAmount = useValidateRequestAmount(daoApi);
+
+  const validateWithdraw = React.useCallback((value: number) => {
+    return isRequired(value) || validateRequestAmount(value);
+  }, [validateRequestAmount]);
+
+  const validateReason = React.useMemo(() => composeValidators(isRequired, onEnglishPlease), []);
+
+  const validateForm = React.useCallback(({ amount, reason }: IRequestFormData):
+    Partial<MarkAs<ITranslateKey, IRequestFormData>> => {
+    return {
+      amount: validateWithdraw(amount),
+      reason: validateReason(reason),
+    };
+  }, [validateWithdraw, validateReason]);
+
   const asyncSubmit = makeAsyncSubmit<IRequestFormData>(
     ({ amount, reason }) => daoApi.requestWithdraw(amount, reason),
     onSuccess,
     onError,
   );
-
-  const validateRequestAmount = useValidateRequestAmount(daoApi);
-
-  const validateWithdraw = React.useCallback((value: number) => {
-    return isRequired(value) || validateRequestAmount(value);
-  }, []);
 
   // tslint:disable:jsx-key
   const formFields = [
@@ -50,14 +61,12 @@ function RequestWithdrawForm(props: IProps) {
         suffix=" DAI"
         name={fieldNames.amount}
         label={t(tKeys.fields.amount.getKey())}
-        validate={validateWithdraw}
         fullWidth
       />),
     (
       <TextInputField
         name={fieldNames.reason}
         label={t(tKeys.fields.reason.getKey())}
-        validate={composeValidators(isRequired, onEnglishPlease)}
         fullWidth
       />),
   ];
@@ -68,6 +77,7 @@ function RequestWithdrawForm(props: IProps) {
       onCancel={onCancel}
       onSubmit={asyncSubmit}
       cancelButton={t(tKeys.form.cancel.getKey())}
+      validate={validateForm}
       submitButton={<>
         <Request className={classes.buttonIcon} />
         {t(tKeys.form.submit.getKey())}
