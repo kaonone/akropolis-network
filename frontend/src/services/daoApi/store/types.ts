@@ -48,6 +48,6 @@ export interface IDaoOverview {
 }
 
 interface IDaoOverviewMetric {
-  value: number;
-  valueDayAgo: number;
+  value: BigNumber;
+  valueDayAgo: BigNumber;
 }

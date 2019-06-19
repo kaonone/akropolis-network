@@ -1,4 +1,5 @@
 import * as React from 'react';
+import BigNumber from 'bignumber.js';
 
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 
@@ -14,8 +15,8 @@ const tKeys = tKeysAll.features.cooperativeOverview;
 
 interface IOwnProps {
   members: string[];
-  balance: number;
-  balanceDayAgo: number;
+  balance: BigNumber;
+  balanceDayAgo: BigNumber;
 }
 
 type IProps = StylesProps & IOwnProps;

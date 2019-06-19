@@ -1,4 +1,5 @@
 import React from 'react';
+import BigNumber from 'bignumber.js';
 import { useObserver } from 'mobx-react-lite';
 
 import { DaoApi } from 'services/daoApi';
@@ -8,7 +9,7 @@ import { useAccountAddress } from 'services/user';
 import { addressesEqual } from '../web3';
 import { calculateIsRejected } from './votingStatus';
 
-const useActiveWithdraws = (daoApi: DaoApi): number => {
+const useActiveWithdraws = (daoApi: DaoApi): BigNumber => {
   const userAccountAddress = useAccountAddress();
   const votes = useObserver(() => daoApi.store.voting.votings);
 
@@ -23,7 +24,7 @@ const useActiveWithdraws = (daoApi: DaoApi): number => {
           !calculateIsRejected(vote, votingConfig.voteTime) &&
           !vote.executed
         ))
-      .reduce((acc, curr) => acc + (curr.intent as TransferIntent).payload.amount.toNumber(), 0);
+      .reduce((acc, curr) => acc.plus((curr.intent as TransferIntent).payload.amount), new BigNumber(0));
   }, [votes, userAccountAddress, votingConfig]);
 
 };

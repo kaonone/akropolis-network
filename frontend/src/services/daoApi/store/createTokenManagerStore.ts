@@ -103,7 +103,7 @@ async function loadNewBalances(token: ContractProxy, ...addresses: string[]): Pr
     return Promise.all(
       addresses.map(async address => {
         const balance: string = await token.call('balanceOf', address);
-        return { address, balance: new BN(balance).div(ONE_ERC20).toNumber() };
+        return { address, balance: new BN(balance).div(ONE_ERC20) };
       }),
     );
   }

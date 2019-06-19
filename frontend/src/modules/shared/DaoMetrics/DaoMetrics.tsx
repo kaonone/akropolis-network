@@ -1,8 +1,8 @@
 import * as React from 'react';
+import BigNumber from 'bignumber.js';
 
-import { formatDAI } from 'shared/helpers/format';
 import { tKeys as tkeysAll, useTranslate } from 'services/i18n';
-
+import { formatDAI } from 'shared/helpers/format';
 import { Grid, Typography, Growth } from 'shared/view/elements';
 
 import { provideStyles, StylesProps } from './DaoMetrics.style';
@@ -12,17 +12,17 @@ const tKeys = tkeysAll.modules.daos;
 interface IMetric {
   title: string;
   formatedValue: string;
-  value: number;
-  valueDayAgo: number;
+  value: BigNumber;
+  valueDayAgo: BigNumber;
 }
 
 interface IOwnProps {
-  balance: number;
-  balanceDayAgo: number;
-  deposit: number;
-  depositDayAgo: number;
-  withdraw: number;
-  withdrawDayAgo: number;
+  balance: BigNumber;
+  balanceDayAgo: BigNumber;
+  deposit: BigNumber;
+  depositDayAgo: BigNumber;
+  withdraw: BigNumber;
+  withdrawDayAgo: BigNumber;
 }
 type IProps = IOwnProps & StylesProps;
 

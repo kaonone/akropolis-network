@@ -1,4 +1,5 @@
 import * as React from 'react';
+import BigNumber from 'bignumber.js';
 import { Typography, Grid, ProgressBar } from 'shared/view/elements';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 
@@ -8,7 +9,7 @@ const tKeys = tKeysAll.features.cooperativeOverview;
 
 interface IOwnProps {
   totalGoal: number;
-  currentBalance: number;
+  currentBalance: BigNumber;
   description: string;
 }
 
@@ -32,7 +33,7 @@ function CooperativeChart(props: IProps) {
         <ProgressBar
           variant="secondary"
           totalValue={totalGoal}
-          currentValue={Math.min(currentBalance, totalGoal)}
+          currentValue={Math.min(currentBalance.toNumber(), totalGoal)}
           progressPrecision={2}
           className={classes.progress}
         />

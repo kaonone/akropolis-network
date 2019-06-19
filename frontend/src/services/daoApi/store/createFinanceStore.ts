@@ -36,9 +36,9 @@ export const initialFinanceState: IFinanceState = {
   transactions: {},
   vaultAddress: '',
   daoOverview: {
-    balance: { value: 0, valueDayAgo: 0 },
-    withdraw: { value: 0, valueDayAgo: 0 },
-    deposit: { value: 0, valueDayAgo: 0 },
+    balance: { value: new BN(0), valueDayAgo: new BN(0) },
+    withdraw: { value: new BN(0), valueDayAgo: new BN(0) },
+    deposit: { value: new BN(0), valueDayAgo: new BN(0) },
   },
   ready: false,
 };
@@ -62,14 +62,14 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
         .map(event => event.returnValues.transactionId));
 
       const daoBalance = isNeedLoadBalance
-        ? new BN(await vaultProxy.call('balance', NETWORK_CONFIG.daiContract)).div(ONE_ERC20).toNumber()
+        ? new BN(await vaultProxy.call('balance', NETWORK_CONFIG.daiContract)).div(ONE_ERC20)
         : state.daoOverview.balance.value;
 
       const mainCoinNewTransactions: IFinanceTransaction[] = (await Promise.all(
         transactionsForLoad.map(async id => ({ id, ...await proxy.call('getTransaction', id) })),
       )).map<IFinanceTransaction>(item => ({
         ...item,
-        amount: new BN(item.amount).div(ONE_ERC20).toNumber(),
+        amount: new BN(item.amount).div(ONE_ERC20),
         date: parseInt(item.date, 10) * 1000,
       })).filter(item => addressesEqual(item.token, NETWORK_CONFIG.daiContract));
 
@@ -87,25 +87,25 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
       const holdersForDay: IFinanceHolder[] = Object.values(
         reduceHolders(Object.values(nextTransactions).filter(transaction => transaction.date > dayAgo)),
       );
-      const balanceChangeForDay = R.sum(holdersForDay.map(item => item.balance));
-      const depositChangeForDay = R.sum(holdersForDay.map(item => item.deposit));
-      const withdrawChangeForDay = R.sum(holdersForDay.map(item => item.withdraw));
+      const balanceChangeForDay = BN.sum(...holdersForDay.map(item => item.balance));
+      const depositChangeForDay = BN.sum(...holdersForDay.map(item => item.deposit));
+      const withdrawChangeForDay = BN.sum(...holdersForDay.map(item => item.withdraw));
 
-      const daoDeposit = R.sum(Object.values(holders).map(item => item.deposit));
-      const daoWithdraw = R.sum(Object.values(holders).map(item => item.withdraw));
+      const daoDeposit = BN.sum(...Object.values(holders).map(item => item.deposit));
+      const daoWithdraw = BN.sum(...Object.values(holders).map(item => item.withdraw));
 
       const daoOverview: IFinanceState['daoOverview'] = {
         balance: {
           value: daoBalance,
-          valueDayAgo: daoBalance - balanceChangeForDay,
+          valueDayAgo: daoBalance.minus(balanceChangeForDay),
         },
         deposit: {
           value: daoDeposit,
-          valueDayAgo: daoDeposit - depositChangeForDay,
+          valueDayAgo: daoDeposit.minus(depositChangeForDay),
         },
         withdraw: {
           value: daoWithdraw,
-          valueDayAgo: daoWithdraw - withdrawChangeForDay,
+          valueDayAgo: daoWithdraw.minus(withdrawChangeForDay),
         },
       };
 
@@ -128,15 +128,15 @@ function reduceHolders(nextTransactions: IFinanceTransaction[]): Record<string, 
     .reduce<Record<string, IFinanceHolder>>((acc, cur) => {
       const prevHolderState: IFinanceHolder = acc[cur.entity] || {
         address: cur.entity,
-        balance: 0,
-        withdraw: 0,
-        deposit: 0,
+        balance: new BN(0),
+        withdraw: new BN(0),
+        deposit: new BN(0),
       };
       const holder: IFinanceHolder = {
         ...prevHolderState,
-        balance: prevHolderState.balance + (cur.isIncoming ? cur.amount : -cur.amount),
-        withdraw: prevHolderState.withdraw + (cur.isIncoming ? 0 : cur.amount),
-        deposit: prevHolderState.deposit + (cur.isIncoming ? cur.amount : 0),
+        balance: prevHolderState.balance.plus(cur.isIncoming ? cur.amount : -cur.amount),
+        withdraw: prevHolderState.withdraw.plus(cur.isIncoming ? 0 : cur.amount),
+        deposit: prevHolderState.deposit.plus(cur.isIncoming ? cur.amount : 0),
       };
       return { ...acc, [cur.entity]: holder };
     }, {});

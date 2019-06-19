@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import BigNumber from 'bignumber.js';
 import { EventLog } from 'web3/types';
 
 export type Provider = typeof Web3.givenProvider;
@@ -14,13 +15,13 @@ export interface IEthereumEvent<E extends string = string, V = any> extends Even
 }
 
 export interface IHolder {
-  balance: number;
+  balance: BigNumber;
   address: string;
 }
 
 export interface IFinanceTransaction {
   id: string;
-  amount: number;
+  amount: BigNumber;
   date: number;
   entity: string;
   isIncoming: boolean;
@@ -30,6 +31,6 @@ export interface IFinanceTransaction {
 }
 
 export interface IFinanceHolder extends IHolder {
-  deposit: number;
-  withdraw: number;
+  deposit: BigNumber;
+  withdraw: BigNumber;
 }
