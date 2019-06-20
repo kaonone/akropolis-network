@@ -179,6 +179,7 @@ export default {
         enable: 'Open',
         deposit: 'Deposit',
         withdraw: 'Withdraw',
+        transfer: 'Transfer',
       },
       fields: {
         amount: 'Amount',
@@ -200,6 +201,7 @@ export default {
       enable: 'Enable',
       withdraw: 'Withdraw',
       supply: 'Supply',
+      transfer: 'Transfer',
       fields: {
         amount: 'Amount',
       },

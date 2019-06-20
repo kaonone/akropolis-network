@@ -18,6 +18,7 @@ interface IOwnProps<V, F> {
   form?: {
     fields: React.ReactNode[],
     title: string,
+    submitButtonText?: string,
     formProps?: Omit<GetProps<typeof Form>, 'onSubmit'>,
   };
   buttonProps?: GetProps<typeof Button>;
@@ -113,17 +114,17 @@ function ActionButtonWithForm<V = void, F extends {} = {}>(props: IActionButtonW
     },
   ), [executeAction, onSuccess, onFail, closeModal, onError]);
 
-  const buttonContent = React.useMemo(() => (
+  const renderButtonContent = React.useCallback((text: string) => (
     <>
       {!!buttonIcon && <div className={classes.buttonIcon}>{buttonIcon}</div>}
-      {buttonText}
+      {text}
     </>
-  ), [buttonIcon, buttonText]);
+  ), [buttonIcon]);
 
   return (
     <>
       <Button variant="contained" {...buttonProps} onClick={openModal}>
-        {buttonContent}
+        {renderButtonContent(buttonText)}
       </Button>
       <Modal
         size="large"
@@ -136,7 +137,7 @@ function ActionButtonWithForm<V = void, F extends {} = {}>(props: IActionButtonW
           onCancel={closeModal}
           onSubmit={asyncSubmit}
           cancelButton={t(tKeys.shared.cancel.getKey())}
-          submitButton={buttonContent}
+          submitButton={renderButtonContent(form.submitButtonText || buttonText)}
           fields={form.fields}
         />
       </Modal>
