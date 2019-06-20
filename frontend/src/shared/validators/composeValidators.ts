@@ -1,7 +1,7 @@
 import { ITranslateKey } from 'services/i18n';
 
-type Validator = (value: string) => string | ITranslateKey | undefined;
+type Validator<T> = (value: T) => string | ITranslateKey | undefined;
 
-export function composeValidators(...validators: Validator[]) {
-  return (value: string) => validators.reduce((error, validator) => error || validator(value), void 0);
+export function composeValidators<T>(...validators: Array<Validator<T>>) {
+  return (value: T) => validators.reduce((error, validator) => error || validator(value), void 0);
 }

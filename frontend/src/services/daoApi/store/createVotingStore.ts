@@ -5,15 +5,15 @@ import AragonWrapper from '@aragon/wrapper';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 
 import { currentAddress$, getCurrentAccount } from 'services/user';
-import { IEthereumEvent, IVoting, VotingIntent, VotingDecision } from 'shared/types/models';
+import { IEthereumEvent, IVoting, VotingDecision } from 'shared/types/models';
 import { ONE_ERC20 } from 'shared/constants';
 import { addressesEqual } from 'shared/helpers/web3';
 import { makeStoreFromEvents } from 'shared/helpers/makeStoreFromEvents';
 
 import { IVotingState, ISimpleEvent } from './types';
+import { calculateVotingIntent } from './calculateVotingIntent';
 
 const ACCOUNTS_TRIGGER = Symbol('ACCOUNTS_TRIGGER');
-export const EMPTY_CALLSCRIPT = '0x00000001';
 
 interface IVotingInfoFromEvent {
   voteId: string;
@@ -216,8 +216,7 @@ async function loadVoting(
     const {
       minAcceptQuorum, nay, startDate, snapshotBlock, supportRequired, votingPower, yea, executed, open, script,
     }: IVoteFromContract = await proxy.call('getVote', id);
-    const { description, intentDetails } = await loadVotingDescription(wrapper, script);
-    const intent = calculateVotingIntent(intentDetails);
+    const intent = await calculateVotingIntent(wrapper, script);
 
     return {
       id,
@@ -225,8 +224,6 @@ async function loadVoting(
       executed,
       open,
       script,
-      description,
-      intentDetails,
       minAcceptQuorum: new BN(minAcceptQuorum).div(ONE_ERC20).times(100).toNumber(),
       supportRequired: new BN(supportRequired).div(ONE_ERC20).times(100).toNumber(),
       votingPower: new BN(votingPower).div(ONE_ERC20).toNumber(),
@@ -240,72 +237,4 @@ async function loadVoting(
   }));
 
   return R.indexBy(R.prop('id'), votes);
-}
-
-function calculateVotingIntent(intentDetails: IVoting['intentDetails']): VotingIntent {
-  if (!intentDetails[0]) {
-    return { type: 'unknown' };
-  }
-
-  const addressRegexStr = '0x[a-fA-F0-9]{40}';
-  const details = intentDetails[0];
-
-  try {
-    if (!details.name || !details.description) {
-      return { type: 'unknown' };
-    }
-
-    if (details.name.startsWith('Token') && details.description.startsWith('Mint')) {
-      const [, address] = details.description.match(new RegExp(`^.+?(${addressRegexStr})$`)) || ([] as string[]);
-      return {
-        type: 'joinToDao',
-        payload: { address },
-      };
-    }
-
-    if (details.name.startsWith('Finance') && details.description.startsWith('Create a new payment')) {
-      const [, amount, to, reason] = details.description.match(
-        new RegExp(`^Create a new payment of ([0-9.]+?) .+? to (${addressRegexStr}).+?'(.*)'$`),
-      ) || ([] as string[]);
-      return {
-        type: 'withdrawRequest',
-        payload: {
-          to,
-          reason,
-          amount: parseFloat(amount),
-        },
-      };
-    }
-    return { type: 'unknown' };
-  } catch (e) {
-    console.error(e);
-    return { type: 'unknown' };
-  }
-}
-
-async function loadVotingDescription(
-  wrapper: AragonWrapper, voteScript?: string,
-): Promise<Pick<IVoting, 'description' | 'intentDetails'>> {
-  if (!voteScript || voteScript === EMPTY_CALLSCRIPT) {
-    return {
-      intentDetails: [],
-    };
-  }
-
-  const intentDetails = await wrapper.describeTransactionPath(
-    wrapper.decodeTransactionPath(voteScript),
-  );
-  return {
-    intentDetails,
-    description: intentDetails
-      ? intentDetails
-        .map(step => {
-          const identifier = step.identifier ? ` (${step.identifier})` : '';
-          const app = step.name ? `${step.name}${identifier}` : `${step.to}`;
-
-          return `${app}: ${step.description || 'No description'}`;
-        })
-        .join('\n')
-      : undefined,
-  };
 }

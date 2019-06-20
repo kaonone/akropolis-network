@@ -9,7 +9,6 @@ import { IAragonApp, ITransaction, IAbi } from '@aragon/types';
 import { getWeb3, getMainAccount } from 'shared/helpers/web3';
 import { notifyDevWarning } from 'shared/helpers/notifyDevWarning';
 import { isEthereumAddress } from 'shared/validators/isEthereumAddress/isEthereumAddress';
-import { NULL_ADDRESS } from 'shared/constants';
 import { IDaoApiConfig, AppType, MethodByApp, ParamsByAppByMethod } from './types';
 import { currentAddress$ } from 'services/user';
 
@@ -35,9 +34,13 @@ export class BaseDaoApi {
     return getWeb3(this.config.walletWeb3Provider);
   }
 
-  public getAppByName(appName: AppType): IExtendedAragonApp | null {
+  public getAppByName(appName: AppType): IExtendedAragonApp {
     // ACL, Kernel and EVM Scripts don't have appName property
-    return this.apps.find(app => !!app.appName && app.appName.startsWith(appName)) || null;
+    const foundApp = this.apps.find(app => !!app.appName && app.appName.startsWith(appName));
+    if (!foundApp) {
+      throw new Error(`Aragon app "${appName}" is not found`);
+    }
+    return foundApp;
   }
 
   public async getAccount() {
@@ -110,10 +113,6 @@ export class BaseDaoApi {
 
     const app = this.getAppByName(appType);
 
-    if (!app) {
-      throw new Error(`app for "${appType}" is not found`);
-    }
-
     return app.proxy.call(method as any, ...(params as any || []));
   }
 
@@ -149,17 +148,16 @@ export class BaseDaoApi {
     }
 
     const proxy = this.getAppByName(appType);
-    const proxyAddress = proxy ? proxy.proxyAddress : NULL_ADDRESS;
 
-    const path = await this.wrapper.getTransactionPath(proxyAddress, method as string, params as any);
-
-    notifyDevWarning(
-      path.length > 1,
-      'Transactions path have more than one transaction',
-      { path },
-    );
+    const path = await this.wrapper.getTransactionPath(proxy.proxyAddress, method as string, params as any);
 
     const transaction = path[0];
+
+    notifyDevWarning(
+      !transaction,
+      'Detected empty transaction path',
+      { path, proxy, method, params },
+    );
 
     if (transaction) {
       transaction.pretransaction && await this._sendTransaction(transaction.pretransaction);

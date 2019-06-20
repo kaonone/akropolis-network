@@ -1,12 +1,12 @@
-export function makeAsyncSubmit<FormData = object>(
-  action: (values: FormData) => Promise<void>,
-  onSuccess: () => void,
+export function makeAsyncSubmit<FormData = object, R = void>(
+  action: (values: FormData) => Promise<R>,
+  onSuccess: (result?: R) => void,
   onError?: (error: string) => void,
 ) {
   return async (values: FormData) => {
     try {
-      await action(values);
-      onSuccess();
+      const result = await action(values);
+      onSuccess(result);
     } catch (e) {
       onError && onError(String(e));
     }

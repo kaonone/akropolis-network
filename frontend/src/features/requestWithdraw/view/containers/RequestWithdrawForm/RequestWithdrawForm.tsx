@@ -34,19 +34,13 @@ function RequestWithdrawForm(props: IProps) {
 
   const validateRequestAmount = useValidateRequestAmount(daoApi);
 
-  const validateWithdraw = React.useCallback((value: number) => {
-    return isRequired(value) || validateRequestAmount(value);
-  }, [validateRequestAmount]);
-
-  const validateReason = React.useMemo(() => composeValidators(isRequired, onEnglishPlease), []);
-
   const validateForm = React.useCallback(({ amount, reason }: IRequestFormData):
     Partial<MarkAs<ITranslateKey, IRequestFormData>> => {
     return {
-      amount: validateWithdraw(amount),
-      reason: validateReason(reason),
+      amount: composeValidators<number>(isRequired, validateRequestAmount)(amount),
+      reason: composeValidators<string>(isRequired, onEnglishPlease)(reason),
     };
-  }, [validateWithdraw, validateReason]);
+  }, [validateRequestAmount]);
 
   const asyncSubmit = makeAsyncSubmit<IRequestFormData>(
     ({ amount, reason }) => daoApi.requestWithdraw(amount, reason),

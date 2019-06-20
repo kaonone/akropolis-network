@@ -45,12 +45,13 @@ type LocalEvent =
 type Event = EthereumEvent | LocalEvent;
 
 export const initialAgentState: IAgentState = {
+  isEnabled: false,
   availableBalance: new BigNumber(0),
   investments: {
     compound: {
       balance: new BigNumber(0),
       currentRate: new BigNumber(0),
-      earn: new BigNumber(0),
+      earned: new BigNumber(0),
       isEnabled: false,
     },
   },
@@ -87,11 +88,12 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
         .filter((item): item is AgentExecute => item.event === 'Execute')
         .filter(item => addressesEqual(NETWORK_CONFIG.daiCompound, item.returnValues.target));
 
-      const needToUpdateAgentBalance = !!financeAndAgentTransactionEvents.length;
+      const needToUpdateAgentBalance = !!financeAndAgentTransactionEvents.length || !!agentToCompoundExecutions.length;
       const needToUpdateCompoundState = !!agentToCompoundExecutions.length || !!compoundTriggers.length;
       const needToUpdateReady = !state.ready && isCompleteLoading;
+      const needToUpdateIsEnabled = !!agentEvents.length;
 
-      if (!(needToUpdateAgentBalance || needToUpdateCompoundState || needToUpdateReady)) {
+      if (!(needToUpdateAgentBalance || needToUpdateCompoundState || needToUpdateReady || needToUpdateIsEnabled)) {
         return state;
       }
 
@@ -99,14 +101,19 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
         ? await getErc20Balance(wrapper.web3, NETWORK_CONFIG.daiContract, agentProxy.address)
         : state.availableBalance;
 
+      const isEnabled = needToUpdateIsEnabled
+        ? await investments.deFiAccount.isEnabled()
+        : state.isEnabled; // TODO ds: check this
+
       const compound: IInvestmentState = needToUpdateCompoundState ? {
         balance: await investments.compound.getBalance(agentProxy.address),
         currentRate: await investments.compound.getCurrentRate(),
-        earn: await investments.compound.getEarn(agentProxy.address),
+        earned: await investments.compound.getEarn(agentProxy.address),
         isEnabled: await investments.compound.isEnabled(agentProxy.address),
       } : state.investments.compound;
 
       return {
+        isEnabled,
         availableBalance,
         investments: {
           compound,

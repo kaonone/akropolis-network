@@ -1,4 +1,5 @@
 import * as React from 'react';
+import BigNumber from 'bignumber.js';
 
 import { TOTAL_WAITING_DAYS_FOR_ACCESS } from 'core/constants';
 import { Typography } from 'shared/view/elements';
@@ -16,7 +17,7 @@ const tKeys = tKeysAll.features.cooperativeOverview;
 const tKeysShared = tKeysAll.shared;
 
 interface IOwnProps {
-  balance: number;
+  balance: BigNumber;
   earn: number;
 }
 

@@ -1,13 +1,14 @@
 import * as React from 'react';
-import * as cn from 'classnames';
+import { UnionToIntersection, ExtractByType } from '_helpers';
 
-import { Grid, Typography } from 'shared/view/elements';
-import { Receipt, AddPerson, Graphic } from 'shared/view/elements/Icons';
-import { shortenString, formatDAI } from 'shared/helpers/format';
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
 import { VotingIntent } from 'shared/types/models';
+import { Receipt, AddPerson, DeFiDots, AddCircle, RemoveCircle } from 'shared/view/elements/Icons';
+import { formatDAI } from 'shared/helpers/format';
 
-import { StylesProps, provideStyles } from './../VotingCard.style';
+import Column from '../Column/Column';
+import Address from '../Address/Address';
+import { StylesProps, provideStyles } from './Intent.style';
 
 const tKeys = tKeysAll.features.voting;
 const tKeysShared = tKeysAll.shared;
@@ -19,65 +20,72 @@ interface IIntentProps {
 type IProps = IIntentProps & StylesProps;
 
 export default React.memo(provideStyles((props: IProps) => {
-  const { classes, intent } = props;
-
+  const { classes, intent: ownIntent } = props;
   const { t } = useTranslate();
 
-  const renderColumn = React.useCallback((title: string, icon: React.ReactElement, subtitle: string) => (
-    <Grid item xs container direction="column">
-      <Grid container wrap="nowrap" alignItems="center">
-        {icon}
-        <Typography variant="overline" className={cn(classes.title, classes.grey)}>
-          {title}
-        </Typography>
-      </Grid>
-      <Typography variant="h6" className={cn({ [classes.address]: intent.type === 'joinToDao' })}>
-        {subtitle}
-      </Typography>
-    </Grid>
-  ), [intent]);
+  const renderByType: { [key in VotingIntent['type']]: (intent: ExtractByType<VotingIntent, key>) => JSX.Element } = {
+    transfer: (intent) => (
+      <>
+        <Column
+          xs
+          title={t(tKeys.transfer.getKey())}
+          value={formatDAI(intent.payload.amount.toNumber(), 2)}
+          icon={<Receipt className={classes.withdrawIcon} />}
+        />
+        <Column
+          xs
+          title={t(tKeysShared.from.getKey())}
+          value={<Address value={intent.payload.from} />}
+        />
+        <Column
+          xs
+          title={t(tKeysShared.to.getKey())}
+          value={<Address value={intent.payload.to} />}
+        />
+      </>
+    ),
+    joinToDao: (intent) => (
+      <Column
+        xs
+        title={t(tKeys.join.getKey())}
+        value={<Address value={intent.payload.address} />}
+        icon={<AddPerson className={classes.addPersonIcon} />}
+      />
+    ),
+    enableDeFiAccount: () => (
+      <Column
+        xs
+        title={t(tKeys.open.getKey())}
+        value={'DeFi Account'}
+        icon={<DeFiDots className={classes.deFiIcon} />}
+      />
+    ),
+    disableDeFiAccount: () => (
+      <Column
+        xs
+        title={t(tKeys.close.getKey())}
+        value={'DeFi Account'}
+        icon={<DeFiDots className={classes.deFiIcon} />}
+      />
+    ),
+    enableInvestment: (intent) => (
+      <Column
+        xs
+        title={t(tKeys.enable.getKey())}
+        value={<Address value={intent.payload.address} />}
+        icon={<AddCircle className={classes.enableInvestmentIcon} />}
+      />
+    ),
+    disableInvestment: (intent) => (
+      <Column
+        xs
+        title={t(tKeys.disable.getKey())}
+        value={<Address value={intent.payload.address} />}
+        icon={<RemoveCircle className={classes.disableInvestmentIcon} />}
+      />
+    ),
+    unknown: () => <noscript />,
+  };
 
-  return (
-    <>
-      {intent.type === 'withdrawRequest' &&
-        <>
-          {renderColumn(
-            t(tKeys.withdraw.getKey()),
-            <Receipt className={classes.withdrawIcon} />,
-            formatDAI(intent.payload.amount),
-          )}
-          <Grid item xs container direction="column">
-            <Typography variant="overline" className={cn(classes.title, classes.grey)}>
-              {t(tKeysShared.to.getKey())}
-            </Typography>
-            <Typography variant="h6" className={classes.address}>
-              {shortenString(intent.payload.to, 10)}
-            </Typography>
-          </Grid>
-        </>
-      }
-      {intent.type === 'joinToDao' &&
-        renderColumn(
-          t(tKeys.join.getKey()),
-          <AddPerson className={classes.addPersonIcon} />,
-          shortenString(intent.payload.address, 10),
-        )
-      }
-      {intent.type === 'invest' &&
-        <>
-          {renderColumn(
-            t(tKeys.deposit.getKey()),
-            <Graphic className={classes.votingTypeIcon} />,
-            formatDAI(intent.payload.amount),
-          )}
-          <Grid item xs container direction="column">
-            <Typography variant="overline" className={cn(classes.title, classes.grey)}>
-              {t(tKeysShared.to.getKey())}
-            </Typography>
-            <Typography variant="h6">{intent.payload.to}</Typography>
-          </Grid>
-        </>
-      }
-    </>
-  );
+  return renderByType[ownIntent.type](ownIntent as UnionToIntersection<VotingIntent>);
 }));

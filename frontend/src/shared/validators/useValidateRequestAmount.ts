@@ -10,8 +10,8 @@ export function useValidateRequestAmount(daoApi: DaoApi) {
   const currentWithdrawAmount = useActiveWithdraws(daoApi);
 
   return React.useCallback((daiAmount: number) => {
-    const remainedDai = userBalance - currentWithdrawAmount;
+    const remainedDai = userBalance.minus(currentWithdrawAmount);
 
-    return remainedDai >= daiAmount ? undefined : tKeys.shared.validation.notEnoughDai.getKey();
+    return remainedDai.isGreaterThanOrEqualTo(daiAmount) ? undefined : tKeys.shared.validation.notEnoughDai.getKey();
   }, [currentWithdrawAmount, userBalance]);
 }

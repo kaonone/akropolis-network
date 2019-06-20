@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as cn from 'classnames';
+import BigNumber from 'bignumber.js';
 
 import { calculateGrowth } from 'shared/helpers/integer';
 import { formatPercent } from 'shared/helpers/format';
@@ -9,10 +10,10 @@ import { Increase, Decrease } from '../Icons';
 import { StylesProps, provideStyles } from './Growth.style';
 
 interface IProps {
-  previous: number;
-  current: number;
-  calculate?(previous: number, current: number): number;
-  format?(value: number): string;
+  previous: BigNumber;
+  current: BigNumber;
+  calculate?(previous: BigNumber, current: BigNumber): BigNumber;
+  format?(value: BigNumber): string;
 }
 
 function Growth(props: IProps & StylesProps) {
@@ -20,10 +21,10 @@ function Growth(props: IProps & StylesProps) {
   const growth = (calculate || calculateGrowth)(previous, current);
 
   const type =
-    !Number.isFinite(growth) && 'infinite' ||
-    growth === 0 && 'zero' ||
-    growth > 0 && 'increase' ||
-    growth < 0 && 'decrease' || 'infinite';
+    !growth.isFinite() && 'infinite' ||
+    growth.isEqualTo(0) && 'zero' ||
+    growth.isGreaterThan(0) && 'increase' ||
+    growth.isLessThan(0) && 'decrease' || 'infinite';
 
   if (type === 'infinite') { return <></>; }
 
