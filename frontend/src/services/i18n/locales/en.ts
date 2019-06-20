@@ -163,7 +163,7 @@ export default {
       personalInformation: 'Personal Information',
       balance: 'Balance',
       earn: 'Earn',
-      earnHint: 'The earnings of the Co-op is distributed proportionally among the its members.',
+      earnHint: 'The earnings of the Co-op are distributed proportionally among its members.',
       forMembers: 'For members',
       accessToLoan: 'Access to loan',
       accessToInsurance: 'Access to social insurance',
