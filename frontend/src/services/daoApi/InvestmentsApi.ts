@@ -4,9 +4,10 @@ import CompoundABI from 'blockchain/abi/compoundCToken.json';
 import Erc20ABI from 'blockchain/abi/erc20.json';
 import { NETWORK_CONFIG } from 'core/constants';
 import { UINT256_MAX, ONE_ERC20 } from 'shared/constants';
-import { InvestmentType, IInvestmentApi } from 'shared/types/models/Investment';
+import { InvestmentType, IInvestmentApi, ICompoundAccountApiResponse } from 'shared/types/models';
 
 import { BaseDaoApi } from './BaseDaoApi';
+import { addressesEqual } from 'shared/helpers/web3';
 
 export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
   public deFiAccount = {
@@ -87,7 +88,36 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
     },
 
     getEarn: async () => {
-      return new BigNumber(0); // TODO ds: calculate this
+      const apiUrl = NETWORK_CONFIG.compoundAccountApiUrl;
+      const accountAddress = this.base.getAppByName('agent').proxyAddress;
+
+      try {
+        const fetchResponse = await fetch(`${apiUrl}?addresses[]=${accountAddress}`);
+        const apiResponse: ICompoundAccountApiResponse = await fetchResponse.json();
+
+        if (apiResponse.error !== null) {
+          throw new Error(`
+            Compound account api returns error with code ${apiResponse.error}.
+            For more details go to https://compound.finance/developers/api#AccountResponse
+          `);
+        }
+
+        const account = apiResponse.accounts[0];
+        const token = account && account.tokens.find(
+          item => addressesEqual(item.address, NETWORK_CONFIG.daiCompound),
+        );
+
+        if (!token) {
+          return new BigNumber(0);
+        }
+
+        return new BigNumber(token.supply_balance_underlying.value)
+          .times(token.lifetime_supply_interest_accrued.value)
+          .div(100);
+      } catch (error) {
+        console.error(error);
+        return new BigNumber(0);
+      }
     },
 
     isEnabled: async () => {
