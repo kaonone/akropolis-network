@@ -97,6 +97,7 @@ export class DaoStore {
     const daoDeposit = BigNumber.sum(...Object.values(holdersWithoutAgent).map(item => item.deposit));
     const daoWithdraw = BigNumber.sum(...Object.values(holdersWithoutAgent).map(item => item.withdraw));
     const daoDeFi = agentBalance.plus(suppliedToDeFi);
+    const daoEarned = daoBalance.plus(daoDeFi).minus(daoDeposit).plus(daoWithdraw);
 
     const daoOverview: IDaoOverview = {
       balance: {
@@ -113,6 +114,10 @@ export class DaoStore {
       },
       deFi: {
         value: daoDeFi,
+        valueDayAgo: new BigNumber(0),
+      },
+      earned: {
+        value: daoEarned,
         valueDayAgo: new BigNumber(0),
       },
     };

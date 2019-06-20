@@ -47,6 +47,7 @@ export interface IDaoOverview {
   deposit: IDaoOverviewMetric;
   withdraw: IDaoOverviewMetric;
   deFi: IDaoOverviewMetric;
+  earned: IDaoOverviewMetric;
 }
 
 interface IDaoOverviewMetric {
