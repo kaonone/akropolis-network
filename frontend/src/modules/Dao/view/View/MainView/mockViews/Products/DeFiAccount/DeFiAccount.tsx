@@ -97,7 +97,7 @@ function DeFiAccount(props: StylesProps) {
             <Grid container spacing={16} alignItems="center" >
               <Grid item><Info /></Grid>
               <Grid item xs zeroMinWidth>
-                <Typography variant="subtitle1" component="div">
+                <Typography variant="subtitle1" component="div" className={classes.description}>
                   {isEnabled
                     ? t(tKeys.actionsDescription.enabled.getKey())
                     : t(tKeys.actionsDescription.disabled.getKey())
