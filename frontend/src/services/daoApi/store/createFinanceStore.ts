@@ -11,7 +11,7 @@ import { ONE_ERC20 } from 'shared/constants';
 import { addressesEqual } from 'shared/helpers/web3';
 import { makeStoreFromEvents } from 'shared/helpers/makeStoreFromEvents';
 
-import { IFinanceState } from './types';
+import { IFinanceState, IBalanceHistoryPoint } from './types';
 
 type VaultEvent = IEthereumEvent<'MockEventName', {
   token: string;
@@ -38,6 +38,7 @@ export const initialFinanceState: IFinanceState = {
     deposit: { value: 0, valueDayAgo: 0 },
   },
   ready: false,
+  balanceHistory: [],
 };
 
 export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
@@ -83,6 +84,9 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
       const holdersForDay: IFinanceHolder[] = Object.values(
         reduceHolders(Object.values(nextTransactions).filter(transaction => transaction.date > dayAgo)),
       );
+
+      const balanceHistory = makeBalanceHistory(Object.values(nextTransactions));
+
       const balanceChangeForDay = R.sum(holdersForDay.map(item => item.balance));
       const depositChangeForDay = R.sum(holdersForDay.map(item => item.deposit));
       const withdrawChangeForDay = R.sum(holdersForDay.map(item => item.withdraw));
@@ -112,6 +116,7 @@ export async function createFinanceStore(web3: Web3, proxy: ContractProxy) {
         vaultAddress,
         transactions: nextTransactions,
         ready: isCompleteLoading,
+        balanceHistory,
       };
     },
     initialFinanceState,
@@ -136,4 +141,13 @@ function reduceHolders(nextTransactions: IFinanceTransaction[]): Record<string, 
       };
       return { ...acc, [cur.entity]: holder };
     }, {});
+}
+
+function makeBalanceHistory(nextTransactions: IFinanceTransaction[]): IBalanceHistoryPoint[] {
+  let currentBalance = 0;
+  return nextTransactions
+    .map(tx => {
+      currentBalance += tx.isIncoming ? tx.amount : -tx.amount;
+      return { date: tx.date, value: currentBalance };
+    });
 }
