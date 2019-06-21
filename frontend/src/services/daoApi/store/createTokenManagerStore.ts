@@ -28,11 +28,15 @@ export const initialTokenManagerState: ITokenManagerState = {
   tokenAddress: '',
   tokenSupply: '0',
   ready: false,
+  daoCreationDate: 0,
 };
 
 export async function createTokenManagerStore(web3: Web3, proxy: ContractProxy) {
   const tokenAddr: string = await proxy.call('token');
   const tokenProxy = new ContractProxy(tokenAddr, tokenAbi, web3, proxy.initializationBlock);
+
+  const firstBlock = await web3.eth.getBlock(proxy.initializationBlock);
+  const daoCreationDate = firstBlock.timestamp * 1000;
 
   return makeStoreFromEvents(
     async (state: ITokenManagerState, events: Event[], isCompleteLoading: boolean) => {
@@ -71,6 +75,7 @@ export async function createTokenManagerStore(web3: Web3, proxy: ContractProxy) 
         holders,
         tokenAddress: tokenAddr,
         ready: isCompleteLoading,
+        daoCreationDate,
       };
     },
     initialTokenManagerState,

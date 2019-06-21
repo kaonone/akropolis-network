@@ -2,14 +2,14 @@ import * as React from 'react';
 import BigNumber from 'bignumber.js';
 
 import { useTranslate, tKeys as tKeysAll } from 'services/i18n';
-
 import { Typography, Grid, Avatar, Growth } from 'shared/view/elements';
 import { formatDAI } from 'shared/helpers/format';
 import getIdenticonSrc from 'shared/helpers/getIdenticonSrc';
+import { useGetBalanceHistory } from 'shared/helpers/finance';
+import { BalanceChart } from 'shared/view/components';
+import { useDaoApi } from 'services/daoApi';
 
 import { StylesProps, provideStyles } from './CooperativeChart.style';
-
-import chartMock from './chartMock.svg';
 
 const tKeys = tKeysAll.features.cooperativeOverview;
 
@@ -24,6 +24,9 @@ type IProps = StylesProps & IOwnProps;
 const CooperativeChart = (props: IProps) => {
   const { classes, members, balance, balanceDayAgo } = props;
   const { t } = useTranslate();
+  const daoApi = useDaoApi();
+
+  const chartPoints = useGetBalanceHistory(daoApi);
 
   return (
     <div className={classes.root}>
@@ -48,7 +51,9 @@ const CooperativeChart = (props: IProps) => {
         <Typography className={classes.balanceValue} variant="h5">{formatDAI(balance)}</Typography>
         <Growth previous={balanceDayAgo} current={balance} />
       </Grid>
-      <img className={classes.graphic} src={chartMock} />
+      <div className={classes.graphic}>
+        <BalanceChart points={chartPoints} />
+      </div>
     </div>
   );
 };

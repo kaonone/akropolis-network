@@ -35,6 +35,8 @@ const styles = ({ extra: theme }: Theme) => ({
 
   graphic: rule({
     width: '100%',
+    marginTop: theme.spacing.unit * 2,
+    height: '260px',
   }),
 });
 
