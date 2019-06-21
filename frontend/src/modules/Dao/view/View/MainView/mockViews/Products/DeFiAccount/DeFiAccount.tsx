@@ -113,6 +113,7 @@ function DeFiAccount(props: StylesProps) {
                     form={{
                       fields: [amountInput, reasonInput],
                       title: t(tKeys.formTitles.deposit.getKey()),
+                      submitButtonText: t(tKeys.actions.transfer.getKey()),
                       formProps: {
                         validate: validateDeposit,
                       },
@@ -127,6 +128,7 @@ function DeFiAccount(props: StylesProps) {
                     form={{
                       fields: [amountInput],
                       title: t(tKeys.formTitles.withdraw.getKey()),
+                      submitButtonText: t(tKeys.actions.transfer.getKey()),
                       formProps: {
                         validate: validateWithdraw,
                       },

@@ -14,6 +14,8 @@ const styles = ({ extra: theme }: Theme) => ({
   }),
 
   subTitle: rule({
+    display: 'flex',
+    alignItems: 'center',
     lineHeight: '1.75',
     color: theme.colors.topaz,
   }),
@@ -22,6 +24,11 @@ const styles = ({ extra: theme }: Theme) => ({
     '& > :not(:last-child)': {
       marginBottom: theme.spacing.unit,
     },
+  }),
+
+  hintIcon: rule({
+    fontSize: '1.7em',
+    marginLeft: theme.spacing.unit,
   }),
 });
 

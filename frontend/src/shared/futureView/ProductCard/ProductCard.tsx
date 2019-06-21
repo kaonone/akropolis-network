@@ -155,6 +155,7 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
             form={{
               title: t(tKeys.withdrawModalTitle[type].getKey()),
               fields: formFields,
+              submitButtonText: t(tKeys.transfer.getKey()),
               formProps: {
                 validate: validateWithdraw,
               },
@@ -172,6 +173,7 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
             form={{
               title: t(tKeys.supplyModalTitle[type].getKey()),
               fields: formFields,
+              submitButtonText: t(tKeys.transfer.getKey()),
               formProps: {
                 validate: validateDeposit,
               },

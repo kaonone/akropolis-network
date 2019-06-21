@@ -20,12 +20,14 @@ const CooperativeOverview = (props: StylesProps) => {
 
   const cooperativeBalance = useObserver(() => daoApi.store.coopBalanceOverview.balance.value);
   const cooperativeBalanceChange = useObserver(() => daoApi.store.coopBalanceOverview.balance.valueDayAgo);
+  const coopEarned = useObserver(() => daoApi.store.coopBalanceOverview.earned.value);
 
   const cooperativeHolders = useObserver(() => daoApi.store.tokenManager.holders);
   const financeHolders = useObserver(() => daoApi.store.finance.holders);
 
   const members = React.useMemo(() => Object.keys(cooperativeHolders), [cooperativeHolders]);
 
+  const userEarned = coopEarned.div(members.length);
   const userBalance = (financeHolders[userAccountAddress] || { balance: 0 }).balance;
 
   return (
@@ -46,7 +48,7 @@ const CooperativeOverview = (props: StylesProps) => {
       </Grid>
       <Grid item xs={4}>
         <div className={classes.section}>
-          <PersonalInformation earn={0} balance={userBalance} />
+          <PersonalInformation earn={userEarned} balance={userBalance} />
         </div>
       </Grid>
     </Grid>
