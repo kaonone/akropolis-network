@@ -4,10 +4,7 @@ import { LineChart, XAxis, YAxis, CartesianGrid, Line, ResponsiveContainer } fro
 
 import { Button, Grid } from 'shared/view/elements';
 
-import {
-  makeFormatDateByPeriod, getDateByPeriod, getXAxisTicks, correctPeriod, roundTicksByPeriod,
-} from './helpers';
-
+import { makeFormatDateByPeriod, getTicks } from './helpers';
 import { provideStyles, StylesProps } from './BalanceChart.style';
 
 export type Period = '24h' | '1w' | '1m' | '6m' | 'all';
@@ -26,40 +23,27 @@ type IProps = IOwnProps & StylesProps;
 function BalanceChart(props: IProps) {
   const { classes, points } = props;
 
-  const [period, setPeriod] = React.useState<Period>('1w');
+  const initialPeriod = React.useMemo(() => getTicks(points, 'all').realPeriod, []);
+  const [period, setPeriod] = React.useState<Period>(initialPeriod);
 
-  const firstPoint = R.head(points);
-  if (!firstPoint) {
-    return null;
-  }
+  const { ticks, realPeriod } = getTicks(points, period);
 
-  const usedPeriod: Period = React.useMemo(() => correctPeriod(firstPoint.date, period), [firstPoint.date, period]);
-  const { min, max } = React.useMemo(() => getDateByPeriod(usedPeriod, firstPoint.date), [usedPeriod, firstPoint.date]);
-
-  const ticksData = React.useMemo(
-    () => points.concat([{ date: max, value: points[points.length - 1].value }]),
-    [max, points[points.length - 1].value],
-  );
-
-  const ticks = React.useMemo(() => getXAxisTicks(usedPeriod, min, max), [usedPeriod, min, max]);
-
-  const firstTick = R.head(ticksData);
+  const firstTick = R.head(ticks);
 
   if (!firstTick) {
     return null;
   }
 
   const formatTick = React.useMemo(
-    () => makeFormatDateByPeriod(usedPeriod, firstTick.date),
-    [usedPeriod, firstTick.date],
+    () => makeFormatDateByPeriod(realPeriod, firstTick.date),
+    [realPeriod, firstTick.date],
   );
 
   const renderTick = React.useCallback(
     ({ x, y, payload, index, visibleTicksCount }) => {
-
       const display =
         visibleTicksCount > 12 &&
-          (usedPeriod === '24h' || usedPeriod === '1m') &&
+          (realPeriod === '24h' || realPeriod === '1m') &&
           index % 2 !== 0 ?
           'none' : 'block';
 
@@ -77,23 +61,22 @@ function BalanceChart(props: IProps) {
           </text>
         </g>
       );
-    }
-    , [formatTick]);
+    },
+    [formatTick]);
 
-  const roundedTicks = roundTicksByPeriod(usedPeriod, ticksData);
   return (
     <div className={classes.root}>
       <div className={classes.graphic}>
         <ResponsiveContainer>
-          <LineChart data={roundedTicks} margin={{ left: 18, right: 18 }}>
+          <LineChart data={ticks} margin={{ left: 18, right: 18 }}>
             <XAxis
               dataKey="date"
               type="number"
               axisLine={false}
               interval={0}
-              domain={[min, max]}
+              domain={[ticks[0].date, ticks[ticks.length - 1].date]}
               allowDataOverflow
-              ticks={ticks}
+              ticks={R.pluck('date', ticks)}
               tickSize={0}
               tick={renderTick}
             />

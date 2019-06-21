@@ -1,2 +1,2 @@
 export * from './formatDate';
-export * from './getXAxisTicks';
+export * from './getTicks';
