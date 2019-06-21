@@ -7,3 +7,4 @@ export { default as ErrorModal } from './ErrorModal/ErrorModal';
 export { default as UserAvatar } from './UserAvatar/UserAvatar';
 export { default as RequestForm } from './RequestForm/RequestForm';
 export { default as Pagination } from './Pagination/Pagination';
+export { default as BalanceChart } from './BalanceChart/BalanceChart';

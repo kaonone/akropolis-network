@@ -18,6 +18,7 @@ export interface ITokenManagerState {
   tokenAddress: string;
   tokenSupply: string;
   ready: boolean;
+  daoCreationDate: number;
 }
 
 export interface IFinanceState {
@@ -25,6 +26,7 @@ export interface IFinanceState {
   holders: Record<string, IFinanceHolder>;
   vaultAddress: string;
   daoOverview: IDaoOverview;
+  balanceHistory: IBalanceHistoryPoint[];
   ready: boolean;
 }
 
@@ -42,4 +44,9 @@ export interface IDaoOverview {
 interface IDaoOverviewMetric {
   value: number;
   valueDayAgo: number;
+}
+
+export interface IBalanceHistoryPoint {
+  date: number;
+  value: number;
 }
