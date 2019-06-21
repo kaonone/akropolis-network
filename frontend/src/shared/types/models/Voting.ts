@@ -9,21 +9,24 @@ export type VotingResult = 'confirmed' | 'rejected';
 
 export type VotingType = VotingIntent['type'];
 
-export type VotingIntent =
-  | IPlainAction<'unknown'>
-  | IAction<'joinToDao', {
-    address: string;
-  }>
-  | IAction<'withdrawRequest', {
-    amount: number;
-    reason: string;
-    to: string;
-  }>
-  | IAction<'invest', {
-    amount: number;
-    reason: string;
-    to: string;
-  }>;
+export type VotingIntent = UnknownIntent | JoinIntent | WithdrawIntent | InvestIntent;
+
+export type UnknownIntent = IPlainAction<'unknown'>;
+
+export type JoinIntent = IAction<'joinToDao', {
+  address: string;
+}>;
+
+export type WithdrawIntent = IAction<'withdrawRequest', {
+  amount: number;
+  reason: string;
+  to: string;
+}>;
+export type InvestIntent = IAction<'invest', {
+  amount: number;
+  reason: string;
+  to: string;
+}>;
 
 export interface IVoting {
   id: string;
