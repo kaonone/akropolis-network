@@ -9,9 +9,9 @@ import getWaitingAccessDays from '../getWaitingAccessDays';
 export default function useDaysForAccess(daoApi: DaoApi) {
   const tokenMints = useObserver(() => daoApi.store.tokenManager.tokenMints);
   const userAccountAddress = useAccountAddress();
-
-  return tokenMints[userAccountAddress] && React.useMemo(
-    () => getWaitingAccessDays(tokenMints[userAccountAddress].startDate),
-    [tokenMints[userAccountAddress].startDate],
+  const startDate = tokenMints[userAccountAddress] && tokenMints[userAccountAddress].startDate;
+  return React.useMemo(
+    () => startDate && getWaitingAccessDays(startDate),
+    [startDate],
   );
 }
