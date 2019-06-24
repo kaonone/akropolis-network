@@ -1,13 +1,17 @@
 import * as React from 'react';
+import { useObserver } from 'mobx-react-lite';
 
 import { DaoApi } from 'services/daoApi';
-import useLastConfirmedJoinVoting from '../useLastConfirmedJoinVoting';
+import { useAccountAddress } from 'services/user';
+
 import getWaitingAccessDays from '../getWaitingAccessDays';
 
 export default function useDaysForAccess(daoApi: DaoApi) {
-  const lastJoinTransaction = useLastConfirmedJoinVoting(daoApi);
-  return lastJoinTransaction && React.useMemo(
-    () => getWaitingAccessDays(lastJoinTransaction.startDate),
-    [lastJoinTransaction.startDate],
+  const tokenMints = useObserver(() => daoApi.store.tokenManager.tokenMints);
+  const userAccountAddress = useAccountAddress();
+
+  return tokenMints[userAccountAddress] && React.useMemo(
+    () => getWaitingAccessDays(tokenMints[userAccountAddress].startDate),
+    [tokenMints[userAccountAddress].startDate],
   );
 }

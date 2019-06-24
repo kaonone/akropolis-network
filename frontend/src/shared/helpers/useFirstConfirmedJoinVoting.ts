@@ -8,7 +8,7 @@ import { useAccountAddress } from 'services/user';
 import { addressesEqual } from './web3';
 import { IVoting } from 'shared/types/models';
 
-export default function useLastConfirmedJoinVoting(daoApi: DaoApi): IVoting | null {
+export default function useFirstConfirmedJoinVoting(daoApi: DaoApi): IVoting | null {
   const votes = useObserver(() => daoApi.store.voting.votings);
   const userAccountAddress = useAccountAddress();
 

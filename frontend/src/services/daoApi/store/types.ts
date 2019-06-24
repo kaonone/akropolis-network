@@ -16,6 +16,7 @@ export interface IVotingState {
 
 export interface ITokenManagerState {
   holders: Record<string, IHolder>;
+  tokenMints: Record<string, ITokenMint>;
   tokenAddress: string;
   tokenSupply: string;
   ready: boolean;
@@ -60,4 +61,9 @@ interface IDaoOverviewMetric {
 export interface IBalanceHistoryPoint {
   date: number;
   value: number;
+}
+
+export interface ITokenMint {
+  address: string;
+  startDate: number;
 }
