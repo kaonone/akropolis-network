@@ -36,12 +36,12 @@ function Address(props: IProps & StylesProps) {
     lowerValue;
 
   return (
-    <span className={classes.root}>
+    <a href={NETWORK_CONFIG.etherscanDomain + value} className={classes.root} target="_blank" rel="noopener noreferrer">
       {maybeAlias === lowerValue
         ? shortenString(maybeAlias, 8)
         : maybeAlias
       }
-    </span>
+    </a>
   );
 }
 

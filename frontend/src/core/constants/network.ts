@@ -15,6 +15,7 @@ interface INetworkConfig {
   aragonEnsRegistry: string;
   defaultEthNode: string;
   defaultIpfsConfig: IpfsConfig;
+  etherscanDomain: string;
 }
 
 const networkConfigs: Record<string, INetworkConfig> = {
@@ -32,6 +33,7 @@ const networkConfigs: Record<string, INetworkConfig> = {
     defaultIpfsConfig: {
       gateway: 'https://ipfs.eth.aragon.network/ipfs',
     },
+    etherscanDomain: 'https://rinkeby.etherscan.io/address/',
   },
   '42': {
     id: 42,
@@ -47,6 +49,8 @@ const networkConfigs: Record<string, INetworkConfig> = {
     defaultIpfsConfig: {
       gateway: 'https://ipfs.eth.aragon.network/ipfs',
     },
+    etherscanDomain: 'https://kovan.etherscan.io/address/',
+
   },
   '1': {
     id: 1,
@@ -62,6 +66,7 @@ const networkConfigs: Record<string, INetworkConfig> = {
     defaultIpfsConfig: {
       gateway: 'https://ipfs.eth.aragon.network/ipfs',
     },
+    etherscanDomain: 'https://etherscan.io/address/',
   },
 };
 
