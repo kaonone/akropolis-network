@@ -1,6 +1,9 @@
 import BN from 'bn.js';
 import { Provider } from 'shared/types/models';
-import { web3Providers, NETWORK_CONFIG, TEMPLATE_ENS_ID, defaultGasPriceFn } from 'core/constants';
+import {
+  web3Providers, NETWORK_CONFIG, TEMPLATE_ENS_ID, defaultGasPriceFn, MIN_ACCEPTANCE_QUORUM,
+  SUPPORT_NEEDED, VOTE_DURATION_IN_SECONDS,
+} from 'core/constants';
 import { getWeb3, getMainAccount } from 'shared/helpers/web3';
 import { getBuilder, InstanceParams } from './getBuilder';
 
@@ -19,9 +22,9 @@ export const buildDao = async (domainName: string) => {
 
   const tokenName = `${domainName} token`;
   const tokenSymbol = `${domainName.slice(0, 2)}CT`;
-  const minAcceptanceQuorum = percentageBase.muln(15);
-  const supportNeeded = percentageBase.muln(50);
-  const voteDuration = 24 * 60 * 60;
+  const minAcceptanceQuorum = percentageBase.muln(MIN_ACCEPTANCE_QUORUM);
+  const supportNeeded = percentageBase.muln(SUPPORT_NEEDED);
+  const voteDuration = VOTE_DURATION_IN_SECONDS;
 
   const web3 = getWeb3(provider);
   const account = await getMainAccount(web3);
