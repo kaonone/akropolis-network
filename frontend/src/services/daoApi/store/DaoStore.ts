@@ -90,7 +90,7 @@ export class DaoStore {
     const holdersWithoutAgent = allHolders.filter(item => !addressesEqual(item.address, agentAddress));
     const holdersForDayWithoutAgent = allHoldersForDay.filter(item => !addressesEqual(item.address, agentAddress));
 
-    const balanceChangeForDay = BigNumber.sum(...holdersForDayWithoutAgent.map(item => item.balance));
+    const balanceChangeForDay = BigNumber.sum(...allHoldersForDay.map(item => item.balance));
     const depositChangeForDay = BigNumber.sum(...holdersForDayWithoutAgent.map(item => item.deposit));
     const withdrawChangeForDay = BigNumber.sum(...holdersForDayWithoutAgent.map(item => item.withdraw));
 
