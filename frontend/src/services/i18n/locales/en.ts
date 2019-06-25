@@ -59,7 +59,7 @@ export default {
       logout: 'Log out',
       connectToWallet: 'Connect a wallet',
       givePermission: 'Give permission',
-      metamaskDescription: 'Metamask allows Web 3.0 applications to interact with Etherium blockchain and leaves you in full control over every transaction',
+      metamaskDescription: 'Metamask allows Web 3.0 applications to interact with Ethereum blockchain and leaves you in full control over every transaction',
       confirmModal: {
         title: 'Confirm your address',
         beforeAddressDescription: 'You’re signing in with the following address:',
