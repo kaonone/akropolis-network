@@ -72,15 +72,24 @@ const configByAppByMethod: Record<AppType, Record<string, IConfig>> = {
   finance: {
     'newImmediatePayment(address,address,uint256,string)': {
       paramsNames: ['tokenAddress', 'recipient', 'amount', 'reason'],
-      getIntent: (params, { appProxyAddress }) => ({
-        type: 'transfer',
-        payload: {
-          amount: new BigNumber(params.amount).div(ONE_ERC20),
-          from: appProxyAddress, // TODO ds: maybe to Vault???
-          to: params.recipient,
-          reason: params.reason,
-        },
-      }),
+      getIntent: async (params, { wrapper }): Promise<VotingIntent> => {
+        const apps = await wrapper.apps.pipe(first()).toPromise();
+        const vaultApp = apps.find(item => item.appName && item.appName.startsWith('vault'));
+
+        if (!vaultApp) {
+          return { type: 'unknown' };
+        }
+
+        return {
+          type: 'transfer',
+          payload: {
+            amount: new BigNumber(params.amount).div(ONE_ERC20),
+            from: vaultApp.proxyAddress,
+            to: params.recipient,
+            reason: params.reason,
+          },
+        };
+      },
     },
   },
   agent: {
@@ -177,9 +186,9 @@ const configByAragonExecuteTargetByMethod: Record<string, Record<string, IConfig
       paramsNames: ['tokenAddress', 'amount', 'reason'],
       getIntent: async (params, { appProxyAddress, wrapper }): Promise<VotingIntent> => {
         const apps = await wrapper.apps.pipe(first()).toPromise();
-        const financeApp = apps.find(item => item.appName && item.appName.startsWith('finance'));
+        const vaultApp = apps.find(item => item.appName && item.appName.startsWith('vault'));
 
-        if (!financeApp) {
+        if (!vaultApp) {
           return { type: 'unknown' };
         }
 
@@ -188,7 +197,7 @@ const configByAragonExecuteTargetByMethod: Record<string, Record<string, IConfig
           payload: {
             amount: new BigNumber(params.amount).div(ONE_ERC20),
             from: appProxyAddress,
-            to: financeApp.proxyAddress, // TODO ds: maybe to Vault???
+            to: vaultApp.proxyAddress,
             reason: params.reason,
           },
         };
