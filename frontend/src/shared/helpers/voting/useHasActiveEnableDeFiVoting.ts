@@ -4,10 +4,9 @@ import { useObserver } from 'mobx-react-lite';
 import { DaoApi } from 'services/daoApi';
 import { useAccountAddress } from 'services/user';
 
-import { addressesEqual } from '../web3';
 import { calculateIsRejected } from './votingStatus';
 
-function useHasActiveJoinVoting(daoApi: DaoApi): boolean {
+function useHasActiveEnableDeFiVoting(daoApi: DaoApi): boolean {
   const userAccountAddress = useAccountAddress();
   const votingsMap = useObserver(() => daoApi.store.voting.votings);
   const votingConfig = useObserver(() => daoApi.store.voting.config);
@@ -17,8 +16,7 @@ function useHasActiveJoinVoting(daoApi: DaoApi): boolean {
     return !!votings
       .filter(
         vote => (
-          vote.intent.type === 'joinToDao' &&
-          addressesEqual(vote.intent.payload.address, userAccountAddress) &&
+          vote.intent.type === 'enableDeFiAccount' &&
           !calculateIsRejected(vote, votingConfig.voteTime) &&
           !vote.executed
         ),
@@ -26,4 +24,4 @@ function useHasActiveJoinVoting(daoApi: DaoApi): boolean {
   }, [votings, userAccountAddress, votingConfig]);
 }
 
-export default useHasActiveJoinVoting;
+export default useHasActiveEnableDeFiVoting;

@@ -46,7 +46,6 @@ function MainView(props: IProps) {
 
   const daoApi = useDaoApi();
 
-  const userAccountAddress = useAccountAddress();
   const tokenHolders = useObserver(() => daoApi.store.tokenManager.holders);
   const financeHolders = useObserver(() => daoApi.store.finance.holders);
   const daoOverview = useObserver(() => daoApi.store.coopBalanceOverview);
@@ -54,6 +53,11 @@ function MainView(props: IProps) {
   const connectedAccountVotes = useObserver(() => daoApi.store.voting.connectedAccountVotes);
   const canVoteConnectedAccount = useObserver(() => daoApi.store.voting.canVoteConnectedAccount);
 
+  const isMember = useIsMember(daoApi);
+  const userAccountAddress = useAccountAddress();
+  const newEvents = useNewVotingEvents(daoApi);
+  const hasActiveJoinVoting: boolean = useHasActiveJoinVoting(daoApi);
+  const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
   const fieldsForVotingStatus = useFieldsForVotingStatus(daoApi);
 
   const sortVote = R.sortWith<IVoting>(
@@ -68,19 +72,12 @@ function MainView(props: IProps) {
     [votes],
   );
 
-  const newEvents = useNewVotingEvents(daoApi, preparedVotes);
-
   const links: ISectionLink[] = React.useMemo(() => ([
     { section: 'overview', title: tKeys.overview.getKey() },
     { section: 'activities', title: tKeys.activities.getKey(), badge: newEvents.length },
     { section: 'members', title: tKeys.members.getKey() },
     { section: 'products', title: tKeys.products.getKey() },
-  ]), [newEvents]);
-
-  const hasActiveJoinVoting: boolean = useHasActiveJoinVoting(daoApi, preparedVotes);
-
-  const isMember = useIsMember(daoApi);
-  const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
+  ]), [newEvents.length]);
 
   return (
     <BaseLayout

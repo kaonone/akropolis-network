@@ -11,6 +11,7 @@ import { Metric, AsyncActionButton } from 'shared/view/components';
 import { Grid, Typography } from 'shared/view/elements';
 import { Info } from 'shared/view/elements/Icons';
 import { formatDAI } from 'shared/helpers/format';
+import { useHasActiveEnableDeFiVoting } from 'shared/helpers/voting';
 import { isRequired, composeValidators, lessThenOrEqual, onEnglishPlease, moreThen } from 'shared/validators';
 
 import { StylesProps, provideStyles } from './DeFiAccount.style';
@@ -37,7 +38,9 @@ function DeFiAccount(props: StylesProps) {
   const coopBalance = useObserver(() => daoApi.store.finance.vaultBalance);
   const isEnabled = useObserver(() => daoApi.store.agent.isEnabled);
   const supplied = useObserver(() => daoApi.store.suppliedToDeFi);
+
   const isMember = useIsMember(daoApi);
+  const hasActiveEnableVoting = useHasActiveEnableDeFiVoting(daoApi);
 
   const amountInput = (
     <NumberInputField
@@ -142,7 +145,7 @@ function DeFiAccount(props: StylesProps) {
                 <Grid item xs={3}>
                   <AsyncActionButton
                     buttonText={t(tKeys.actions.enable.getKey())}
-                    buttonProps={{ fullWidth: true, color: 'primary', disabled: !isMember }}
+                    buttonProps={{ fullWidth: true, color: 'primary', disabled: !isMember || hasActiveEnableVoting }}
                     executeAction={daoApi.investments.deFiAccount.enable}
                   />
                 </Grid>

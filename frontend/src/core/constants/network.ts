@@ -1,4 +1,5 @@
 import { IpfsConfig } from '@aragon/apm';
+import { InvestmentType } from 'shared/types/models';
 import { toWei } from 'shared/helpers/web3';
 import { NULL_ADDRESS } from 'shared/constants';
 import getEnvParams from '../getEnvParams';
@@ -8,7 +9,6 @@ interface INetworkConfig {
   type: string; // 'main' | 'kovan' | ...
   rpcUrl: string;
   daiContract: string;
-  daiCompound: string;
   compoundAccountApiUrl: string;
   aktContract: string;
   c2fcContract: string;
@@ -16,6 +16,7 @@ interface INetworkConfig {
   defaultEthNode: string;
   defaultIpfsConfig: IpfsConfig;
   etherscanDomain: string;
+  investments: Record<InvestmentType, string>;
 }
 
 const networkConfigs: Record<string, INetworkConfig> = {
@@ -24,7 +25,9 @@ const networkConfigs: Record<string, INetworkConfig> = {
     type: 'rinkeby',
     rpcUrl: 'https://rinkeby.infura.io/',
     daiContract: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
-    daiCompound: '0x6d7f0754ffeb405d23c51ce938289d4835be3b14',
+    investments: {
+      compound: '0x6d7f0754ffeb405d23c51ce938289d4835be3b14',
+    },
     compoundAccountApiUrl: 'https://api.stage.compound.finance/api/v2/account',
     aktContract: NULL_ADDRESS,
     c2fcContract: '0xb272fA8bD66fbD310165d322Febd5e275081f886',
@@ -40,7 +43,9 @@ const networkConfigs: Record<string, INetworkConfig> = {
     type: 'kovan',
     rpcUrl: 'https://kovan.infura.io/',
     daiContract: '0xC4375B7De8af5a38a93548eb8453a498222C4fF2',
-    daiCompound: NULL_ADDRESS,
+    investments: {
+      compound: NULL_ADDRESS,
+    },
     compoundAccountApiUrl: '',
     aktContract: '0xcfd6e4044dd6e6ce64aed0711f849c7b9134d7db',
     c2fcContract: '0xb272fA8bD66fbD310165d322Febd5e275081f886',
@@ -57,7 +62,9 @@ const networkConfigs: Record<string, INetworkConfig> = {
     type: 'main',
     rpcUrl: 'https://mainnet.infura.io/',
     daiContract: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
-    daiCompound: NULL_ADDRESS,
+    investments: {
+      compound: NULL_ADDRESS,
+    },
     compoundAccountApiUrl: '',
     aktContract: NULL_ADDRESS,
     c2fcContract: NULL_ADDRESS,

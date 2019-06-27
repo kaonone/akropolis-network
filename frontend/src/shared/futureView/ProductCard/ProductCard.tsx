@@ -4,6 +4,7 @@ import { MarkAs } from '_helpers';
 import BigNumber from 'bignumber.js';
 
 import { useTranslate, tKeys as tKeysAll, ITranslateKey } from 'services/i18n';
+import { useDaoApi } from 'services/daoApi';
 
 import {
   IInvestmentState, InvestmentStatus, InvestmentType, InvestmentCategory, FutureInvestmentType, IInvestmentApi,
@@ -13,6 +14,7 @@ import { NumberInputField } from 'shared/view/form';
 import { Grid, Typography } from 'shared/view/elements';
 import { Settings, Info } from 'shared/view/elements/Icons';
 import { formatPercent, formatDAI } from 'shared/helpers/format';
+import { useHasActiveEnableInvestmentVoting } from 'shared/helpers/voting';
 import { isRequired, composeValidators, moreThen, lessThenOrEqual } from 'shared/validators';
 
 import { StylesProps, provideStyles } from './ProductCard.style';
@@ -66,6 +68,9 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
   const { classes, api, state, type, depositLimit, disabled, isComingSoon } = props;
   const { balance, currentRate, earned, isEnabled } = state;
   const { t } = useTranslate();
+
+  const daoApi = useDaoApi();
+  const hasActiveEnableVoting = useHasActiveEnableInvestmentVoting(daoApi, type);
 
   const withdraw = React.useCallback(({ amount }: IFormData) => api.withdraw(amount), []);
   const deposit = React.useCallback(({ amount }: IFormData) => api.deposit(amount), []);
@@ -133,7 +138,7 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
         <Grid item className={classes.enableButton} xs={4}>
           <AsyncActionButton
             buttonProps={{
-              disabled,
+              disabled: disabled || hasActiveEnableVoting,
               fullWidth: true,
               color: 'primary',
             }}

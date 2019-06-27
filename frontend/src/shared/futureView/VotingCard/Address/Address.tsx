@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const staticAliases = {
-  [NETWORK_CONFIG.daiCompound.toLowerCase()]: 'Compound',
+  [NETWORK_CONFIG.investments.compound.toLowerCase()]: 'Compound',
 };
 
 const aliasByType: Record<AppType, string | null> = {

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useObserver } from 'mobx-react-lite';
 
 import { DaoApi } from 'services/daoApi';
@@ -19,7 +20,10 @@ export const useFieldsForVotingStatus = (daoApi: DaoApi): VotingStateFields => {
   const canVoteConnectedAccount = useObserver(() => daoApi.store.voting.canVoteConnectedAccount);
   const config = useObserver(() => daoApi.store.voting.config);
 
-  return { connectedAccountVotes, canVoteConnectedAccount, config };
+  return React.useMemo(
+    () => ({ connectedAccountVotes, canVoteConnectedAccount, config }),
+    [connectedAccountVotes, canVoteConnectedAccount, config],
+  );
 };
 
 export const getVotingStatus = (votingState: VotingStateFields, vote: IVoting): VotingStatus => {

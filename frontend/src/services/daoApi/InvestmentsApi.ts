@@ -60,26 +60,26 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
       NETWORK_CONFIG.daiContract,
       'approve(address,uint256)',
       [
-        NETWORK_CONFIG.daiCompound,
+        NETWORK_CONFIG.investments.compound,
         UINT256_MAX,
       ],
     ),
 
     deposit: (amount: number) => this.base.executeOnAgent(
-      NETWORK_CONFIG.daiCompound,
+      NETWORK_CONFIG.investments.compound,
       'mint(uint256)',
       [ONE_ERC20.times(amount).toFixed()],
     ),
 
     withdraw: (amount: number) => this.base.executeOnAgent(
-      NETWORK_CONFIG.daiCompound,
+      NETWORK_CONFIG.investments.compound,
       'redeemUnderlying(uint256)',
       [ONE_ERC20.times(amount).toFixed()],
     ),
 
     getBalance: async () => {
       const balance = await this.base.callExternal<string>(
-        NETWORK_CONFIG.daiCompound,
+        NETWORK_CONFIG.investments.compound,
         CompoundABI,
         'balanceOfUnderlying',
         [this.base.getAppByName('agent').proxyAddress],
@@ -104,7 +104,7 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
 
         const account = apiResponse.accounts[0];
         const token = account && account.tokens.find(
-          item => addressesEqual(item.address, NETWORK_CONFIG.daiCompound),
+          item => addressesEqual(item.address, NETWORK_CONFIG.investments.compound),
         );
 
         if (!token) {
@@ -127,7 +127,7 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
         'allowance',
         [
           this.base.getAppByName('agent').proxyAddress,
-          NETWORK_CONFIG.daiCompound,
+          NETWORK_CONFIG.investments.compound,
         ],
       );
       return !!Number(approvedAmount);
@@ -137,7 +137,7 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
       const secondsInYear = 365 * 24 * 60 * 60;
       const secondsPerBlock = 15;
       const ratePerBlock = await this.base.callExternal<string>(
-        NETWORK_CONFIG.daiCompound,
+        NETWORK_CONFIG.investments.compound,
         CompoundABI,
         'supplyRatePerBlock',
       );

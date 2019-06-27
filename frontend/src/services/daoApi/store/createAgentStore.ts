@@ -86,7 +86,7 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
 
       const agentToCompoundExecutions = agentEvents
         .filter((item): item is AgentExecute => item.event === 'Execute')
-        .filter(item => addressesEqual(NETWORK_CONFIG.daiCompound, item.returnValues.target));
+        .filter(item => addressesEqual(NETWORK_CONFIG.investments.compound, item.returnValues.target));
 
       const needToUpdateAgentBalance = !!financeAndAgentTransactionEvents.length || !!agentToCompoundExecutions.length;
       const needToUpdateCompoundState = !!agentToCompoundExecutions.length || !!compoundTriggers.length;
@@ -103,7 +103,7 @@ export async function createAgentStore(wrapper: AragonWrapper, investments: Inve
 
       const isEnabled = needToUpdateIsEnabled
         ? await investments.deFiAccount.isEnabled()
-        : state.isEnabled; // TODO ds: check this
+        : state.isEnabled;
 
       const compound: IInvestmentState = needToUpdateCompoundState ? {
         balance: await investments.compound.getBalance(agentProxy.address),

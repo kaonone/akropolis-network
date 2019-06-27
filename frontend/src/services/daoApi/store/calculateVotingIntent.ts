@@ -148,7 +148,7 @@ const configByAragonExecuteTargetByMethod: Record<string, Record<string, IConfig
       },
     },
   },
-  [NETWORK_CONFIG.daiCompound.toLowerCase()]: {
+  [NETWORK_CONFIG.investments.compound.toLowerCase()]: {
     'mint(uint256)': {
       paramsNames: ['amount'],
       getIntent: (params, { appProxyAddress }) => ({
@@ -156,7 +156,7 @@ const configByAragonExecuteTargetByMethod: Record<string, Record<string, IConfig
         payload: {
           amount: new BigNumber(params.amount).div(ONE_ERC20),
           from: appProxyAddress,
-          to: NETWORK_CONFIG.daiCompound,
+          to: NETWORK_CONFIG.investments.compound,
         },
       }),
     },
@@ -166,7 +166,7 @@ const configByAragonExecuteTargetByMethod: Record<string, Record<string, IConfig
         type: 'transfer',
         payload: {
           amount: new BigNumber(params.amount).div(ONE_ERC20),
-          from: NETWORK_CONFIG.daiCompound,
+          from: NETWORK_CONFIG.investments.compound,
           to: appProxyAddress,
         },
       }),

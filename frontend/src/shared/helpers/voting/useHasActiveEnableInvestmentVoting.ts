@@ -2,12 +2,16 @@ import React from 'react';
 import { useObserver } from 'mobx-react-lite';
 
 import { DaoApi } from 'services/daoApi';
+import { InvestmentType, FutureInvestmentType, isInvestmentType } from 'shared/types/models';
 import { useAccountAddress } from 'services/user';
 
 import { addressesEqual } from '../web3';
 import { calculateIsRejected } from './votingStatus';
+import { NETWORK_CONFIG } from 'core/constants';
 
-function useHasActiveJoinVoting(daoApi: DaoApi): boolean {
+function useHasActiveEnableInvestmentVoting(daoApi: DaoApi, type: InvestmentType | FutureInvestmentType): boolean {
+  if (!isInvestmentType(type)) { return false; }
+
   const userAccountAddress = useAccountAddress();
   const votingsMap = useObserver(() => daoApi.store.voting.votings);
   const votingConfig = useObserver(() => daoApi.store.voting.config);
@@ -17,13 +21,13 @@ function useHasActiveJoinVoting(daoApi: DaoApi): boolean {
     return !!votings
       .filter(
         vote => (
-          vote.intent.type === 'joinToDao' &&
-          addressesEqual(vote.intent.payload.address, userAccountAddress) &&
+          vote.intent.type === 'enableInvestment' &&
+          addressesEqual(vote.intent.payload.address, NETWORK_CONFIG.investments[type]) &&
           !calculateIsRejected(vote, votingConfig.voteTime) &&
           !vote.executed
         ),
       ).length;
-  }, [votings, userAccountAddress, votingConfig]);
+  }, [votings, userAccountAddress, votingConfig, type]);
 }
 
-export default useHasActiveJoinVoting;
+export default useHasActiveEnableInvestmentVoting;
