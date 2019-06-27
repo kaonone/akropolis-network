@@ -22,7 +22,7 @@ const ComplexCell = React.memo(provideStyles((props: IComplexCellProps & StylesP
       direction={'column'}
     >
       <Typography variant="subtitle1" className={classes.complexCellTitle}>{title}</Typography>
-      <Typography variant="body1">{value}</Typography>
+      <Typography variant="body1" noWrap>{value}</Typography>
     </Grid>
   );
 
