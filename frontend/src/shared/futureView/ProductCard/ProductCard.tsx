@@ -147,6 +147,7 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
         <Grid item xs={6}>
           <AsyncActionButton
             buttonProps={{
+              disabled,
               fullWidth: true,
               color: 'primary',
             }}
@@ -165,6 +166,7 @@ export const ProductCard = React.memo(provideStyles((props: IProps) => {
         <Grid item xs={6}>
           <AsyncActionButton
             buttonProps={{
+              disabled,
               fullWidth: true,
               color: 'primary',
             }}

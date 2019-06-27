@@ -3,6 +3,7 @@ import { useObserver } from 'mobx-react-lite';
 import BigNumber from 'bignumber.js';
 
 import { useDaoApi } from 'services/daoApi';
+import { useIsMember } from 'services/user';
 
 import { InvestmentType, FutureInvestmentType, IInvestmentState, IInvestmentApi } from 'shared/types/models';
 import { ProductCard } from 'shared/futureView/ProductCard/ProductCard';
@@ -40,6 +41,7 @@ function Products(props: IProps) {
   const isEnabledDeFi = useObserver(() => daoApi.store.agent.isEnabled);
   const deFiBalance = useObserver(() => daoApi.store.agent.availableBalance);
   const investments = useObserver(() => daoApi.store.agent.investments);
+  const isMember = useIsMember(daoApi);
 
   return (
     <div className={classes.root}>
@@ -50,7 +52,7 @@ function Products(props: IProps) {
         {types.map((type, i) => (
           <Grid key={i} item xs={6}>
             <ProductCard
-              disabled={!isEnabledDeFi}
+              disabled={!isEnabledDeFi || !isMember}
               type={type}
               depositLimit={deFiBalance}
               state={investments[type]}

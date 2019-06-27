@@ -3,6 +3,7 @@ import { MarkAs } from '_helpers';
 import { useObserver } from 'mobx-react-lite';
 
 import { useDaoApi } from 'services/daoApi';
+import { useIsMember } from 'services/user';
 import { useTranslate, tKeys as tKeysAll, ITranslateKey } from 'services/i18n';
 
 import { NumberInputField, TextInputField } from 'shared/view/form';
@@ -36,6 +37,7 @@ function DeFiAccount(props: StylesProps) {
   const coopBalance = useObserver(() => daoApi.store.finance.vaultBalance);
   const isEnabled = useObserver(() => daoApi.store.agent.isEnabled);
   const supplied = useObserver(() => daoApi.store.suppliedToDeFi);
+  const isMember = useIsMember(daoApi);
 
   const amountInput = (
     <NumberInputField
@@ -108,7 +110,7 @@ function DeFiAccount(props: StylesProps) {
                 <Grid item xs={3}>
                   <AsyncActionButton
                     buttonText={t(tKeys.actions.deposit.getKey())}
-                    buttonProps={{ fullWidth: true, color: 'primary' }}
+                    buttonProps={{ fullWidth: true, color: 'primary', disabled: !isMember }}
                     executeAction={daoApi.investments.deFiAccount.deposit}
                     form={{
                       fields: [amountInput, reasonInput],
@@ -123,7 +125,7 @@ function DeFiAccount(props: StylesProps) {
                 <Grid item xs={3}>
                   <AsyncActionButton
                     buttonText={t(tKeys.actions.withdraw.getKey())}
-                    buttonProps={{ fullWidth: true, color: 'primary' }}
+                    buttonProps={{ fullWidth: true, color: 'primary', disabled: !isMember }}
                     executeAction={daoApi.investments.deFiAccount.withdraw}
                     form={{
                       fields: [amountInput],
@@ -140,7 +142,7 @@ function DeFiAccount(props: StylesProps) {
                 <Grid item xs={3}>
                   <AsyncActionButton
                     buttonText={t(tKeys.actions.enable.getKey())}
-                    buttonProps={{ fullWidth: true, color: 'primary' }}
+                    buttonProps={{ fullWidth: true, color: 'primary', disabled: !isMember }}
                     executeAction={daoApi.investments.deFiAccount.enable}
                   />
                 </Grid>
