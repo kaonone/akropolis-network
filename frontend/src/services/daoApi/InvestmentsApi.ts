@@ -77,48 +77,9 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
       [ONE_ERC20.times(amount).toFixed()],
     ),
 
-    getBalance: async () => {
-      const balance = await this.base.callExternal<string>(
-        NETWORK_CONFIG.investments.compound,
-        CompoundABI,
-        'balanceOfUnderlying',
-        [this.base.getAppByName('agent').proxyAddress],
-      );
-      return new BigNumber(balance).div(ONE_ERC20);
-    },
+    getBalance: () => this.loadCompoundState().then(state => state.balance),
 
-    getEarn: async () => {
-      const apiUrl = NETWORK_CONFIG.compoundAccountApiUrl;
-      const accountAddress = this.base.getAppByName('agent').proxyAddress;
-
-      try {
-        const fetchResponse = await fetch(`${apiUrl}?addresses[]=${accountAddress}`);
-        const apiResponse: ICompoundAccountApiResponse = await fetchResponse.json();
-
-        if (apiResponse.error !== null) {
-          throw new Error(`
-            Compound account api returns error with code ${apiResponse.error}.
-            For more details go to https://compound.finance/developers/api#AccountResponse
-          `);
-        }
-
-        const account = apiResponse.accounts[0];
-        const token = account && account.tokens.find(
-          item => addressesEqual(item.address, NETWORK_CONFIG.investments.compound),
-        );
-
-        if (!token) {
-          return new BigNumber(0);
-        }
-
-        return new BigNumber(token.supply_balance_underlying.value)
-          .times(token.lifetime_supply_interest_accrued.value)
-          .div(100);
-      } catch (error) {
-        console.error(error);
-        return new BigNumber(0);
-      }
-    },
+    getEarn: () => this.loadCompoundState().then(state => state.earned),
 
     isEnabled: async () => {
       const approvedAmount = await this.base.callExternal<string>(
@@ -149,5 +110,44 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
 
   public constructor(base: BaseDaoApi) {
     this.base = base;
+  }
+
+  private loadCompoundState = async (): Promise<{ balance: BigNumber, earned: BigNumber }> => {
+    const apiUrl = NETWORK_CONFIG.compoundAccountApiUrl;
+    const accountAddress = this.base.getAppByName('agent').proxyAddress;
+
+    const empty = {
+      balance: new BigNumber(0),
+      earned: new BigNumber(0),
+    };
+
+    try {
+      const fetchResponse = await fetch(`${apiUrl}?addresses[]=${accountAddress}`);
+      const apiResponse: ICompoundAccountApiResponse = await fetchResponse.json();
+
+      if (apiResponse.error !== null) {
+        throw new Error(`
+          Compound account api returns error with code ${apiResponse.error}.
+          For more details go to https://compound.finance/developers/api#AccountResponse
+        `);
+      }
+
+      const account = apiResponse.accounts[0];
+      const token = account && account.tokens.find(
+        item => addressesEqual(item.address, NETWORK_CONFIG.investments.compound),
+      );
+
+      if (!token) {
+        return empty;
+      }
+
+      return {
+        earned: new BigNumber(token.lifetime_supply_interest_accrued.value),
+        balance: new BigNumber(token.supply_balance_underlying.value),
+      };
+    } catch (error) {
+      console.error(error);
+      return empty;
+    }
   }
 }
