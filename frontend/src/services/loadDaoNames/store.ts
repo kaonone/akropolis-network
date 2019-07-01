@@ -32,6 +32,12 @@ type DeployInstanceEvent = IEthereumEvent<'DeployInstance', {
   token: string;
 }>;
 
+const HIDDEN_DAOS = [
+  'testagent', 'testagent2', 'testagent3', 'testagentevents', 'ilgiz2', 'ivanivanivan', 'testenabling', 'rich',
+  'testcreation', 'vasilycompoundtest', 'testvictor2', 'yaya', 'ivantest2', 'video1', 'video2', 'testagent6',
+  'testagent7', 'newcoop2', 'testcoop', 'libregroup2', 'cooplibre', 'truelibre',
+];
+
 export class DaosStore {
   @observable
   public daoIds: string[] = [];
@@ -95,7 +101,7 @@ export class DaosStore {
       );
 
       this.subscription = this.daos$.subscribe(state => runInAction(() => {
-        this.daoIds = state.daos;
+        this.daoIds = state.daos.filter(item => !HIDDEN_DAOS.includes(item));
         if (state.ready && this.loading.status !== 'ready') {
           this.loading = {
             error: null,
