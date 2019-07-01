@@ -77,7 +77,15 @@ export class InvestmentsApi implements Record<InvestmentType, IInvestmentApi> {
       [ONE_ERC20.times(amount).toFixed()],
     ),
 
-    getBalance: () => this.loadCompoundState().then(state => state.balance),
+    getBalance: async () => {
+      const balance = await this.base.callExternal<string>(
+        NETWORK_CONFIG.investments.compound,
+        CompoundABI,
+        'balanceOfUnderlying',
+        [this.base.getAppByName('agent').proxyAddress],
+      );
+      return new BigNumber(balance).div(ONE_ERC20);
+    },
 
     getEarn: () => this.loadCompoundState().then(state => state.earned),
 
