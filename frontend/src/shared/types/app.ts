@@ -4,7 +4,6 @@ import { Store, Reducer, ActionCreator, Action } from 'redux';
 import { SagaIterator } from 'redux-saga';
 import { GenerateClassName } from 'jss';
 import { Drizzle } from 'drizzle';
-import ApolloClient, { NormalizedCacheObject } from 'apollo-boost';
 
 import { LocalStorage } from 'services/storage';
 import Api from 'services/api/Api';
@@ -42,7 +41,6 @@ export interface IDependencies {
   api: Api;
   drizzle: Drizzle;
   storage: LocalStorage;
-  apolloClient: ApolloClient<NormalizedCacheObject>;
 }
 
 export type IDictionary<T, S extends keyof any = string> = {
