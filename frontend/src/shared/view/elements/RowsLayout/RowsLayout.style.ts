@@ -11,6 +11,7 @@ const styles = (_theme: Theme) => ({
 
   container: rule({
     flexGrow: 1,
+    alignItems: 'stretch',
   }),
 });
 

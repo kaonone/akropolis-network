@@ -10,3 +10,4 @@ export { default as Pagination } from './Pagination/Pagination';
 export { default as AsyncActionButton } from './AsyncActionButton/AsyncActionButton';
 export { default as Metric } from './Metric/Metric';
 export { default as BalanceChart } from './BalanceChart/BalanceChart';
+export { default as AirSwapButton } from './AirSwapButton/AirSwapButton';
