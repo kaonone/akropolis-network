@@ -2,19 +2,19 @@ import React from 'react';
 import { useObserver } from 'mobx-react-lite';
 
 import { DaoApi } from 'services/daoApi';
-import { IVoting } from 'shared/types/models';
 import { useAccountAddress } from 'services/user';
 
 import { addressesEqual } from '../web3';
 import { calculateIsRejected } from './votingStatus';
 
-const useHasActiveJoinVoting = (daoApi: DaoApi, votes: IVoting[]) => {
-
+function useHasActiveJoinVoting(daoApi: DaoApi): boolean {
   const userAccountAddress = useAccountAddress();
+  const votingsMap = useObserver(() => daoApi.store.voting.votings);
   const votingConfig = useObserver(() => daoApi.store.voting.config);
+  const votings = React.useMemo(() => Object.values(votingsMap), [votingsMap]);
 
-  const hasActiveJoinVoting: boolean = React.useMemo(() => {
-    return !!votes
+  return React.useMemo(() => {
+    return !!votings
       .filter(
         vote => (
           vote.intent.type === 'joinToDao' &&
@@ -23,9 +23,7 @@ const useHasActiveJoinVoting = (daoApi: DaoApi, votes: IVoting[]) => {
           !vote.executed
         ),
       ).length;
-  }, [votes, userAccountAddress, votingConfig]);
-
-  return hasActiveJoinVoting;
-};
+  }, [votings, userAccountAddress, votingConfig]);
+}
 
 export default useHasActiveJoinVoting;

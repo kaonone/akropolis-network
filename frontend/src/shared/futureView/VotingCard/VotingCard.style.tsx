@@ -17,30 +17,6 @@ const styles = ({ extra: theme }: Theme) => ({
     marginRight: '1.5rem',
   }),
 
-  title: rule({
-    '&$purple': {
-      color: theme.colors.royalPurple,
-    },
-
-    '&$grey': {
-      color: theme.colors.topaz,
-    },
-  }),
-
-  value: rule({
-    composes: '$title',
-  }),
-
-  address: rule({
-    alignSelf: 'flex-start',
-    borderBottom: 'dotted 1px black',
-  }),
-
-  subValue: rule({
-    marginLeft: theme.spacing.unit * 0.5,
-    color: theme.colors.frenchGray,
-  }),
-
   purple: {},
   grey: {},
 
@@ -91,21 +67,6 @@ const styles = ({ extra: theme }: Theme) => ({
   votingAgainstIcon: rule({
     composes: '$votingIcon',
     color: theme.colors.geraldine,
-  }),
-
-  votingTypeIcon: rule({
-    fontSize: '1rem',
-    marginRight: theme.spacing.unit,
-  }),
-
-  withdrawIcon: rule({
-    composes: '$votingTypeIcon',
-    color: theme.colors.jaffa,
-  }),
-
-  addPersonIcon: rule({
-    composes: '$votingTypeIcon',
-    color: theme.colors.curiousBlue,
   }),
 
   votingResult: rule({

@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import * as R from 'ramda';
 import BN from 'bignumber.js';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 
@@ -7,7 +8,7 @@ import { IEthereumEvent, IHolder } from 'shared/types/models';
 import { ONE_ERC20 } from 'shared/constants';
 import { makeStoreFromEvents } from 'shared/helpers/makeStoreFromEvents';
 
-import { ITokenManagerState } from './types';
+import { ITokenManagerState, ITokenMint } from './types';
 
 type ClaimedTokensEvent = IEthereumEvent<'ClaimedTokens', {
   _token: string;
@@ -25,6 +26,7 @@ type Event =
 
 export const initialTokenManagerState: ITokenManagerState = {
   holders: {},
+  tokenMints: {},
   tokenAddress: '',
   tokenSupply: '0',
   ready: false,
@@ -42,6 +44,12 @@ export async function createTokenManagerStore(web3: Web3, proxy: ContractProxy) 
     async (state: ITokenManagerState, events: Event[], isCompleteLoading: boolean) => {
       // The transfer may have increased the token's total supply, so let's refresh it
       const isNeedUpdateTokenSupply = events.some(({ event }) => event === 'Transfer');
+
+      const newTokenMints = await loadTokenMints(web3, events);
+
+      const tokenMints = Object.values(newTokenMints).length !== 0 ?
+        { ...state.tokenMints, ...newTokenMints } : state.tokenMints;
+
       const addressesForLoadBalance = Array.from(
         events.reduce((acc, cur) => {
           switch (cur.event) {
@@ -72,6 +80,7 @@ export async function createTokenManagerStore(web3: Web3, proxy: ContractProxy) 
       return {
         ...state,
         tokenSupply,
+        tokenMints,
         holders,
         tokenAddress: tokenAddr,
         ready: isCompleteLoading,
@@ -108,7 +117,7 @@ async function loadNewBalances(token: ContractProxy, ...addresses: string[]): Pr
     return Promise.all(
       addresses.map(async address => {
         const balance: string = await token.call('balanceOf', address);
-        return { address, balance: new BN(balance).div(ONE_ERC20).toNumber() };
+        return { address, balance: new BN(balance).div(ONE_ERC20) };
       }),
     );
   }
@@ -117,5 +126,28 @@ async function loadNewBalances(token: ContractProxy, ...addresses: string[]): Pr
     // Return an empty object to avoid changing any state
     // TODO: ideally, this would actually cause the UI to show "unknown" for the address
     return [];
+  }
+}
+
+async function loadTokenMints(web3: Web3, events: Event[]): Promise<Record<string, ITokenMint>> {
+  try {
+    const mints: ITokenMint[] = await Promise.all(
+      events.filter((event): event is TransferEvent => event.event === 'Transfer')
+        .map(async event => {
+          const block = await web3.eth.getBlock(event.blockNumber);
+          return { address: event.returnValues._to, startDate: block.timestamp * 1000 };
+        }),
+    );
+
+    const mintsUniqByAddress = R.uniqWith(R.eqBy(R.prop('address')), mints.sort(R.ascend(R.prop('startDate'))));
+
+    return mintsUniqByAddress.reduce((acc, cur) => {
+      acc[cur.address] = { ...cur };
+      return acc;
+    }, {} as Record<string, ITokenMint>);
+  }
+  catch (err) {
+    console.error(`Failed to load tokenMints due to:`, err);
+    return {};
   }
 }

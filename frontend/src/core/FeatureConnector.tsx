@@ -104,7 +104,7 @@ export function getAsyncContainer<C extends Record<string, React.ComponentType<a
     return <Container {...props} />;
   }
 
-  return featureConnect({ _entry: loader })(render) as React.ComponentClass<GetProps<C[K]>>;
+  return featureConnect({ _entry: loader })(render) as any as React.ComponentClass<GetProps<C[K]>>;
 }
 
 export default featureConnect;

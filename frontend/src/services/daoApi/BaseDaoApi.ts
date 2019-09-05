@@ -1,16 +1,18 @@
 import { bind } from 'decko';
+import { AbiCoder } from 'web3-eth-abi';
 import { observable, action, runInAction, when } from 'mobx';
 import AragonWrapper, { ensResolve } from '@aragon/wrapper';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 import { makeProxyFromABI } from '@aragon/wrapper/dist/utils';
-import { IAragonApp, ITransaction } from '@aragon/types';
+import { IAragonApp, ITransaction, IAbi } from '@aragon/types';
 
 import { getWeb3, getMainAccount } from 'shared/helpers/web3';
 import { notifyDevWarning } from 'shared/helpers/notifyDevWarning';
 import { isEthereumAddress } from 'shared/validators/isEthereumAddress/isEthereumAddress';
-import { NULL_ADDRESS } from 'shared/constants';
 import { IDaoApiConfig, AppType, MethodByApp, ParamsByAppByMethod } from './types';
 import { currentAddress$ } from 'services/user';
+
+const ABI = new AbiCoder();
 
 interface IExtendedAragonApp extends IAragonApp {
   proxy: ContractProxy;
@@ -32,9 +34,13 @@ export class BaseDaoApi {
     return getWeb3(this.config.walletWeb3Provider);
   }
 
-  public getAppByName(appName: AppType): IExtendedAragonApp | null {
+  public getAppByName(appName: AppType): IExtendedAragonApp {
     // ACL, Kernel and EVM Scripts don't have appName property
-    return this.apps.find(app => !!app.appName && app.appName.startsWith(appName)) || null;
+    const foundApp = this.apps.find(app => !!app.appName && app.appName.startsWith(appName));
+    if (!foundApp) {
+      throw new Error(`Aragon app "${appName}" is not found`);
+    }
+    return foundApp;
   }
 
   public async getAccount() {
@@ -107,11 +113,31 @@ export class BaseDaoApi {
 
     const app = this.getAppByName(appType);
 
-    if (!app) {
-      throw new Error(`app for "${appType}" is not found`);
+    return app.proxy.call(method as any, ...(params as any || []));
+  }
+
+  public async callExternal<R>(address: string, abi: IAbi[], method: string, params: string[] = []): Promise<R> {
+    if (!this.wrapper) {
+      throw new Error('AragonWrapper is not initialized');
     }
 
-    return app.proxy.call(method as any, ...(params as any || []));
+    const proxy = new ContractProxy(address, abi, this.wrapper.web3);
+
+    return proxy.call(method, ...params);
+  }
+
+  @bind
+  public async executeOnAgent(targetAddress: string, method: string, args: string[]) {
+    const params = [
+      targetAddress,
+      0,
+      encodeCalldata(
+        method,
+        args,
+      ),
+    ] as const;
+
+    return this.sendTransaction('agent', 'execute', params);
   }
 
   public async sendTransaction<T extends AppType, M extends MethodByApp<T>, P extends ParamsByAppByMethod<T, M>>(
@@ -122,17 +148,16 @@ export class BaseDaoApi {
     }
 
     const proxy = this.getAppByName(appType);
-    const proxyAddress = proxy ? proxy.proxyAddress : NULL_ADDRESS;
 
-    const path = await this.wrapper.getTransactionPath(proxyAddress, method as string, params as any);
-
-    notifyDevWarning(
-      path.length > 1,
-      'Transactions path have more than one transaction',
-      { path },
-    );
+    const path = await this.wrapper.getTransactionPath(proxy.proxyAddress, method as string, params as any);
 
     const transaction = path[0];
+
+    notifyDevWarning(
+      !transaction,
+      'Detected empty transaction path',
+      { path, proxy, method, params },
+    );
 
     if (transaction) {
       transaction.pretransaction && await this._sendTransaction(transaction.pretransaction);
@@ -187,5 +212,19 @@ export class BaseDaoApi {
     }
     this.wrapper.setAccounts([account]);
   }
-
 }
+
+const encodeCalldata = (signature: string, params?: string[]): string => {
+  const sigBytes = ABI.encodeFunctionSignature(signature);
+
+  const types = signature.replace(')', '').split('(')[1];
+
+  // No params, return signature directly
+  if (types === '') {
+    return sigBytes;
+  }
+
+  const paramBytes = ABI.encodeParameters(types.split(','), params || []);
+
+  return `${sigBytes}${paramBytes.slice(2)}`;
+};

@@ -82,15 +82,14 @@ const Cooperative = React.memo(provideStyles((props: ICooperativeProps & StylesP
   const onClickHandle = React.useCallback(() => onSelect(daoName), [daoName]);
 
   const account = useAccountAddress();
-  const balance = useObserver(() => daoApi.store.finance.daoOverview.balance.value);
+  const balance = useObserver(() => daoApi.store.coopBalanceOverview.balance.value);
   const holders = useObserver(() => daoApi.store.tokenManager.holders);
-  const votes = useObserver(() => daoApi.store.voting.votings);
 
-  const newEvents = useNewVotingEvents(daoApi, Object.values(votes));
+  const newEvents = useNewVotingEvents(daoApi);
 
   const hasNewEvent = newEvents.length > 0;
   const userIsInCoop = !!holders[account];
-  const hasActiveJoinVoting: boolean = useHasActiveJoinVoting(daoApi, Object.values(votes));
+  const hasActiveJoinVoting: boolean = useHasActiveJoinVoting(daoApi);
 
   const cooperative: ICooperative = {
     name: daoName,

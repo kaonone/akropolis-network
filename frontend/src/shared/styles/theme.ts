@@ -51,6 +51,9 @@ const colors = {
   whiteWine: '#FAF9FD',
   normalPurple: '#8E44DC',
   mischka: '#E0DDE6',
+  ghostGray: '#F4F3F5',
+  blueRibbon: '#0136ff',
+  jungleGreen: '#27AE60',
 };
 
 const gradients = {

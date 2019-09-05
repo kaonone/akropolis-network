@@ -1,5 +1,5 @@
 import { from, merge, Observable, ConnectableObservable } from 'rxjs';
-import { mergeScan, bufferTime, skipUntil, distinctUntilChanged, publishReplay, map } from 'rxjs/operators';
+import { mergeScan, bufferTime, skipUntil, distinctUntilChanged, publishReplay, map, filter } from 'rxjs/operators';
 import ContractProxy from '@aragon/wrapper/dist/core/proxy';
 import { EventLog } from 'web3/types';
 
@@ -77,6 +77,7 @@ function getEventsStream<T, K extends string>(flatEvents$: Observable<T>, key: K
   return flatEvents$.pipe(
     bufferTime(300),
     skipUntil(flatEvents$),
+    filter(bufferedEvents => !!bufferedEvents.length),
     map(bufferedEvents => ({ [key]: bufferedEvents } as { [k in K]: T[]; })),
   );
 }

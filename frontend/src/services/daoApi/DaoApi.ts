@@ -1,10 +1,13 @@
 import { bind } from 'decko';
+
 import { NETWORK_CONFIG } from 'core/constants/network';
 import { VotingDecision } from 'shared/types/models/Voting';
 import { ONE_ERC20 } from 'shared/constants';
+
 import { IDaoApiConfig, ITransitionPeriod } from './types';
 import { BaseDaoApi } from './BaseDaoApi';
 import { DaoStore } from './store';
+import { InvestmentsApi } from './InvestmentsApi';
 
 const ETHER_TOKEN_FAKE_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -34,12 +37,14 @@ export class DaoApi {
   }
 
   public store: DaoStore;
+  public investments: InvestmentsApi;
   private base: BaseDaoApi;
   private daoEnsName: string;
 
   private constructor(config: IDaoApiConfig, daoEnsName: string) {
     this.base = new BaseDaoApi(config);
-    this.store = new DaoStore(this.base);
+    this.investments = new InvestmentsApi(this.base);
+    this.store = new DaoStore(this.base, this.investments);
     this.daoEnsName = daoEnsName;
   }
 
@@ -58,7 +63,7 @@ export class DaoApi {
 
     const params = [
       account,
-      ONE_ERC20.toString(),
+      ONE_ERC20.toFixed(),
     ] as const;
 
     await this.base.sendTransaction('token-manager', 'mint', params);
@@ -72,11 +77,16 @@ export class DaoApi {
       throw new Error('Ethereum account is not found');
     }
 
+    await this.requestWithdrawTo(account, amount, reason);
+  }
+
+  @bind
+  public async requestWithdrawTo(address: string, amount: number, reason: string) {
     const tokenAddress = NETWORK_CONFIG.daiContract;
-    const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
+    const resultAmount = ONE_ERC20.multipliedBy(amount).toFixed();
     const params = [
       tokenAddress,
-      account,
+      address,
       resultAmount,
       reason,
     ] as const;
@@ -86,15 +96,9 @@ export class DaoApi {
 
   @bind
   public async deposit(amount: number) {
-    const account = await this.base.getAccount();
-
-    if (!account) {
-      throw new Error('Ethereum account is not found');
-    }
-
     const tokenAddress = NETWORK_CONFIG.daiContract;
 
-    const resultAmount = ONE_ERC20.multipliedBy(amount).toString();
+    const resultAmount = ONE_ERC20.multipliedBy(amount).toFixed();
     const reference = 'deposit';
 
     const periodDuration: string = await this.base.call('finance', 'getPeriodDuration', null);

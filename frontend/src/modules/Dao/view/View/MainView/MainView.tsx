@@ -46,14 +46,18 @@ function MainView(props: IProps) {
 
   const daoApi = useDaoApi();
 
-  const userAccountAddress = useAccountAddress();
   const tokenHolders = useObserver(() => daoApi.store.tokenManager.holders);
   const financeHolders = useObserver(() => daoApi.store.finance.holders);
-  const daoOverview = useObserver(() => daoApi.store.finance.daoOverview);
+  const daoOverview = useObserver(() => daoApi.store.coopBalanceOverview);
   const votes = useObserver(() => daoApi.store.voting.votings);
   const connectedAccountVotes = useObserver(() => daoApi.store.voting.connectedAccountVotes);
   const canVoteConnectedAccount = useObserver(() => daoApi.store.voting.canVoteConnectedAccount);
 
+  const isMember = useIsMember(daoApi);
+  const userAccountAddress = useAccountAddress();
+  const newEvents = useNewVotingEvents(daoApi);
+  const hasActiveJoinVoting: boolean = useHasActiveJoinVoting(daoApi);
+  const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
   const fieldsForVotingStatus = useFieldsForVotingStatus(daoApi);
 
   const sortVote = R.sortWith<IVoting>(
@@ -68,25 +72,22 @@ function MainView(props: IProps) {
     [votes],
   );
 
-  const newEvents = useNewVotingEvents(daoApi, preparedVotes);
-
   const links: ISectionLink[] = React.useMemo(() => ([
     { section: 'overview', title: tKeys.overview.getKey() },
     { section: 'activities', title: tKeys.activities.getKey(), badge: newEvents.length },
     { section: 'members', title: tKeys.members.getKey() },
     { section: 'products', title: tKeys.products.getKey() },
-  ]), [newEvents]);
-
-  const hasActiveJoinVoting: boolean = useHasActiveJoinVoting(daoApi, preparedVotes);
-
-  const isMember = useIsMember(daoApi);
-  const memoTokenHolders = React.useMemo(() => Object.values(tokenHolders), [tokenHolders]);
+  ]), [newEvents.length]);
 
   return (
     <BaseLayout
       backRoutePath={routes.daos.getRedirectPath()}
       title={daoId}
-      actions={isMember || hasActiveJoinVoting ? undefined : [<JointToCooperativeButtonAsync key={1} />]}
+      actions={(
+        !isMember && !hasActiveJoinVoting && [<JointToCooperativeButtonAsync key="1" />] ||
+        isMember && [<RequestWithdrawButtonAsync key="1" />, <RequestDepositButtonAsync key="2" />] ||
+        undefined
+      )}
       additionalHeaderContent={(
         <Grid container wrap="nowrap" spacing={8}>
           <Grid item xs>
@@ -94,21 +95,13 @@ function MainView(props: IProps) {
               balance={daoOverview.balance.value}
               deposit={daoOverview.deposit.value}
               withdraw={daoOverview.withdraw.value}
+              deFi={daoOverview.deFi.value}
               balanceDayAgo={daoOverview.balance.valueDayAgo}
               depositDayAgo={daoOverview.deposit.valueDayAgo}
               withdrawDayAgo={daoOverview.withdraw.valueDayAgo}
+              deFiDayAgo={daoOverview.deFi.valueDayAgo}
             />
           </Grid>
-          {!!isMember && (
-            <>
-              <Grid item>
-                <RequestWithdrawButtonAsync />
-              </Grid>
-              <Grid item>
-                <RequestDepositButtonAsync />
-              </Grid>
-            </>
-          )}
         </Grid>
       )}
     >

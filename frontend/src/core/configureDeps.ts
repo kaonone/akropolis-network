@@ -43,12 +43,12 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
     },
   });
 
-  const httpLinkCompaund = new HttpLink({
+  const httpLinkCompound = new HttpLink({
     uri: 'https://api.thegraph.com/subgraphs/name/compound-finance/compound-v2-rinkeby',
     credentials: 'same-origin',
   });
 
-  const wsLinkCompaund = new WebSocketLink({
+  const wsLinkCompound = new WebSocketLink({
     uri: 'wss://api.thegraph.com/subgraphs/name/compound-finance/compound-v2-rinkeby',
     options: {
       reconnect: true,
@@ -56,28 +56,28 @@ export default function configureDeps(_store: Store<IAppReduxState>): IDependenc
   });
 
   const akroLink = makeEndpointLink(httpLink, wsLink);
-  const compaundLink = makeEndpointLink(httpLinkCompaund, wsLinkCompaund);
+  const compoundLink = makeEndpointLink(httpLinkCompound, wsLinkCompound);
 
   const link = split(
     ({ query }) => {
       const akroSelectionNames: string[] = ['votes'];
-      const compaundSelectionNames: string[] = ['compaundUsers'];
+      const compoundSelectionNames: string[] = ['compoundUsers'];
 
       const definition = getMainDefinition(query);
       const selectionName = getFirstSelectionName(definition);
 
       const isAkroSelection = !!selectionName && akroSelectionNames.includes(selectionName);
-      const isCompaundSelection = !!selectionName && compaundSelectionNames.includes(selectionName);
+      const isCompoundSelection = !!selectionName && compoundSelectionNames.includes(selectionName);
 
       notifyDevWarning(
-        !isAkroSelection && !isCompaundSelection,
-        `You need to add "${selectionName}" to \`akroSelectionNames\` or \`compaundSelectionNames\``,
+        !isAkroSelection && !isCompoundSelection,
+        `You need to add "${selectionName}" to \`akroSelectionNames\` or \`compoundSelectionNames\``,
       );
 
       return isAkroSelection;
     },
     akroLink,
-    compaundLink,
+    compoundLink,
   );
 
   const apolloClient = new ApolloClient({

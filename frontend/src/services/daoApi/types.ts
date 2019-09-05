@@ -38,7 +38,7 @@ interface IAppMethodParams {
   finance: {
     // set
     newImmediatePayment: readonly [string, string, string, string]; // [tokenAddress, recipient, amount, reference]
-    deposit: readonly [string, string, string, object]; // [tokenAddress, amount, reference, intentParams]
+    deposit: readonly [string, string, 'deposit', IIntentParams] // [tokenAddress, amount, reference, intentParams]
     // get
     getPeriodDuration: null;
     currentPeriodId: null;
@@ -47,4 +47,12 @@ interface IAppMethodParams {
   vault: {
     mock: null;
   };
+  agent: {
+    execute: readonly [string, number, string]; // [address, ethAmount, encodedCalldata]
+  };
 }
+
+type IIntentParams = { value: string } | {
+  token: { address: string, value: string };
+  gas: number;
+};
