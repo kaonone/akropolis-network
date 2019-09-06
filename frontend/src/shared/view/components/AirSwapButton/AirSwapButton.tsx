@@ -28,8 +28,10 @@ function AirSwapButton(props: GetProps<typeof Button> & IProps) {
     window.AirSwapTrader && airSwapContentElementRef.current && window.AirSwapTrader.render(
       {
         env: NETWORK_CONFIG.id === 1 ? 'production' : 'development',
-        taker: {
-          token: targetTokenAddress,
+        order: {
+          taker: {
+            token: targetTokenAddress,
+          },
         },
         onCreate: (order: any, cid: any) => {
           onCreateOrder({ ...order, cid });

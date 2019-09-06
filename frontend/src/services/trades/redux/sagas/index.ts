@@ -44,8 +44,9 @@ export function* saveTradesSaga({ storage }: IDependencies, action: NS.ISaveTrad
 
 export function* loadTradesSaga({ storage }: IDependencies, _action: NS.ILoadTrades) {
   try {
-    const trades: IAirSwapOrder[] | null = yield call([storage, storage.get], storageKeys.trades);
-    yield put(actions.loadTradesSuccess(trades || []));
+    const savedTrades: IAirSwapOrder[] | null = yield call([storage, storage.get], storageKeys.trades);
+    const trades = (savedTrades || []).filter(item => (item.expiry * 1000) < Date.now());
+    yield put(actions.loadTradesSuccess(trades));
   } catch (error) {
     const message = getErrorMsg(error);
     yield put(actions.loadTradesFail(message));
