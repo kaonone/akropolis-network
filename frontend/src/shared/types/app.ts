@@ -13,6 +13,7 @@ import * as adaptabilityNS from 'services/adaptability/namespace';
 import * as i18nNS from 'services/i18n/namespace';
 import * as userNS from 'services/user/namespace';
 import * as notificationNS from 'services/notifications/namespace';
+import * as tradesNS from 'services/trades/namespace';
 
 import { namespace as createDaoNS } from 'features/createDao';
 import * as signInNS from 'features/signIn/namespace';
@@ -70,6 +71,7 @@ export interface IAppReduxState {
   i18n: i18nNS.IReduxState;
   user: userNS.IReduxState;
   notifications: notificationNS.IReduxState;
+  trades: tradesNS.IReduxState;
   // features
   createDao: createDaoNS.IReduxState;
   signIn: signInNS.IReduxState;

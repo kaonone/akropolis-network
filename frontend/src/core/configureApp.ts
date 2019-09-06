@@ -8,6 +8,7 @@ import { reduxEntry as adaptabilityRE } from 'services/adaptability';
 import { reduxEntry as i18nRE } from 'services/i18n';
 import { reduxEntry as userRE } from 'services/user';
 import { reduxEntry as notificationRE } from 'services/notifications';
+import { reduxEntry as tradesRE } from 'services/trades';
 
 import { reduxEntry as signInRE } from 'features/signIn';
 
@@ -31,6 +32,7 @@ function configureApp(data?: IAppData): IAppData {
     notificationRE,
     signInRE,
     userRE,
+    tradesRE,
   ];
 
   const connectedSagas: RootSaga[] = [];
