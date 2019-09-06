@@ -9,6 +9,7 @@ const rawTree = {
     },
   },
   daos: null,
+  account: null,
 };
 
 const routes = build(rawTree);

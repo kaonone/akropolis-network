@@ -37,3 +37,4 @@ export { default as Settings } from './Settings';
 export { default as DeFiDots } from './DeFiDots';
 export { default as AddCircle } from '@material-ui/icons/AddCircle';
 export { default as RemoveCircle } from '@material-ui/icons/RemoveCircle';
+export { default as AccountBoxOutlined } from '@material-ui/icons/AccountBoxOutlined';

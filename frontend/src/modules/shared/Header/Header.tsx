@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+import * as cn from 'classnames';
 
+import routes from 'modules/routes';
 import { Grid, IconButton, Typography } from 'shared/view/elements';
-import { Back } from 'shared/view/elements/Icons';
+import { Back, AccountBoxOutlined } from 'shared/view/elements/Icons';
 import { withComponent } from 'shared/helpers/react';
 
 import { provideStyles, StylesProps } from './Header.style';
@@ -15,19 +17,20 @@ interface IOwnProps {
   backRoutePath?: string;
   title: string;
   additionalContent?: React.ReactNode;
+  hideAccountLink?: boolean;
 }
 
 type IProps = IOwnProps & StylesProps & RouteComponentProps;
 
 class Header extends React.PureComponent<IProps> {
   public render() {
-    const { classes, actions, title, backRoutePath, additionalContent } = this.props;
+    const { classes, actions, title, additionalContent, backRoutePath, hideAccountLink } = this.props;
     return (
       <div className={classes.root}>
         <Grid container alignItems="center" spacing={16}>
           {backRoutePath && (
             <Grid item>
-              <LinkIconButton to={backRoutePath} className={classes.backButton}><Back /></LinkIconButton>
+              <LinkIconButton to={backRoutePath} className={classes.iconButton}><Back /></LinkIconButton>
             </Grid>
           )}
           <Grid item xs zeroMinWidth>
@@ -41,6 +44,16 @@ class Header extends React.PureComponent<IProps> {
           <Grid item>
             <Profile />
           </Grid>
+          {!hideAccountLink && (
+            <Grid item>
+              <LinkIconButton
+                to={routes.account.getRedirectPath()}
+                className={cn(classes.iconButton, classes.accountIcon)}
+              >
+                <AccountBoxOutlined fontSize="large" />
+              </LinkIconButton>
+            </Grid>
+          )}
           {!!additionalContent && <Grid item xs={12}>{additionalContent}</Grid>}
         </Grid>
       </div>

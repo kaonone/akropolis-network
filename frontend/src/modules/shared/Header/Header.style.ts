@@ -8,8 +8,12 @@ const styles = ({ extra: theme }: Theme) => ({
     borderRadius: 4,
   }),
 
-  backButton: rule({
+  iconButton: rule({
     color: '#fff',
+  }),
+
+  accountIcon: rule({
+    padding: 5.5,
   }),
 
   title: rule({

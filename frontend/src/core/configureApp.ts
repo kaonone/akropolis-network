@@ -3,7 +3,7 @@ import { TYPES, container } from './configureIoc';
 import configureStore, { createReducer } from './configureStore';
 import { configureJss } from 'core/configureJss';
 
-import { DaoModule } from 'modules';
+import { DaoModule, AccountModule } from 'modules';
 import { reduxEntry as adaptabilityRE } from 'services/adaptability';
 import { reduxEntry as i18nRE } from 'services/i18n';
 import { reduxEntry as userRE } from 'services/user';
@@ -18,6 +18,7 @@ function configureApp(data?: IAppData): IAppData {
   /* Prepare main app elements */
   const modules: IModule[] = [
     DaoModule,
+    AccountModule,
   ];
 
   if (data) {

@@ -1,3 +1,2 @@
-// export { default as MarketplaceModule } from './Marketplace/Marketplace';
-// export { default as CashFlowModule } from './CashFlow/CashFlow';
 export { default as DaoModule } from './Dao/Dao';
+export { default as AccountModule } from './Account/Account';
