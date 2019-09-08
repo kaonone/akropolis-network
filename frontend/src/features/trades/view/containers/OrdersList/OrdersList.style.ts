@@ -9,6 +9,12 @@ const styles = ({ extra: theme }: Theme) => {
   const horizontalCellPadding = theme.spacing.unit * 1.5;
 
   return {
+    hint: rule({
+      padding: theme.spacing.unit * 2,
+      borderRadius: '0.25rem',
+      backgroundColor: theme.colors.whiteLilac,
+      textAlign: 'center',
+    }),
 
     table: rule({
       marginTop: '-1rem',

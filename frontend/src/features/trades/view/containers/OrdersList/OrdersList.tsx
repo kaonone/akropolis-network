@@ -54,69 +54,71 @@ function OrdersList(props: IProps & StylesProps) {
 
   const { items: paginatedOrders, paginationView } = usePagination(orders);
 
-  return !orders.length ? <span>Orders not found</span> : (
-    <div>
-      <Table separated className={classes.table}>
-        <TableHead>
-          <TableRow className={classes.header}>
-            {headerCells.map((title, i) => (
-              <TableCell key={i} align={cellsAlign[i]} className={classes.headerCell}>
-                <Typography variant="subtitle1" className={classes.headerTitle}>{title}</Typography>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {paginatedOrders.map((order, i) => {
-            // tslint:disable:jsx-key
-            const cells = [
-              <Typography variant="body1" className={classes.memberNumber}>
-                {i + 1}
-              </Typography>,
-              <Typography variant="body2">
-                <ERC20Balance token={order.maker.token} amount={order.maker.param} />
-              </Typography>,
-              <Typography variant="body2">
-                <ERC20Balance token={order.taker.token} amount={order.taker.param} />
-              </Typography>,
-              <Typography variant="body2">
-                <Countdown
-                  date={order.expiry * 1000}
-                  renderer={expiredRenderer}
-                />
-              </Typography>,
-              <TypographyA
-                variant="body2"
-                href={`https://trader${NETWORK_CONFIG.id === 1 ? '' : '.development'}.airswap.io/${order.cid}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t(tKeys.showMore.getKey())}
-              </TypographyA>,
-            ];
-            // tslint:enable:jsx-key
+  return !orders.length
+    ? <Typography className={classes.hint}>Orders not found</Typography>
+    : (
+      <div>
+        <Table separated className={classes.table}>
+          <TableHead>
+            <TableRow className={classes.header}>
+              {headerCells.map((title, i) => (
+                <TableCell key={i} align={cellsAlign[i]} className={classes.headerCell}>
+                  <Typography variant="subtitle1" className={classes.headerTitle}>{title}</Typography>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {paginatedOrders.map((order, i) => {
+              // tslint:disable:jsx-key
+              const cells = [
+                <Typography variant="body1" className={classes.memberNumber}>
+                  {i + 1}
+                </Typography>,
+                <Typography variant="body2">
+                  <ERC20Balance token={order.maker.token} amount={order.maker.param} />
+                </Typography>,
+                <Typography variant="body2">
+                  <ERC20Balance token={order.taker.token} amount={order.taker.param} />
+                </Typography>,
+                <Typography variant="body2">
+                  <Countdown
+                    date={order.expiry * 1000}
+                    renderer={expiredRenderer}
+                  />
+                </Typography>,
+                <TypographyA
+                  variant="body2"
+                  href={`https://trader${NETWORK_CONFIG.id === 1 ? '' : '.development'}.airswap.io/${order.cid}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t(tKeys.showMore.getKey())}
+                </TypographyA>,
+              ];
+              // tslint:enable:jsx-key
 
-            return (
-              <TableRow key={i} className={classes.row}>
-                {
-                  cells.map((cell, k) =>
-                    <TableCell
-                      key={k}
-                      className={classes.cell}
-                      align={cellsAlign[k]}
-                    >
-                      {cell}
-                    </TableCell>)}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-      <div className={classes.pagination}>
-        {paginationView}
+              return (
+                <TableRow key={i} className={classes.row}>
+                  {
+                    cells.map((cell, k) =>
+                      <TableCell
+                        key={k}
+                        className={classes.cell}
+                        align={cellsAlign[k]}
+                      >
+                        {cell}
+                      </TableCell>)}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+        <div className={classes.pagination}>
+          {paginationView}
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 function mapState(state: IAppReduxState) {
