@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { BaseLayout } from 'modules/shared';
 import routes from 'modules/routes';
 
-import { CreateOrderButton } from 'features/trades';
+import { CreateOrderButton, OrdersList } from 'features/trades';
 import { Grid, Typography } from 'shared/view/elements';
 
 function Account(_props: RouteComponentProps<any>) {
@@ -18,7 +18,7 @@ function Account(_props: RouteComponentProps<any>) {
           <CreateOrderButton />
         </Grid>
         <Grid item xs={12}>
-          Coming soon
+          <OrdersList />
         </Grid>
       </Grid>
     </BaseLayout>

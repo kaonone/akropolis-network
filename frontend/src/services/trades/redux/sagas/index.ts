@@ -26,7 +26,7 @@ function getSaga(deps: IDependencies) {
 export function* addTradeSaga(action: NS.IAddTrade) {
   const prevTrades: ReturnType<typeof selectors.selectTrades> = yield select(selectors.selectTrades);
   const trades: IAirSwapOrder[] = prevTrades
-    .filter(item => (item.expiry * 1000) < Date.now())
+    .filter(item => (item.expiry * 1000) > Date.now())
     .concat(action.payload);
   yield put(actions.saveTrades(trades));
 }
@@ -45,7 +45,7 @@ export function* saveTradesSaga({ storage }: IDependencies, action: NS.ISaveTrad
 export function* loadTradesSaga({ storage }: IDependencies, _action: NS.ILoadTrades) {
   try {
     const savedTrades: IAirSwapOrder[] | null = yield call([storage, storage.get], storageKeys.trades);
-    const trades = (savedTrades || []).filter(item => (item.expiry * 1000) < Date.now());
+    const trades = (savedTrades || []).filter(item => (item.expiry * 1000) > Date.now());
     yield put(actions.loadTradesSuccess(trades));
   } catch (error) {
     const message = getErrorMsg(error);

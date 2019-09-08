@@ -321,6 +321,7 @@
     "react-apollo": "^2.5.5",
     "react-apollo-hooks": "^0.4.5",
     "react-async-bootstrapper": "^2.1.0",
+    "react-countdown-now": "^2.1.1",
     "react-device-detect": "^1.6.1",
     "react-dom": "^16.8.1",
     "react-final-form": "^4.0.2",
