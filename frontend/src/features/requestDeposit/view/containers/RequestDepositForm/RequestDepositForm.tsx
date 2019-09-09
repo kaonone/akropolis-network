@@ -53,7 +53,7 @@ function RequestDepositForm(props: IProps) {
       <div className={classes.hint}>
         <Typography>{t(tKeys.form.hint.getKey())}</Typography>
         <Typography>
-          {'If you want to deposit more DAI, you can sell another tokens for DAI on '}
+          {'If you want to deposit more DAI (than you currently have), you can sell other tokens for DAI at the '}
           <Link to={routes.account.getRedirectPath()}>account page</Link>
         </Typography>
       </div>),
