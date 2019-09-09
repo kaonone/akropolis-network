@@ -3,11 +3,12 @@ import { TYPES, container } from './configureIoc';
 import configureStore, { createReducer } from './configureStore';
 import { configureJss } from 'core/configureJss';
 
-import { DaoModule } from 'modules';
+import { DaoModule, AccountModule } from 'modules';
 import { reduxEntry as adaptabilityRE } from 'services/adaptability';
 import { reduxEntry as i18nRE } from 'services/i18n';
 import { reduxEntry as userRE } from 'services/user';
 import { reduxEntry as notificationRE } from 'services/notifications';
+import { reduxEntry as tradesRE } from 'services/trades';
 
 import { reduxEntry as signInRE } from 'features/signIn';
 
@@ -18,6 +19,7 @@ function configureApp(data?: IAppData): IAppData {
   /* Prepare main app elements */
   const modules: IModule[] = [
     DaoModule,
+    AccountModule,
   ];
 
   if (data) {
@@ -30,6 +32,7 @@ function configureApp(data?: IAppData): IAppData {
     notificationRE,
     signInRE,
     userRE,
+    tradesRE,
   ];
 
   const connectedSagas: RootSaga[] = [];

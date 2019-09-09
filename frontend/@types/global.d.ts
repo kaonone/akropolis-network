@@ -6,6 +6,7 @@ interface Window {
   __CIPHER__: any;
   ethereum: any;
   web3: any;
+  AirSwapTrader: any;
 }
 
 declare var __DISABLE_SSR__: boolean;

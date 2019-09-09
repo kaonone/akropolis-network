@@ -117,6 +117,11 @@ export async function checkValidEthNode(uri: string, expectedNetworkType: string
   return true;
 }
 
+interface IFormatBalanceOptions {
+  decimals?: BN | number;
+  precision?: number;
+}
+
 /**
  * Format the balance to a fixed number of decimals
  *
@@ -128,13 +133,16 @@ export async function checkValidEthNode(uri: string, expectedNetworkType: string
  * @returns {string} The formatted balance.
  */
 export function formatBalance(
-  amount: BN,
-  { base = new BN(10).pow(new BN(18)), precision = 2 } = {},
+  amount: BN | string,
+  { decimals = 18, precision = 2 }: IFormatBalanceOptions = {},
 ): string {
-  const baseLength = base.toString().length;
+  amount = new BN(amount);
+  decimals = new BN(10).pow(new BN(decimals));
 
-  const whole = amount.div(base).toString();
-  let fraction = amount.mod(base).toString();
+  const baseLength = decimals.toString().length;
+
+  const whole = amount.div(decimals).toString();
+  let fraction = amount.mod(decimals).toString();
   const zeros = '0'.repeat(Math.max(0, baseLength - fraction.length - 1));
   fraction = `${zeros}${fraction}`.replace(/0+$/, '').slice(0, precision);
 

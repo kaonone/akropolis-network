@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import routes from 'modules/routes';
 
 import { tKeys as tKeysAll, useTranslate } from 'services/i18n';
 import { useDaoApi } from 'services/daoApi';
@@ -50,6 +52,10 @@ function RequestDepositForm(props: IProps) {
     (
       <div className={classes.hint}>
         <Typography>{t(tKeys.form.hint.getKey())}</Typography>
+        <Typography>
+          {'If you want to deposit more DAI (than you currently have), you can sell other tokens for DAI at the '}
+          <Link to={routes.account.getRedirectPath()}>account page</Link>
+        </Typography>
       </div>),
   ];
   // tslint:enable:jsx-key

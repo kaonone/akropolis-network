@@ -122,6 +122,12 @@ export default {
       deposit: 'Deposit',
       withdraw: 'Withdraw',
     },
+    orders: {
+      youSend: 'You\'ll send',
+      youGet: 'You\'ll get',
+      expires: 'Expires in',
+      showMore: 'Show more',
+    },
     joinToCooperative: {
       button: 'Join to Coop',
       fields: {

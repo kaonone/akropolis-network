@@ -14,7 +14,7 @@ function RowsLayout({ children, footerContent, headerContent, classes, spacing }
   return (
     <div className={classes.root}>
       <Grid container direction="column" spacing={spacing} className={classes.container}>
-        {!!headerContent && <Grid item>{headerContent}</Grid>}
+        {!!headerContent && <Grid item className={classes.header}>{headerContent}</Grid>}
         {!!children && <Grid item xs>{children}</Grid>}
         {!!footerContent && <Grid item>{footerContent}</Grid>}
       </Grid>
