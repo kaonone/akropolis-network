@@ -3,15 +3,17 @@ import { rule } from 'shared/helpers/style';
 
 const styles = (_theme: Theme) => ({
   root: rule({
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100%',
+    height: '100%',
     overflow: 'hidden', // https://github.com/mui-org/material-ui/issues/7466
   }),
 
   container: rule({
     flexGrow: 1,
-    alignItems: 'stretch',
+    minHeight: '100%',
+  }),
+
+  header: rule({
+    width: '100%',
   }),
 });
 
