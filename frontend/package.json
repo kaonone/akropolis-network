@@ -306,7 +306,7 @@
     "mobx-react-lite": "^1.2.0",
     "moment": "^2.18.1",
     "node-polyglot": "^2.3.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "normalize.css": "^8.0.0",
     "normalizr": "^2.3.1",
     "path-to-regexp": "^3.0.0",
